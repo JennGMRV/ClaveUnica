@@ -1494,8 +1494,91 @@ body.high-contrast .btn-access:hover {
     opacity: 0.8;
 }
 
+.cu-info-banner {
+    background-color: #f0f7ff;
+    border-left: 5px solid var(--cu-blue);
+    margin: 20px 20px 0;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-radius: 4px;
+}
+
+.cu-info-banner p {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+    line-height: 1.4;
+}
+
+.info-icon {
+    font-size: 24px;
+}
+
 .cu-form-body {
     padding: 30px 40px;
+}
+
+.label-with-help {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.help-container {
+    position: relative;
+    display: inline-block;
+}
+
+.btn-help-inline {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 5px;
+    transition: transform 0.2s;
+}
+
+.btn-help-inline:hover {
+    transform: scale(1.2);
+}
+
+.cu-help-tooltip {
+    display: none;
+    position: absolute;
+    bottom: 120%;
+    right: 0;
+    width: 280px;
+    background: #e3f2fd;
+    border: 2px solid #0066ad;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    z-index: 1000;
+    font-size: 16px;
+    color: #1a1a1a;
+}
+
+.cu-help-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    right: 15px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: #0066ad transparent transparent transparent;
+}
+
+.help-container:hover .cu-help-tooltip {
+    display: block;
+    animation: fadeInTooltip 0.3s ease;
+}
+
+@keyframes fadeInTooltip {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .cu-form-body .form-group {

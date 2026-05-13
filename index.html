@@ -65,6 +65,11 @@
                     <p>requiere autenticación</p>
                 </div>
 
+                <div class="cu-info-banner">
+                    <span class="info-icon">ℹ️</span>
+                    <p>La clave es su Clave Única, una contraseña secreta de 8 caracteres o más que le entregó el Registro Civil. Pueden ser <strong>letras, números o símbolos</strong>.</p>
+                </div>
+
                 <div class="cu-form-body">
                     <div class="form-group">
                         <label for="rut">RUN</label>
@@ -74,7 +79,14 @@
                     <div class="form-group">
                         <div class="label-with-help">
                             <label for="password">Tu ClaveÚnica</label>
-                            <button class="btn-help-inline" id="btn-help-password" title="¿Qué es la Clave Única?">❓</button>
+                            <div class="help-container">
+                                <button class="btn-help-inline" id="btn-help-password">❓</button>
+                                <div class="cu-help-tooltip">
+                                    <strong>Información de ClaveÚnica:</strong>
+                                    <p>Es una contraseña secreta de 8 caracteres o más que le entregó el Registro Civil.</p>
+                                    <p>Puede contener <strong>letras, números o símbolos</strong>.</p>
+                                </div>
+                            </div>
                         </div>
                         <div class="input-with-tools">
                             <input type="password" id="password" placeholder="">
