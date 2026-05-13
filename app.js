@@ -1335,19 +1335,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
+            // --- Navegación global a secciones principales (funciona desde CUALQUIER pantalla) ---
+            const goToCA =
+                cmd.includes('chile atiende') || cmd.includes('chileatiende') ||
+                cmd.includes('chile a tiende') || cmd.includes('chile') && cmd.includes('atiende') ||
+                cmd.includes('chileaten') || cmd.includes('chile atien') ||
+                cmd.includes('beneficios sociales') || cmd.includes('beneficio social') ||
+                cmd.includes('registro social') || cmd.includes('registro de hogar') ||
+                cmd.includes('capacitacion') || cmd.includes('informacion previsional') ||
+                cmd.includes('seguro social') || cmd.includes('ips') || cmd.includes('sence') ||
+                cmd.includes('pagos del estado') || cmd.includes('bono') || cmd.includes('subsidio');
+
+            const goToRC =
+                cmd.includes('registro civil') || cmd.includes('registrocivil') ||
+                cmd.includes('registro civi') || cmd.includes('registro siv') ||
+                cmd.includes('certif') || cmd.includes('certificado') ||
+                cmd.includes('papel de nacimiento') || cmd.includes('papel de matrimonio') ||
+                cmd.includes('acta') || cmd.includes('partida');
+
+            if (goToCA && currentScreenKey !== 'caCategories' && currentScreenKey !== 'rcTutorial') {
+                this.say("Entendido. Abriendo los servicios de ChileAtiende.");
+                showScreen('caCategories');
+                return;
+            }
+
+            if (goToRC && !goToCA && currentScreenKey !== 'rcCategories' && currentScreenKey !== 'rcTutorial') {
+                this.say("Claro, aquí tiene los trámites del Registro Civil.");
+                showScreen('rcCategories');
+                return;
+            }
+
             if (currentScreenKey === 'menu' || currentScreenKey === 'landing') {
-                if (cmd.includes('certificado') || cmd.includes('papel') || cmd.includes('tramite')) {
+                if (cmd.includes('papel') || cmd.includes('tramite') || cmd.includes('obtener')) {
                     this.say("Abriendo sección de certificados del Registro Civil.");
-                    showScreen('rcCategories');
-                    return;
-                }
-                if (cmd.includes('chile atiende') || cmd.includes('chileatiende') || cmd.includes('beneficios')) {
-                    this.say("Entendido. Abriendo los servicios y beneficios de ChileAtiende.");
-                    showScreen('caCategories');
-                    return;
-                }
-                if (cmd.includes('registro civil') || cmd.includes('registrocivil')) {
-                    this.say("Claro, aquí tiene los trámites del Registro Civil.");
                     showScreen('rcCategories');
                     return;
                 }
