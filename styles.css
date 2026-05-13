@@ -1960,6 +1960,63 @@ body.high-contrast .custom-toast {
 body.high-contrast .custom-toast-icon { color: yellow; }
 body.high-contrast .custom-toast-close { color: white; }
 
+/* High Contrast: menú principal */
+body.high-contrast .menu-item {
+    background: black;
+    color: white;
+    border-color: yellow;
+}
+body.high-contrast .menu-item:hover:not(:disabled) {
+    background: #222;
+    border-color: yellow;
+}
+body.high-contrast .menu-item .label {
+    color: white;
+}
+
+/* High Contrast: tarjetas y certificados de Registro Civil y ChileAtiende */
+body.high-contrast .rc-category-card {
+    background: black;
+    color: white;
+    border-color: white;
+}
+body.high-contrast .rc-category-card:hover,
+body.high-contrast .rc-category-card.active {
+    background: #222;
+    border-color: yellow;
+}
+body.high-contrast .rc-category-card .icon {
+    background: #333;
+    color: yellow;
+}
+body.high-contrast .rc-category-card strong {
+    color: white;
+}
+body.high-contrast .rc-cert-item,
+body.high-contrast .ca-service-item {
+    background: black;
+    color: white;
+    border-color: white;
+}
+body.high-contrast .rc-cert-item:hover,
+body.high-contrast .ca-service-item:hover {
+    background: #222;
+    border-color: yellow;
+}
+body.high-contrast .rc-cert-name {
+    color: white;
+}
+body.high-contrast .rc-cert-desc {
+    color: #ccc;
+}
+
+/* High Contrast: caja visual de texto en tutoriales (inline style requiere !important) */
+body.high-contrast #rc-step-visual {
+    background: black !important;
+    color: yellow !important;
+    border-color: yellow !important;
+}
+
 .custom-toast.hiding { animation: toastSlideOut 0.3s ease-in forwards !important; }
 @keyframes toastSlideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
 

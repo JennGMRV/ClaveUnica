@@ -98,9 +98,9 @@
                         <span class="icon">🏛️</span>
                         <span class="label">Guía Registro Civil</span>
                     </button>
-                    <button class="menu-item" disabled>
-                        <span class="icon">🏥</span>
-                        <span class="label">Mi Salud</span>
+                    <button class="menu-item" id="btn-ca-guide">
+                        <span class="icon">🤝</span>
+                        <span class="label">Guía ChileAtiende</span>
                     </button>
                 </div>
 
@@ -370,7 +370,57 @@
             </div>
         </section>
 
-        <!-- Screen 8: Registro Civil Step-by-Step Tutorial -->
+        <!-- Screen 8: ChileAtiende Categories -->
+        <section id="screen-ca-categories" class="screen">
+            <button class="btn-back-manual" id="btn-back-ca">⬅ Volver al Menú</button>
+            <div class="card" style="text-align: left;">
+                <h1>Servicios de ChileAtiende</h1>
+                <p class="subtitle">Seleccione un servicio para ver cómo consultarlo paso a paso.</p>
+
+                <div class="reader-toolbar" id="reader-ca-cats">
+                    <button class="reader-btn btn-play" title="Reproducir">▶️</button>
+                    <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
+                    <button class="reader-btn btn-stop" title="Detener">⏹️</button>
+                    <div class="reader-divider"></div>
+                    <div class="reader-status">Presione "Reproducir" para escuchar.</div>
+                </div>
+
+                <div class="rc-cert-list" id="ca-services-list">
+                    <div class="rc-cert-item ca-service-item" data-service="registro-social">
+                        <div class="rc-cert-info">
+                            <span class="rc-cert-name">Mi Registro Social de Hogares</span>
+                            <span class="rc-cert-desc">Consulte su ficha socioeconómica y datos del hogar.</span>
+                        </div>
+                    </div>
+                    <div class="rc-cert-item ca-service-item" data-service="pagos-beneficios">
+                        <div class="rc-cert-info">
+                            <span class="rc-cert-name">Mis Pagos de Beneficios Sociales</span>
+                            <span class="rc-cert-desc">Revise los bonos y subsidios que ha recibido del Estado.</span>
+                        </div>
+                    </div>
+                    <div class="rc-cert-item ca-service-item" data-service="capacitaciones">
+                        <div class="rc-cert-info">
+                            <span class="rc-cert-name">Mis Capacitaciones</span>
+                            <span class="rc-cert-desc">Vea los cursos y capacitaciones registradas a su nombre.</span>
+                        </div>
+                    </div>
+                    <div class="rc-cert-item ca-service-item" data-service="informacion-previsional">
+                        <div class="rc-cert-info">
+                            <span class="rc-cert-name">Mi Información Previsional</span>
+                            <span class="rc-cert-desc">Consulte su situación de pensiones y cotizaciones AFP o IPS.</span>
+                        </div>
+                    </div>
+                    <div class="rc-cert-item ca-service-item" data-service="seguro-social">
+                        <div class="rc-cert-info">
+                            <span class="rc-cert-name">Mi Seguro Social</span>
+                            <span class="rc-cert-desc">Revise su cobertura y estado del seguro de cesantía.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screen 9: Registro Civil Step-by-Step Tutorial -->
         <section id="screen-rc-tutorial" class="screen">
             <button class="btn-back-manual" id="btn-back-rc-tutorial">⬅ Volver a Categorías</button>
             <div class="card" style="text-align: left;">
