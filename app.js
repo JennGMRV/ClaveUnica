@@ -1428,6 +1428,50 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             this.say("No estoy seguro de cómo ayudarte con '" + cmd + "'. Prueba decir 'ayuda' para explicarte esta pantalla.");
+        },
+
+        // --- Auto-narración de pantalla (accesibilidad para adultos mayores) ---
+        narrateCurrentScreen() {
+            // No interrumpir si ya está hablando
+            if (this.synth.speaking) return;
+            let text = '';
+            switch (currentScreenKey) {
+                case 'landing':
+                    text = 'Bienvenido al portal de trámites. Puede elegir obtener un certificado del Registro Civil, o explorar los servicios de ChileAtiende.';
+                    break;
+                case 'login':
+                    text = 'Pantalla de inicio de sesión. Por favor ingrese su RUN en el primer campo, y su Clave Única en el segundo. Luego presione el botón Autenticar.';
+                    break;
+                case 'menu':
+                    text = 'Menú principal. Tiene tres opciones: Obtener Certificado, Guía del Registro Civil, o Guía de ChileAtiende.';
+                    break;
+                case 'form':
+                    text = 'Selección de certificado. Elija entre el Certificado de Afiliación, que acredita que está en FONASA, o el de Cotizaciones, que muestra sus pagos de salud. Luego presione Siguiente paso.';
+                    break;
+                case 'confirm':
+                    text = 'Pantalla de confirmación. Revise bien su información. Si todo está correcto, presione el botón que dice: Sí, Confirmar Trámite.';
+                    break;
+                case 'success':
+                    text = '¡Trámite exitoso! Su certificado fue procesado correctamente y se enviará a su correo electrónico.';
+                    break;
+                case 'tutorial':
+                    text = 'Centro de ayuda. Aquí encontrará información sobre qué es la Clave Única, cómo usar el teclado, cómo cuidarse en internet, y el compromiso de accesibilidad de esta plataforma.';
+                    break;
+                case 'rcCategories':
+                    text = 'Servicios del Registro Civil. Elija una categoría: Nacimiento, Matrimonio, Defunción, Antecedentes, Vehículos, o Identidad.';
+                    break;
+                case 'caCategories':
+                    text = 'Servicios de ChileAtiende. Puede consultar: Mi Registro Social de Hogares, Mis Pagos de Beneficios Sociales, Mis Capacitaciones, Mi Información Previsional, o Mi Seguro Social.';
+                    break;
+                case 'rcTutorial': {
+                    const step = currentTutorialSteps[currentStepIndex];
+                    text = step ? step.title + '. ' + step.text : '';
+                    break;
+                }
+                default:
+                    text = '';
+            }
+            if (text) this.say(text);
         }
     };
 
@@ -1464,6 +1508,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const oldShowScreen = showScreen;
     showScreen = (key, add) => {
         oldShowScreen(key, add);
+        // Narrar automáticamente la nueva pantalla (accesibilidad adultos mayores)
+        clearTimeout(assistant._narrateTimer);
+        assistant._narrateTimer = setTimeout(() => {
+            assistant.narrateCurrentScreen();
+        }, 800);
     };
 });
 
