@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAI-FONASA: Gestión de Trámites Senior</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header class="access-header">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Logotipo_Clave_%C3%9Anica.svg"
+            alt="Logo Clave Única" class="logo-small">
+        <div class="access-toolbar">
+            <button class="btn-access contrast-toggle" id="btn-toggle-contrast" title="Alto Contraste">◐</button>
+            <button class="btn-access" id="btn-font-minus" title="Disminuir letra">A-</button>
+            <button class="btn-access" id="btn-font-plus" title="Aumentar letra">A+</button>
+        </div>
+    </header>
+
+    <main id="app">
+        <!-- Screen 1: Login -->
+        <section id="screen-login" class="screen active">
+            <div class="cu-login-card">
+                <div class="cu-card-header">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Gobierno_de_Chile_logo.svg/512px-Gobierno_de_Chile_logo.svg.png" 
+                         alt="Gobierno de Chile" class="gov-logo">
+                    <div class="cu-header-right">
+                         <div class="cu-close-icon">➖</div>
+                         <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Logotipo_Clave_%C3%9Anica.svg" 
+                              alt="Clave Única" class="cu-logo-main">
+                    </div>
+                </div>
+
+                <div class="cu-banner">
+                    <h2>OficinaInternet</h2>
+                    <p>requiere autenticación</p>
+                </div>
+
+                <div class="cu-form-body">
+                    <div class="form-group">
+                        <label for="rut">RUN</label>
+                        <input type="text" id="rut" placeholder="Ej: 12345678-9" autocomplete="off">
+                    </div>
+
+                    <div class="form-group">
+                        <div class="label-with-help">
+                            <label for="password">Tu ClaveÚnica</label>
+                            <button class="btn-help-inline" id="btn-help-password" title="¿Qué es la Clave Única?">❓</button>
+                        </div>
+                        <div class="input-with-tools">
+                            <input type="password" id="password" placeholder="">
+                            <div class="input-actions">
+                                <button class="btn-toggle-pass" id="btn-toggle-password" type="button" title="Ver contraseña">👁️</button>
+                            </div>
+                        </div>
+                        <a href="#" class="cu-link">¿Olvidaste tu ClaveÚnica?</a>
+                    </div>
+
+                    <button id="btn-login" class="btn-cu-primary">Autenticar</button>
+
+                    <div class="cu-footer">
+                        <p>¿No tienes ClaveÚnica? <a href="#" class="cu-link">Consigue la tuya</a></p>
+                    </div>
+                </div>
+
+                <!-- Accessibility Toolbar (Floating/Integrated) -->
+                <div class="reader-toolbar-cu" id="reader-login" data-reader-target="screen-login">
+                    <button class="reader-btn btn-play" title="Escuchar instrucciones">▶️</button>
+                    <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
+                    <button class="reader-btn btn-stop" title="Detener">⏹️</button>
+                    <div class="reader-divider"></div>
+                    <div class="reader-status">Asistente de voz disponible</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screen 2: Menu -->
+        <section id="screen-menu" class="screen">
+            <div class="header-nav">
+                <p>Bienvenido, Sr. Juan Pérez</p>
+                <button class="btn small outline" id="btn-logout">Salir</button>
+            </div>
+            <div class="card" id="menu-card">
+                <h1>Menú Principal</h1>
+                <p class="subtitle">¿Qué desea hacer hoy?</p>
+
+                <div class="grid-menu">
+                    <button class="menu-item" id="btn-tramites">
+                        <span class="icon">📄</span>
+                        <span class="label">Obtener Certificado</span>
+                    </button>
+                    <button class="menu-item" id="btn-rc-guide">
+                        <span class="icon">🏛️</span>
+                        <span class="label">Guía Registro Civil</span>
+                    </button>
+                    <button class="menu-item" disabled>
+                        <span class="icon">🏥</span>
+                        <span class="label">Mi Salud</span>
+                    </button>
+                </div>
+
+                <div class="reader-toolbar" id="reader-menu" data-reader-target="menu-card">
+                    <button class="reader-btn btn-play" title="Reproducir">▶️</button>
+                    <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
+                    <button class="reader-btn btn-stop" title="Detener">⏹️</button>
+                    <div class="reader-divider"></div>
+                    <div class="reader-status">Escuchar opciones</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screen 3: Form Step 1/3 -->
+        <section id="screen-form" class="screen">
+            <button class="btn-back-manual" id="btn-back-form">⬅ Volver Atrás</button>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 33%;"></div>
+                <p>Paso 1 de 3: Selección de Certificado</p>
+            </div>
+
+            <div class="card" id="form-card">
+                <h1>Seleccione el Trámite</h1>
+                <p class="subtitle">Elija cuál certificado necesita descargar.</p>
+
+                <div class="selection-list">
+                    <label class="radio-item">
+                        <input type="radio" name="tramite" value="afiliacion" checked>
+                        <div class="check-content">
+                            <strong>Certificado de Afiliación</strong>
+                            <span>Acredita que usted está en FONASA.</span>
+                        </div>
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="tramite" value="cotizaciones">
+                        <div class="check-content">
+                            <strong>Certificado de Cotizaciones</strong>
+                            <span>Muestra sus pagos de salud.</span>
+                        </div>
+                    </label>
+                </div>
+
+                <button id="btn-to-confirm" class="btn primary full">Siguiente paso</button>
+
+                <div class="reader-toolbar" id="reader-form" data-reader-target="form-card">
+                    <button class="reader-btn btn-play" title="Reproducir">▶️</button>
+                    <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
+                    <button class="reader-btn btn-stop" title="Detener">⏹️</button>
+                    <div class="reader-divider"></div>
+                    <div class="reader-status">Escuchar pasos</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screen 4: Confirmation (Defensive Design) -->
+        <section id="screen-confirm" class="screen">
+            <div class="card warning" id="confirm-card">
+                <h1>⚠️ Verifique su Información</h1>
+                <p class="subtitle">Revisa bien antes de enviar. Esto es para su seguridad.</p>
+
+                <div class="summary-box">
+                    <div class="summary-item">
+                        <span class="summary-label">Usted solicita:</span>
+                        <span class="summary-value" id="confirm-type">Certificado de Afiliación</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Se enviará a:</span>
+                        <span class="summary-value">juan.perez@gmail.com</span>
+                    </div>
+                </div>
+
+                <div class="friction-alert">
+                    <p>Al presionar "Confirmar", el sistema generará el documento legal.</p>
+                </div>
+
+                <div class="action-row">
+                    <button id="btn-confirm-final" class="btn primary">Sí, Confirmar Trámite</button>
+                    <button id="btn-back-confirm" class="btn outline">No, corregir datos</button>
+                </div>
+
+                <div class="reader-toolbar" id="reader-confirm" data-reader-target="confirm-card">
+                    <button class="reader-btn btn-play" title="Reproducir">▶️</button>
+                    <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
+                    <button class="reader-btn btn-stop" title="Detener">⏹️</button>
+                    <div class="reader-divider"></div>
+                    <div class="reader-status">Escuchar confirmación</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screen 5: Success -->
+        <section id="screen-success" class="screen">
+            <div class="card success" id="success-card">
+                <div class="success-icon">✅</div>
+                <h1>¡Trámite Exitoso!</h1>
+                <p class="subtitle">Su certificado ha sido procesado correctamente.</p>
+
+                <div class="success-actions">
+                    <p>Se ha enviado una copia a su correo electrónico.</p>
+                    <button id="btn-finish" class="btn primary block">Volver al Inicio</button>
+                </div>
+
+                <div class="reader-toolbar" id="reader-success" data-reader-target="success-card">
+                    <button class="reader-btn btn-play" title="Reproducir">▶️</button>
+                    <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
+                    <button class="reader-btn btn-stop" title="Detener">⏹️</button>
+                    <div class="reader-divider"></div>
+                    <div class="reader-status">Escuchar éxito</div>
+                </div>
+            </div>
+        </section>
+        <!-- Screen 6: Tutorial / Alfabetización Digital -->
+        <section id="screen-tutorial" class="screen">
+            <div class="header-nav">
+                <p>Centro de Ayuda y Aprendizaje</p>
+            </div>
+
+            <div class="card info-card">
+                <h2>1. ¿Qué es Clave Única?</h2>
+                <p class="subtitle">Es su llave maestra para entrar a los servicios del Estado.</p>
+                <div class="diagram-container diagram-flow">
+                    <div class="flow-item user">👤 Usted</div>
+                    <div class="flow-arrow">➡</div>
+                    <div class="flow-item cu">🔑 Clave Única</div>
+                    <div class="flow-arrow">➡</div>
+                    <div class="flow-item portal">🖥️ ChileAtiende</div>
+                    <div class="flow-arrow">➡</div>
+                    <div class="flow-services">
+                        <div class="flow-service">🏢 Registro Civil</div>
+                        <div class="flow-service fonasa">🏥 Fonasa</div>
+                        <div class="flow-service">👵 PGU</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card info-card">
+                <h2>2. Uso del Teclado</h2>
+                <p class="subtitle">Conozca las teclas principales para navegar.</p>
+                <div class="keyboard-grid">
+                    <div class="key-item">
+                        <div class="key-ui btn-enter">Enter</div>
+                        <p>Avanzar y confirmar.</p>
+                    </div>
+                    <div class="key-item">
+                        <div class="key-ui btn-space">Espacio</div>
+                        <p>Bajar en la página.</p>
+                    </div>
+                    <div class="key-item highlight-key">
+                        <div class="key-ui btn-backspace">⌫ Borrar</div>
+                        <p>Corregir errores y volver atrás.</p>
+                    </div>
+                </div>
+                <div class="insight-box">
+                    <strong>💡 Recuerde:</strong> Siempre puede presionar "Borrar" (Backspace) si se equivoca, no va a
+                    romper nada.
+                </div>
+            </div>
+
+            <div class="card info-card">
+                <h2>3. Autocuidado Digital</h2>
+                <p class="subtitle">Su seguridad es lo más importante.</p>
+                <div class="shield-diagram">
+                    <div class="shield-icon">🛡️</div>
+                    <div class="shield-points">
+                        <div class="shield-point">Proteja su huella digital</div>
+                        <div class="shield-point">Evite el robo de identidad</div>
+                        <div class="shield-point">Cuide su privacidad</div>
+                    </div>
+                </div>
+                <div class="insight-box">
+                    <strong>💡 Consejo:</strong> Cuidarse en Internet es como cuidar sus documentos en la calle. No le
+                    dé su Clave Única a desconocidos.
+                </div>
+            </div>
+
+            <div class="card info-card">
+                <h2>4. Nuestro Compromiso</h2>
+                <p class="subtitle">Esta plataforma está diseñada para usted (WCAG).</p>
+                <div class="wcag-grid">
+                    <div class="wcag-card">
+                        <strong>👁️ Perceptible</strong>
+                        <p>Letras grandes y colores claros.</p>
+                    </div>
+                    <div class="wcag-card">
+                        <strong>👆 Operable</strong>
+                        <p>Botones grandes, sin prisa.</p>
+                    </div>
+                    <div class="wcag-card">
+                        <strong>🧠 Comprensible</strong>
+                        <p>Palabras simples y pasos claros.</p>
+                    </div>
+                    <div class="wcag-card">
+                        <strong>🛡️ Robusto</strong>
+                        <p>Protección contra errores accidentales.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-row" style="margin-top: 30px;">
+                <button id="btn-back-tutorial" class="btn outline full">⬅ Volver al Menú Principal</button>
+            </div>
+
+            <div class="reader-toolbar" id="reader-tutorial" data-reader-target="tutorial-card" style="margin-top: 40px; width: 100%;">
+                <button class="reader-btn btn-play" title="Reproducir">▶️</button>
+                <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
+                <button class="reader-btn btn-stop" title="Detener">⏹️</button>
+                <div class="reader-divider"></div>
+                <div class="reader-status">Escuchar centro de ayuda</div>
+            </div>
+
+            <!-- Link al Reporte para el Profe -->
+            <div style="margin-top: 60px; text-align: center; border-top: 1px solid #ddd; padding-top: 20px;">
+                <p style="font-size: 0.9rem; color: #666;">Documentación para Evaluación Académica:</p>
+                <a href="reporte-ia.html" target="_blank" class="btn small outline" style="text-decoration: none;">📄 Ver Reporte Técnico de IA y Accesibilidad</a>
+            </div>
+        </section>
+
+        <!-- Screen 7: Registro Civil Categories -->
+        <section id="screen-rc-categories" class="screen">
+            <button class="btn-back-manual" id="btn-back-rc">⬅ Volver al Menú</button>
+            <div class="card" style="text-align: left;">
+                <h1>Servicios del Registro Civil</h1>
+                <p class="subtitle">Seleccione una categoría para ver los certificados disponibles.</p>
+                
+                <div class="reader-toolbar" id="reader-rc-cats">
+                    <button class="reader-btn btn-play" title="Reproducir">▶️</button>
+                    <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
+                    <button class="reader-btn btn-stop" title="Detener">⏹️</button>
+                    <div class="reader-divider"></div>
+                    <div class="reader-status">Presione "Reproducir" para escuchar.</div>
+                </div>
+
+                <div class="rc-categories-grid" id="rc-cats-container">
+                    <!-- Categories will be injected here via JS or hardcoded -->
+                    <div class="rc-category-card" data-cat="nacimiento">
+                        <div class="icon">👶</div>
+                        <strong>Nacimiento</strong>
+                    </div>
+                    <div class="rc-category-card" data-cat="matrimonio">
+                        <div class="icon">💍</div>
+                        <strong>Matrimonio</strong>
+                    </div>
+                    <div class="rc-category-card" data-cat="defuncion">
+                        <div class="icon">⚱️</div>
+                        <strong>Defunción</strong>
+                    </div>
+                    <div class="rc-category-card" data-cat="antecedentes">
+                        <div class="icon">📋</div>
+                        <strong>Antecedentes</strong>
+                    </div>
+                    <div class="rc-category-card" data-cat="vehiculos">
+                        <div class="icon">🚗</div>
+                        <strong>Vehículos</strong>
+                    </div>
+                    <div class="rc-category-card" data-cat="identidad">
+                        <div class="icon">🆔</div>
+                        <strong>Identidad</strong>
+                    </div>
+                </div>
+
+                <div id="rc-certs-sublist" class="rc-cert-list" style="display: none;">
+                    <h2 id="rc-selected-cat-title">Certificados de Nacimiento</h2>
+                    <div id="rc-certs-items">
+                        <!-- Items injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screen 8: Registro Civil Step-by-Step Tutorial -->
+        <section id="screen-rc-tutorial" class="screen">
+            <button class="btn-back-manual" id="btn-back-rc-tutorial">⬅ Volver a Categorías</button>
+            <div class="card" style="text-align: left;">
+                <div class="training-banner">Modo Guía Paso a Paso</div>
+                
+                <div class="reader-toolbar" id="reader-rc-steps">
+                    <button class="reader-btn btn-play" title="Reproducir">▶️</button>
+                    <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
+                    <button class="reader-btn btn-stop" title="Detener">⏹️</button>
+                    <div class="reader-divider"></div>
+                    <div class="reader-status">Escuchando guía...</div>
+                </div>
+
+                <div id="rc-tutorial-content">
+                    <!-- Tutorial steps injected here via JS -->
+                    <div class="rc-official-mockup">
+                         <div class="rc-official-header">
+                             <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Logotipo_Clave_%C3%9Anica.svg" alt="Logo CU" class="rc-official-logo">
+                             <div class="rc-guide-overlay" title="Aquí debe poner su RUT">?</div>
+                         </div>
+                         <div id="rc-step-visual">
+                             <!-- Mockup of the current step -->
+                         </div>
+                    </div>
+                </div>
+
+                <div class="action-row" style="margin-top: 30px;">
+                    <button id="btn-rc-prev" class="btn outline" style="flex: 1;">Atrás</button>
+                    <button id="btn-rc-next" class="btn primary" style="flex: 1;">Siguiente Paso</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+    <!-- Nuevo Asistente Inteligente -->
+    <div class="assistant-container">
+        <div id="assistant-bubble" class="assistant-chat-bubble">
+            Hola, soy tu asistente de FONASA. ¿En qué puedo ayudarte hoy?
+        </div>
+        <div class="assistant-avatar-wrapper" id="btn-assistant-main">
+            <div class="mic-status-ring"></div>
+            <div class="assistant-avatar" id="assistant-icon">
+                🎤
+            </div>
+        </div>
+    </div>
+    <div style="display:none">
+        <div id="voice-transcript" class="voice-transcript"></div>
+        <button class="btn-assistant" id="btn-call-asistente" title="Llamar asistente">
+            <span class="icon">🎧</span> Asistente
+        </button>
+        <button class="btn-assistant mic-btn" id="btn-voice-command" title="Comandos por voz">
+            <span class="icon">🎤</span> Hablar
+        </button>
+    </div>
+
+    <div id="modal-mic-guide" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>⚠️ Paso Importante</h2>
+            <p>Para usar su voz, presione el botón azul que dice <strong>"Permitir mientras se visita el sitio"</strong>
+                en el cuadro que aparecerá arriba:</p>
+
+            <div class="prompt-replica">
+                <div class="prompt-header">
+                    <span>http://localhost:5173 quiere</span>
+                    <span class="prompt-close">&times;</span>
+                </div>
+                <div class="prompt-body">
+                    <span class="mic-icon">🎤</span>
+                    <span>Usar tus micrófonos</span>
+                </div>
+                <div class="prompt-actions">
+                    <button class="btn-replica primary-replica">Permitir mientras se visita el sitio</button>
+                    <button class="btn-replica">Permitir esta vez</button>
+                    <button class="btn-replica">No permitir nunca</button>
+                </div>
+            </div>
+
+            <button class="btn primary" id="btn-close-guide" style="margin-top: 20px;">¡Entendido, abrir
+                micrófono!</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

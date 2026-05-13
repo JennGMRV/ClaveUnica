@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAI-FONASA: Gestión de Trámites Senior</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #004A99;
+            --primary-hover: #003366;
+            --bg: #F0F4F8;
+            --card-bg: #FFFFFF;
+            --text: #1A1A1A;
+            --text-light: #4A4A4A;
+            --success: #28a745;
+            --warning: #EF6C00;
+            --border: #CCCCCC;
+            --font-main: 'Outfit', sans-serif;
+            --base-font-size: 20px;
+        }
+
+        body.high-contrast {
+            --primary: #FFFF00;
+            --primary-hover: #FFFFFF;
+            --bg: #000000;
+            --card-bg: #000000;
+            --text: #FFFFFF;
+            --text-light: #FFFFFF;
+            --border: #FFFFFF;
+            --success: #00FF00;
+            --warning: #FFFF00;
+        }
+
+        body.high-contrast .card { border: 4px solid white; }
+        body.high-contrast .btn.primary { background-color: #FFFF00; color: #000000; border: 2px solid #000000; }
+        body.high-contrast .btn.outline { border-color: #FFFF00; color: #FFFF00; }
+        body.high-contrast .btn-audio { border-color: #FFFF00; color: #FFFF00; background: black; }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font-main); background-color: var(--bg); color: var(--text); line-height: 1.6; font-size: var(--base-font-size); min-height: 100vh; display: flex; flex-direction: column; }
+        #app { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .screen { display: none; width: 100%; max-width: 600px; animation: fadeIn 0.4s ease-out; }
+        .screen.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .card { background: var(--card-bg); padding: 40px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 2px solid var(--border); text-align: center; }
+        .card.warning { border: 4px solid var(--warning); }
+        .card.success { border: 4px solid var(--success); }
+        h1 { font-size: 32px; margin-bottom: 12px; color: var(--primary); font-weight: 700; }
+        .subtitle { font-size: 20px; color: var(--text-light); margin-bottom: 30px; }
+        .form-group { text-align: left; margin-bottom: 24px; }
+        label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 20px; }
+        input[type="text"], input[type="password"] { width: 100%; padding: 18px; font-size: 22px; border: 2px solid var(--border); border-radius: 12px; font-family: inherit; transition: border-color 0.2s; }
+        input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(0, 74, 153, 0.2); }
+        .btn { font-family: inherit; font-size: 22px; font-weight: 700; padding: 18px 36px; border-radius: 16px; border: none; cursor: pointer; transition: all 0.2s; display: inline-block; text-decoration: none; }
+        .btn.primary { background-color: var(--primary); color: white; }
+        .btn.primary:hover { background-color: var(--primary-hover); transform: translateY(-2px); }
+        .btn.outline { background: transparent; border: 3px solid var(--primary); color: var(--primary); }
+        .btn.full { width: 100%; margin-top: 20px; }
+        .logo { width: 180px; margin-bottom: 24px; }
+        .grid-menu { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        .menu-item { background: white; border: 2px solid var(--border); padding: 24px; border-radius: 16px; display: flex; align-items: center; gap: 20px; cursor: pointer; transition: all 0.2s; }
+        .menu-item:hover:not(:disabled) { border-color: var(--primary); background: #F0F7FF; }
+        .menu-item:disabled { opacity: 0.5; cursor: not-allowed; background: #f9f9f9; }
+        .menu-item .icon { font-size: 40px; }
+        .menu-item .label { font-size: 22px; font-weight: 600; }
+        .progress-bar { height: 12px; background: var(--primary); border-radius: 6px; margin-bottom: 8px; transition: width 0.5s ease; }
+        .btn-back-manual { background: none; border: none; color: var(--primary); font-size: 20px; font-weight: 600; cursor: pointer; margin-bottom: 20px; text-decoration: underline; }
+        .radio-item { display: flex; align-items: flex-start; gap: 15px; padding: 20px; border: 2px solid var(--border); border-radius: 12px; margin-bottom: 12px; cursor: pointer; text-align: left;}
+        .radio-item input { width: 25px; height: 25px; margin-top: 5px; }
+        .summary-box { background: #f9f9f9; padding: 20px; border-radius: 12px; text-align: left; margin-bottom: 30px; }
+        .summary-value { font-size: 24px; font-weight: 700; display: block;}
+        .friction-alert { background: #FFF3E0; color: #E65100; padding: 15px; border-radius: 8px; margin-bottom: 30px; font-weight: 600; }
+        .btn-audio { background-color: #f8f9fa; border: 3px solid var(--primary); color: var(--primary); padding: 15px 30px; border-radius: 50px; font-size: 22px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 15px; margin: 30px auto 0; width: 100%; max-width: 450px; }
+        .btn-audio.playing { background-color: var(--primary); color: white; }
+        .assistant-container { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; align-items: flex-end; gap: 15px; z-index: 1000; }
+        .assistant-avatar { width: 100px; height: 100px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 4px solid white; cursor: pointer; }
+        .assistant-avatar.speaking { animation: speak-pulse 0.5s infinite alternate; }
+        .assistant-avatar.listening { border-color: #ffeb3b; box-shadow: 0 0 20px #ffeb3b; }
+        @keyframes speak-pulse { from { transform: scale(1); } to { transform: scale(1.1); } }
+        .assistant-chat-bubble { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-width: 300px; border: 2px solid var(--primary); display: none; }
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); }
+        .modal-content { background: white; margin: 10% auto; padding: 40px; border-radius: 24px; max-width: 500px; text-align: center; }
+        .access-header { background: white; padding: 10px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); sticky; top: 0; z-index: 100; }
+        .access-toolbar { display: flex; gap: 10px; }
+        .btn-access { width: 45px; height: 45px; border: 2px solid #333; cursor: pointer; font-weight: bold; border-radius: 4px; }
+    </style>
+</head>
+
+<body>
+    <header class="access-header">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Logotipo_Clave_%C3%9Anica.svg" alt="Logo" height="40">
+        <div class="access-toolbar">
+            <button class="btn-access" id="btn-toggle-contrast">◐</button>
+            <button class="btn-access" id="btn-font-minus">A-</button>
+            <button class="btn-access" id="btn-font-plus">A+</button>
+        </div>
+    </header>
+
+    <main id="app">
+        <!-- Screen 1: Login -->
+        <section id="screen-login" class="screen active">
+            <div class="card">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Logotipo_Clave_%C3%9Anica.svg" alt="Logo" class="logo">
+                <h1>Acceso</h1>
+                <div class="form-group"><label>RUT</label><input type="text" id="rut" placeholder="12.345.678-9"></div>
+                <div class="form-group"><label>Clave</label><input type="password" id="password" placeholder="********"></div>
+                <button id="btn-login" class="btn primary">Ingresar</button>
+                <button class="btn-audio" data-speak="login">🔊 Instrucciones</button>
+            </div>
+        </section>
+
+        <!-- Screen 2: Menu -->
+        <section id="screen-menu" class="screen">
+            <div class="card">
+                <h1>Menú Principal</h1>
+                <div class="grid-menu">
+                    <button class="menu-item" id="btn-tramites"><span class="icon">📄</span><span class="label">Obtener Certificado</span></button>
+                    <button class="menu-item" disabled><span class="icon">🏥</span><span class="label">Mi Salud</span></button>
+                </div>
+                <button id="btn-logout" class="btn outline full">Cerrar Sesión</button>
+                <button class="btn-audio" data-speak="menu">🔊 Instrucciones</button>
+            </div>
+        </section>
+
+        <!-- Screen 3: Form -->
+        <section id="screen-form" class="screen">
+            <button class="btn-back-manual" id="btn-back-form">⬅ Volver</button>
+            <div class="card">
+                <h1>Seleccione Trámite</h1>
+                <div class="radio-item"><input type="radio" name="tramite" value="afiliacion" checked><div><strong>Certificado de Afiliación</strong><span>Acredita que está en FONASA.</span></div></div>
+                <div class="radio-item"><input type="radio" name="tramite" value="cotizaciones"><div><strong>Certificado de Cotizaciones</strong><span>Muestra sus pagos.</span></div></div>
+                <button id="btn-to-confirm" class="btn primary full">Siguiente</button>
+            </div>
+        </section>
+
+        <!-- Screen 4: Confirm -->
+        <section id="screen-confirm" class="screen">
+            <div class="card warning">
+                <h1>Verifique Datos</h1>
+                <div class="summary-box">
+                    <p>Usted solicita:</p><strong id="confirm-type">Certificado</strong>
+                </div>
+                <button id="btn-confirm-final" class="btn primary full">Sí, Confirmar</button>
+                <button id="btn-back-confirm" class="btn outline full">No, corregir</button>
+            </div>
+        </section>
+
+        <!-- Screen 5: Success -->
+        <section id="screen-success" class="screen">
+            <div class="card success">
+                <h1>¡Éxito!</h1>
+                <p>Su trámite se realizó correctamente.</p>
+                <button id="btn-finish" class="btn primary full">Volver al Inicio</button>
+            </div>
+        </section>
+    </main>
+
+    <div class="assistant-container">
+        <div id="assistant-bubble" class="assistant-chat-bubble"></div>
+        <div class="assistant-avatar" id="btn-assistant-main">🎤</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const screens = {
+                login: document.getElementById('screen-login'),
+                menu: document.getElementById('screen-menu'),
+                form: document.getElementById('screen-form'),
+                confirm: document.getElementById('screen-confirm'),
+                success: document.getElementById('screen-success')
+            };
+            let currentScreenKey = 'login';
+            function showScreen(key) {
+                Object.values(screens).forEach(s => s.classList.remove('active'));
+                screens[key].classList.add('active');
+                currentScreenKey = key;
+            }
+
+            document.getElementById('btn-login').addEventListener('click', () => showScreen('menu'));
+            document.getElementById('btn-tramites').addEventListener('click', () => showScreen('form'));
+            document.getElementById('btn-back-form').addEventListener('click', () => showScreen('menu'));
+            document.getElementById('btn-to-confirm').addEventListener('click', () => {
+                const sel = document.querySelector('input[name="tramite"]:checked').parentElement.querySelector('strong').innerText;
+                document.getElementById('confirm-type').innerText = sel;
+                showScreen('confirm');
+            });
+            document.getElementById('btn-confirm-final').addEventListener('click', () => showScreen('success'));
+            document.getElementById('btn-back-confirm').addEventListener('click', () => showScreen('form'));
+            document.getElementById('btn-finish').addEventListener('click', () => showScreen('login'));
+            document.getElementById('btn-logout').addEventListener('click', () => showScreen('login'));
+
+            // Access Logic
+            document.getElementById('btn-toggle-contrast').addEventListener('click', () => document.body.classList.toggle('high-contrast'));
+            document.getElementById('btn-font-plus').addEventListener('click', () => {
+                let size = parseInt(getComputedStyle(document.body).getPropertyValue('--base-font-size'));
+                document.body.style.setProperty('--base-font-size', (size + 2) + 'px');
+            });
+
+            // Assistant IA (Simplified for Single File)
+            const assistant = {
+                bubble: document.getElementById('assistant-bubble'),
+                say(text, callback) {
+                    const u = new SpeechSynthesisUtterance(text);
+                    u.lang = 'es-CL'; u.rate = 0.75;
+                    u.onstart = () => {
+                        this.bubble.innerText = text;
+                        this.bubble.style.display = 'block';
+                    };
+                    u.onend = () => {
+                        this.bubble.style.display = 'none';
+                        if (callback) callback();
+                    };
+                    window.speechSynthesis.speak(u);
+                },
+                init() {
+                    const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    if (Recognition) {
+                        const rec = new Recognition(); rec.lang = 'es-CL';
+                        rec.onresult = (e) => {
+                            const cmd = e.results[0][0].transcript.toLowerCase();
+                            if (cmd.includes('certificado')) {
+                                this.say("Entendido, abriendo certificados.");
+                                showScreen('form');
+                            } else if (cmd.includes('afiliación')) {
+                                document.querySelector('input[value="afiliacion"]').checked = true;
+                                this.say("Seleccionado Certificado de Afiliación.");
+                                showScreen('confirm');
+                            }
+                        };
+                        document.getElementById('btn-assistant-main').onclick = () => rec.start();
+                    }
+                }
+            };
+            assistant.init();
+            
+            // Instructions
+            document.querySelectorAll('.btn-audio').forEach(btn => {
+                btn.onclick = () => assistant.say("Esta es la pantalla de " + currentScreenKey + ". Use los botones grandes para navegar.");
+            });
+        });
+    </script>
+</body>
+</html>

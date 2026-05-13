@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte Técnico: Implementación de IA y Accesibilidad Senior</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #1e40af;
+            --accent: #f59e0b;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.2);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            color: var(--primary);
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h2 .icon {
+            font-size: 1.5rem;
+        }
+
+        .tech-tag {
+            display: inline-block;
+            background: #e2e8f0;
+            color: #475569;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 20px;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Reporte Técnico: Implementación IA</h1>
+            <p>Proyecto: SAI-FONASA (Sistema de Asistencia Integrado)</p>
+        </header>
+
+        <div class="grid">
+            <!-- NLP & Intent Recognition -->
+            <div class="card">
+                <span class="tech-tag">NLP & Heurísticas</span>
+                <h2><span class="icon">🧠</span> Reconocimiento de Intenciones</h2>
+                <p>Implementación de un motor de análisis de lenguaje natural (NLP) basado en reglas para entender los deseos del usuario sin necesidad de navegación manual.</p>
+                <ul class="feature-list">
+                    <li>Mapeo de sinónimos para certificados.</li>
+                    <li>Extracción de entidades (RUT, contraseñas).</li>
+                    <li>Navegación por voz omnicanal.</li>
+                </ul>
+            </div>
+
+            <!-- Fuzzy Matching -->
+            <div class="card">
+                <span class="tech-tag">Fuzzy Logic</span>
+                <h2><span class="icon">🔍</span> Búsqueda Semántica</h2>
+                <p>Sistema de puntuación de relevancia que permite encontrar documentos oficiales usando lenguaje coloquial (ej: "el papel azul").</p>
+                <ul class="feature-list">
+                    <li>Algoritmo de coincidencia por palabras clave.</li>
+                    <li>Sugerencias inteligentes ante ambigüedad.</li>
+                    <li>Bypass de confirmación por alta confianza.</li>
+                </ul>
+            </div>
+
+            <!-- Defensive AI -->
+            <div class="card">
+                <span class="tech-tag">Conversational AI</span>
+                <h2><span class="icon">🎤</span> Flujos Interactivos</h2>
+                <p>Diseño de IA conversacional defensiva para mitigar errores de entrada en usuarios adultos mayores.</p>
+                <ul class="feature-list">
+                    <li>Confirmación interactiva del RUT dígito por dígito.</li>
+                    <li>Corrección por voz (Ej: "Cambia el 2 por el 1").</li>
+                    <li>Reactivación automática del micrófono tras síntesis de voz.</li>
+                </ul>
+            </div>
+
+            <!-- Accessibility -->
+            <div class="card" style="border-top-color: var(--accent);">
+                <span class="tech-tag">Senior UX / WCAG</span>
+                <h2><span class="icon">👵</span> IA para Inclusión Digital</h2>
+                <p>Adaptación del sistema según los principios de accesibilidad universal para reducir la carga cognitiva.</p>
+                <ul class="feature-list">
+                    <li>Síntesis de voz (TTS) con ritmo pausado (0.75).</li>
+                    <li>Voz localizada (Español Latinoamericano).</li>
+                    <li>Instrucciones narrativas completas.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="index.html" class="back-btn">Ir a la Aplicación</a>
+        </div>
+
+        <footer>
+            <p>Generado por Antigravity AI Assistant &copy; 2026</p>
+        </footer>
+    </div>
+</body>
+</html>
