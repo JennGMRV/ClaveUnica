@@ -1055,7 +1055,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.chatSendBtn.addEventListener('click', () => {
                     const text = this.chatInput.value.trim();
                     if (text) {
-                        this.handleCommand(text);
+                        this.handleCommand(text, false);
                         this.chatInput.value = '';
                     }
                 });
@@ -1111,7 +1111,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (finalTranscript) {
                         const cmd = finalTranscript.trim();
                         this.showBubble('"' + cmd + '"', true);
-                        this.handleCommand(cmd);
+                        this.handleCommand(cmd, true);
                         // Optional: stop after each final command to prevent ghosting
                         this.recognition.stop();
                     }
@@ -1181,9 +1181,9 @@ document.addEventListener('DOMContentLoaded', () => {
             this.synth.speak(utterance);
         },
 
-        handleCommand(cmdRaw) {
+        handleCommand(cmdRaw, isVoice = false) {
             const cmd = cmdRaw.toLowerCase();
-            console.log("Assistant handling:", cmd, "State:", this.state);
+            console.log("Assistant handling:", cmd, "State:", this.state, "IsVoice:", isVoice);
 
             // 0. Handle Confirmation States
             if (this.state === 'confirming_rut') {
@@ -1211,7 +1211,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (this.pendingData.includes(oldDigit)) {
                         this.pendingData = this.pendingData.replace(oldDigit, newDigit);
                         this.say(`Entendido. He cambiado el ${oldDigit} por el ${newDigit}. Ahora el RUT es: ${this.formatNumbersForSeniors(this.pendingData)}. ¿Es correcto ahora?`, () => {
-                            if (!this.isListening) this.recognition.start();
+                            if (isVoice && !this.isListening) this.recognition.start();
                         });
                         return;
                     } else {
@@ -1310,7 +1310,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         this.pendingData = val;
                         this.state = 'confirming_rut';
                         this.say(`He entendido que su RUT es: ${this.formatNumbersForSeniors(val)}. ¿Es esto correcto?`, () => {
-                            if (!this.isListening) this.recognition.start();
+                            if (isVoice && !this.isListening) this.recognition.start();
                         });
                         return;
                     }
@@ -1352,22 +1352,35 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // --- Navegación global a secciones principales (funciona desde CUALQUIER pantalla) ---
-            const goToCA =
-                cmd.includes('chile atiende') || cmd.includes('chileatiende') ||
-                cmd.includes('chile a tiende') || cmd.includes('chile') && cmd.includes('atiende') ||
-                cmd.includes('chileaten') || cmd.includes('chile atien') ||
-                cmd.includes('beneficios sociales') || cmd.includes('beneficio social') ||
-                cmd.includes('registro social') || cmd.includes('registro de hogar') ||
-                cmd.includes('capacitacion') || cmd.includes('informacion previsional') ||
-                cmd.includes('seguro social') || cmd.includes('ips') || cmd.includes('sence') ||
-                cmd.includes('pagos del estado') || cmd.includes('bono') || cmd.includes('subsidio');
+            // Usamos IIFE para evitar bugs de precedencia entre && y ||
+            const goToCA = (() => {
+                if (cmd.includes('chileatiende'))  return true;
+                if (cmd.includes('chile atiende')) return true;
+                if (cmd.includes('chile atien'))   return true;
+                if (cmd.includes('atiende'))        return true; // captura "servicios chileatiende", "chile atiende", etc.
+                if (cmd.includes('chile a tien'))  return true;
+                if (cmd.includes('beneficio'))     return true;
+                if (cmd.includes('bono'))          return true;
+                if (cmd.includes('subsidio'))      return true;
+                if (cmd.includes('registro social'))   return true;
+                if (cmd.includes('capacitacion'))  return true;
+                if (cmd.includes('previsional'))   return true;
+                if (cmd.includes('seguro social')) return true;
+                if (cmd.includes('sence'))         return true;
+                if (cmd.includes('pagos del estado')) return true;
+                return false;
+            })();
 
-            const goToRC =
-                cmd.includes('registro civil') || cmd.includes('registrocivil') ||
-                cmd.includes('registro civi') || cmd.includes('registro siv') ||
-                cmd.includes('certif') || cmd.includes('certificado') ||
-                cmd.includes('papel de nacimiento') || cmd.includes('papel de matrimonio') ||
-                cmd.includes('acta') || cmd.includes('partida');
+            const goToRC = (() => {
+                if (cmd.includes('registro civil'))   return true;
+                if (cmd.includes('registrocivil'))    return true;
+                if (cmd.includes('registro civi'))    return true;
+                if (cmd.includes('certif'))           return true;
+                if (cmd.includes('certificado'))      return true;
+                if (cmd.includes('acta'))             return true;
+                if (cmd.includes('partida'))          return true;
+                return false;
+            })();
 
             if (goToCA && currentScreenKey !== 'caCategories' && currentScreenKey !== 'rcTutorial') {
                 this.say("Entendido. Abriendo los servicios de ChileAtiende.");
@@ -1445,7 +1458,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     this.pendingData = bestMatch;
                     this.state = 'confirming_cert';
                     this.say(`Entendido. No encontré uno con ese nombre exacto, pero tengo el ${bestMatch.name}, que ${bestMatch.desc}. ¿Es ese el que necesita?`, () => {
-                        if (!this.isListening) this.recognition.start();
+                        if (isVoice && !this.isListening) this.recognition.start();
                     });
                     return;
                 } else if (cmd.includes('certificado') || cmd.includes('papel') || cmd.includes('trámite')) {
