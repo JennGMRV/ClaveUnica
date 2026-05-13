@@ -650,6 +650,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('btn-rc-next').innerText = currentStepIndex === currentTutorialSteps.length - 1 ? "Entendido, finalizar" : "Siguiente Paso";
         
         stopAdvancedReader();
+
+        // Auto-leer el nuevo paso si el modo lector persistente está activo
+        if (autoReadMode && typeof assistant !== 'undefined') {
+            clearTimeout(assistant._narrateTimer);
+            assistant._narrateTimer = setTimeout(() => {
+                assistant.narrateCurrentScreen();
+            }, 600);
+        }
     }
 
     document.getElementById('btn-rc-next').addEventListener('click', () => {
