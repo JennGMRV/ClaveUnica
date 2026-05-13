@@ -854,6 +854,9 @@ body.high-contrast .voice-transcript {
 .rc-category-card.active {
     border-color: var(--primary);
     background: #eef4ff;
+    border-width: 4px;
+    box-shadow: 0 0 20px rgba(0, 123, 255, 0.2);
+    transform: scale(1.05);
 }
 
 .rc-cert-list {
@@ -1703,37 +1706,37 @@ body.high-contrast .cu-link {
 
 /* 1. Highlight Nacimiento row */
 .rc-highlight-overlay.nacimiento-row {
-    top: 64%;
+    top: 72%;
     left: 8%;
     width: 50%;
-    height: 5%;
+    height: 4%;
 }
 .nacimiento-row + .rc-finger-pointer {
-    top: 69%;
+    top: 74%;
     left: 45%;
 }
 
 /* 1. Highlight Matrimonio row */
 .rc-highlight-overlay.matrimonio-row {
-    top: 69%;
+    top: 77%;
     left: 8%;
     width: 50%;
-    height: 5%;
+    height: 4%;
 }
 .matrimonio-row + .rc-finger-pointer {
-    top: 74%;
+    top: 79%;
     left: 45%;
 }
 
 /* 1. Highlight Defunciones row */
 .rc-highlight-overlay.defunciones-row {
-    top: 74%;
+    top: 82%;
     left: 8%;
     width: 50%;
-    height: 5%;
+    height: 4%;
 }
 .defunciones-row + .rc-finger-pointer {
-    top: 79%;
+    top: 84%;
     left: 45%;
 }
 
@@ -1799,37 +1802,37 @@ body.high-contrast .cu-link {
 
 /* 2. Highlight RUN and Add to Cart section (Step 2 - Matrícula) */
 .rc-highlight-overlay.add-to-cart-section-mat {
-    top: 50%;
+    top: 76%;
     left: 7%;
     width: 46%;
-    height: 15%;
+    height: 6%;
 }
 .add-to-cart-section-mat + .rc-finger-pointer {
-    top: 57%;
+    top: 78%;
     left: 42%;
 }
 
 /* 2. Highlight RUN and Add to Cart section (Step 2 - Asignación) */
 .rc-highlight-overlay.add-to-cart-section-asig {
-    top: 60%;
+    top: 83%;
     left: 7%;
     width: 46%;
-    height: 15%;
+    height: 6%;
 }
 .add-to-cart-section-asig + .rc-finger-pointer {
-    top: 67%;
+    top: 85%;
     left: 42%;
 }
 
 /* 2. Highlight RUN and Add to Cart section (Step 2 - Todo Trámite) */
 .rc-highlight-overlay.add-to-cart-section {
-    top: 70%;
+    top: 89%;
     left: 7%;
     width: 46%;
-    height: 15%;
+    height: 6%;
 }
 .add-to-cart-section + .rc-finger-pointer {
-    top: 77%;
+    top: 91%;
     left: 42%;
 }
 
@@ -2023,3 +2026,25 @@ body.high-contrast #rc-step-visual {
 
 .error-field { border-color: #D32F2F !important; background-color: #FFEBEE !important; box-shadow: 0 0 0 4px rgba(211, 47, 47, 0.2) !important; transition: all 0.3s; }
 
+
+/* --- Simulation & Landing Styles --- */
+.landing-header { background-color: var(--primary); color: white; padding: 20px; width: 100%; text-align: center; margin-bottom: 30px; border-radius: 0 0 20px 20px; }
+.landing-container { max-width: 900px; margin: 0 auto; padding: 20px; }
+.btn-premium-simulation { background: white; border: 1px solid #ced4da; border-radius: 12px; padding: 30px; display: flex; align-items: center; gap: 30px; width: 100%; cursor: pointer; transition: all 0.2s; text-align: left; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 20px; }
+.btn-premium-simulation:hover { border-color: var(--primary); background-color: #f8fbff; box-shadow: 0 8px 24px rgba(0,0,0,0.1); transform: translateY(-2px); }
+.premium-icon { width: 50px; height: 65px; background-color: #f1f0ff; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; border: 1px solid #ddd; flex-shrink: 0; font-size: 32px; }
+.icon-doc::before { content: '📄'; }
+.icon-handshake::before { content: '🤝'; }
+.btn-premium-simulation .btn-text { font-size: 26px; font-weight: 700; color: #1a1a1a; }
+.simulation-browser-frame { border: 8px solid #333; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.3); background: white; width: 100%; margin-top: 20px; }
+.browser-toolbar { background: #e0e0e0; padding: 10px; display: flex; gap: 10px; border-bottom: 1px solid #ccc; }
+.browser-dot { width: 12px; height: 12px; border-radius: 50%; }
+.dot-red { background: #ff5f56; }
+.dot-yellow { background: #ffbd2e; }
+.dot-green { background: #27c93f; }
+
+
+@keyframes popIn {
+    0% { transform: translateY(20px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}

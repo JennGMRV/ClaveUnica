@@ -1,0 +1,35 @@
+/* 1. Highlight Nacimiento row */
+.rc-highlight-overlay.nacimiento-row {
+    top: 72%;
+    left: 8%;
+    width: 50%;
+    height: 4%;
+}
+.nacimiento-row + .rc-finger-pointer {
+    top: 74%;
+    left: 45%;
+}
+
+/* 1. Highlight Matrimonio row */
+.rc-highlight-overlay.matrimonio-row {
+    top: 77%;
+    left: 8%;
+    width: 50%;
+    height: 4%;
+}
+.matrimonio-row + .rc-finger-pointer {
+    top: 79%;
+    left: 45%;
+}
+
+/* 1. Highlight Defunciones row */
+.rc-highlight-overlay.defunciones-row {
+    top: 82%;
+    left: 8%;
+    width: 50%;
+    height: 4%;
+}
+.defunciones-row + .rc-finger-pointer {
+    top: 84%;
+    left: 45%;
+}
