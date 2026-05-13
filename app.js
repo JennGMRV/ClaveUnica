@@ -54,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let history = ['landing'];
     let currentScreenKey = 'landing';
     let postLoginTarget = 'menu'; // Default target after login
+    let autoReadMode = false; // Modo lector persistente: lee cada pantalla automáticamente
 
     function showScreen(key, addToHistory = true) {
         // Hide all
@@ -813,6 +814,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            // Activar modo lector persistente
+            autoReadMode = true;
+            status.innerText = "Modo auto activo";
+
             // Start new reading
             const targetId = tb.getAttribute('data-reader-target');
             let target;
@@ -829,7 +834,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        stop.onclick = stopAdvancedReader;
+        stop.onclick = () => {
+            autoReadMode = false; // Desactivar modo lector persistente
+            stopAdvancedReader();
+        };
     });
 
 
@@ -1528,11 +1536,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const oldShowScreen = showScreen;
     showScreen = (key, add) => {
         oldShowScreen(key, add);
-        // Narrar automáticamente la nueva pantalla (accesibilidad adultos mayores)
-        clearTimeout(assistant._narrateTimer);
-        assistant._narrateTimer = setTimeout(() => {
-            assistant.narrateCurrentScreen();
-        }, 800);
+        // Solo narrar si el modo lector persistente está activo (activado con ▶️, desactivado con ⏹️)
+        if (autoReadMode) {
+            clearTimeout(assistant._narrateTimer);
+            assistant._narrateTimer = setTimeout(() => {
+                assistant.narrateCurrentScreen();
+            }, 800);
+        }
     };
 });
 
