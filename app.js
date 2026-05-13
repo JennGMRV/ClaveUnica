@@ -1,4 +1,43 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Custom Notification System ---
+    window.showNotification = function(message, type = 'info') {
+        let container = document.getElementById('custom-toast-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'custom-toast-container';
+            container.className = 'custom-toast-container';
+            document.body.appendChild(container);
+        }
+
+        const toast = document.createElement('div');
+        toast.className = `custom-toast ${type}`;
+        
+        let icon = 'ℹ️';
+        if (type === 'error') icon = '⚠️';
+        if (type === 'success') icon = '✅';
+
+        toast.innerHTML = `
+            <div class="custom-toast-icon">${icon}</div>
+            <div class="custom-toast-message">${message}</div>
+            <button class="custom-toast-close">✖</button>
+        `;
+
+        container.appendChild(toast);
+
+        const closeBtn = toast.querySelector('.custom-toast-close');
+        
+        const removeToast = () => {
+            if (toast.classList.contains('hiding')) return;
+            toast.classList.add('hiding');
+            setTimeout(() => {
+                if (toast.parentElement) toast.parentElement.removeChild(toast);
+            }, 300);
+        };
+
+        closeBtn.addEventListener('click', removeToast);
+        setTimeout(removeToast, 5000);
+    };
+
     const screens = {
         login: document.getElementById('screen-login'),
         menu: document.getElementById('screen-menu'),
@@ -56,13 +95,89 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // --- RUT Formatting and Validation ---
+    function formatRut(rut) {
+        let value = rut.replace(/[^0-9kK]/g, '').toUpperCase();
+        if (value.length > 9) {
+            value = value.slice(0, 9);
+        }
+        if (value.length === 0) return '';
+        if (value.length > 1) {
+            let body = value.slice(0, -1);
+            let dv = value.slice(-1);
+            body = body.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            return body + '-' + dv;
+        }
+        return value;
+    }
+
+    function validateRut(rut) {
+        let value = rut.replace(/[^0-9kK]/g, '').toUpperCase();
+        if (value.length < 2) return false;
+        
+        let body = value.slice(0, -1);
+        let dv = value.slice(-1);
+        
+        let sum = 0;
+        let multiple = 2;
+        
+        for (let i = 1; i <= body.length; i++) {
+            sum += multiple * parseInt(body.charAt(body.length - i));
+            multiple = multiple < 7 ? multiple + 1 : 2;
+        }
+        
+        let expectedDv = 11 - (sum % 11);
+        let expectedDvStr = expectedDv === 11 ? '0' : (expectedDv === 10 ? 'K' : expectedDv.toString());
+        
+        return expectedDvStr === dv;
+    }
+
+    const rutInput = document.getElementById('rut');
+    const globalPassInput = document.getElementById('password');
+
+    if (rutInput) {
+        rutInput.addEventListener('input', function() {
+            this.value = formatRut(this.value);
+            this.classList.remove('error-field');
+        });
+    }
+    
+    if (globalPassInput) {
+        globalPassInput.addEventListener('input', function() {
+            this.classList.remove('error-field');
+        });
+    }
+
     // --- Button Handlers ---
 
     // Login -> Menu
     document.getElementById('btn-login').addEventListener('click', () => {
-        const rut = document.getElementById('rut').value;
+        const rutElement = document.getElementById('rut');
+        const passElement = document.getElementById('password');
+        const rut = rutElement ? rutElement.value : '';
+        const password = passElement ? passElement.value : '';
+        
+        if (rutElement) rutElement.classList.remove('error-field');
+        if (passElement) passElement.classList.remove('error-field');
+
+        let missing = [];
         if (rut.trim() === '') {
-            alert('Por favor, ingrese su RUT para continuar.');
+            missing.push('RUT');
+            if (rutElement) rutElement.classList.add('error-field');
+        }
+        if (password.trim() === '') {
+            missing.push('Contraseña');
+            if (passElement) passElement.classList.add('error-field');
+        }
+        
+        if (missing.length > 0) {
+            showNotification(`Por favor, ingrese los siguientes campos: ${missing.join(', ')}.`, 'error');
+            return;
+        }
+
+        if (!validateRut(rut)) {
+            showNotification('Por favor, ingrese un RUT válido.', 'error');
+            if (rutElement) rutElement.classList.add('error-field');
             return;
         }
         showScreen('menu');
@@ -351,7 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 sublist.style.display = 'block';
                 window.scrollTo({ top: sublist.offsetTop - 50, behavior: 'smooth' });
             } else {
-                alert("Esta categoría estará disponible próximamente.");
+                showNotification("Esta categoría estará disponible próximamente.", "info");
             }
         });
     });
@@ -402,7 +517,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="rc-official-mockup">
                  <div class="rc-official-header">
                      <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Logotipo_Clave_%C3%9Anica.svg" alt="Logo CU" class="rc-official-logo">
-                     <div class="rc-guide-overlay" title="Ayuda" onclick="alert('${step.text.replace(/'/g, "\\'")}')">?</div>
+                     <div class="rc-guide-overlay" title="Ayuda" onclick="showNotification('${step.text.replace(/'/g, "\\'")}', 'info')">?</div>
                  </div>
                  ${visualHtml}
                  ${step.secondaryVisual ? `
@@ -682,7 +797,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Assistant Button
     document.getElementById('btn-call-asistente').addEventListener('click', () => {
-        alert('Conectando con un asistente de FONASA en video-llamada... Por favor, espere un momento.');
+        showNotification('Conectando con un asistente de FONASA en video-llamada... Por favor, espere un momento.', 'info');
     });
 
     // Password Toggle Logic
@@ -705,7 +820,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (helpBtn) {
         const helpText = "La clave es su Clave Única, una contraseña secreta de 8 caracteres o más que le entregó el Registro Civil.";
         helpBtn.addEventListener('click', () => {
-            alert(helpText);
+            showNotification(helpText, 'info');
         });
     }
 

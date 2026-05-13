@@ -1889,3 +1889,80 @@ body.high-contrast .cu-link {
     height: 6%;
 }
 
+/* --- Custom Notifications --- */
+.custom-toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.custom-toast {
+    background: #FFFFFF;
+    color: var(--text);
+    padding: 20px 25px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    border-left: 6px solid var(--primary);
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: 300px;
+    animation: toastSlideIn 0.3s ease-out forwards;
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.custom-toast.error {
+    border-left-color: var(--warning);
+}
+
+.custom-toast.success {
+    border-left-color: var(--success);
+}
+
+.custom-toast-icon {
+    font-size: 24px;
+}
+
+.custom-toast.error .custom-toast-icon { color: var(--warning); }
+.custom-toast.success .custom-toast-icon { color: var(--success); }
+.custom-toast:not(.error):not(.success) .custom-toast-icon { color: var(--primary); }
+
+.custom-toast-close {
+    margin-left: auto;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--text-light);
+}
+
+.custom-toast.hiding {
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+@keyframes toastSlideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+body.high-contrast .custom-toast {
+    background: black;
+    color: white;
+    border: 3px solid yellow;
+}
+body.high-contrast .custom-toast-icon { color: yellow; }
+body.high-contrast .custom-toast-close { color: white; }
+
+.custom-toast.hiding { animation: toastSlideOut 0.3s ease-in forwards !important; }
+@keyframes toastSlideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+
+
+.error-field { border-color: #D32F2F !important; background-color: #FFEBEE !important; box-shadow: 0 0 0 4px rgba(211, 47, 47, 0.2) !important; transition: all 0.3s; }
+
