@@ -533,7 +533,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('btn-back-rc').addEventListener('click', goBack);
-    document.getElementById('btn-back-rc-tutorial').addEventListener('click', goBack);
+    document.getElementById('btn-back-rc-tutorial').addEventListener('click', () => {
+        if (currentStepIndex > 0) {
+            document.getElementById('modal-exit-tutorial').style.display = 'block';
+        } else {
+            goBack();
+        }
+    });
 
     // Menu -> CA Categories
     document.getElementById('btn-ca-guide').addEventListener('click', () => {
@@ -644,9 +650,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (step.visual.endsWith('.png') || step.visual.endsWith('.jpg')) {
             visualHtml = `
                 <div class="rc-visual-wrapper">
-                    <img src="${step.visual}" class="rc-step-img" alt="Guía visual">
+                    <img src="${step.visual}" class="rc-step-img" alt="Guía visual" title="Toque para ampliar">
                     ${step.highlight ? `<div class="rc-highlight-overlay ${step.highlight}"></div><div class="rc-finger-pointer">☝️</div>` : ''}
                 </div>
+                <p class="zoom-hint">🔍 Toque la imagen para verla más grande</p>
             `;
         } else {
             visualHtml = `
@@ -656,7 +663,14 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         }
 
+        const progressPct = Math.round(((currentStepIndex + 1) / currentTutorialSteps.length) * 100);
         content.innerHTML = `
+            <div class="tutorial-progress-header">
+                <span class="tutorial-step-counter">Paso ${currentStepIndex + 1} de ${currentTutorialSteps.length}</span>
+                <div class="tutorial-progress-track">
+                    <div class="tutorial-progress-fill" style="width:${progressPct}%"></div>
+                </div>
+            </div>
             <h2>${step.title}</h2>
             <div id="reader-target-text" class="step-text" style="font-size: 24px; margin-bottom: 25px; line-height: 1.8;">
                 ${wrappedText}
@@ -695,7 +709,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentStepIndex++;
             updateStepUI();
         } else {
-            showScreen(currentTutorialOrigin);
+            showTutorialSummary();
         }
     });
 
@@ -826,54 +840,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Unified Reader Logic ---
     let readerUtterance = null;
-    let isReaderPaused = false;
     let targetElement = null;
 
     document.querySelectorAll('.reader-toolbar').forEach(tb => {
         const play = tb.querySelector('.btn-play');
-        const pause = tb.querySelector('.btn-pause');
         const stop = tb.querySelector('.btn-stop');
         const status = tb.querySelector('.reader-status');
 
         play.onclick = () => {
-            if (isReaderPaused) {
-                synth.resume();
-                isReaderPaused = false;
-                status.innerText = "Leyendo...";
-                play.innerHTML = "⏸️";
-                return;
-            }
-
-            if (synth.speaking) {
-                synth.pause();
-                isReaderPaused = true;
-                status.innerText = "Pausado";
-                play.innerHTML = "▶️";
-                return;
-            }
-
-            // Activar modo lector persistente
             autoReadMode = true;
-            status.innerText = "Modo auto activo";
+            status.innerText = "Leyendo...";
 
-            // Start new reading
             const targetId = tb.getAttribute('data-reader-target');
-            let target;
-            
-            if (targetId === 'reader-target-text') {
-                target = document.getElementById('reader-target-text');
-            } else {
-                target = document.getElementById(targetId);
-                if (target) prepareTextForHighlighting(target);
-            }
+            let target = targetId ? document.getElementById(targetId) : null;
 
             if (target) {
+                prepareTextForHighlighting(target);
                 startAdvancedReader(target, tb);
+            } else {
+                // Fallback: leer la pantalla activa actual
+                assistant.narrateCurrentScreen();
+                status.innerText = "Leyendo pantalla...";
             }
         };
 
         stop.onclick = () => {
-            autoReadMode = false; // Desactivar modo lector persistente
+            autoReadMode = false;
             stopAdvancedReader();
         };
     });
@@ -938,9 +930,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         readerUtterance.onstart = () => {
             status.innerText = "Leyendo...";
-            playBtn.innerHTML = "⏸️";
             playBtn.classList.add('active');
-            toolbar.querySelector('.btn-pause').disabled = false;
         };
 
         readerUtterance.onend = () => {
@@ -952,13 +942,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function stopAdvancedReader() {
         synth.cancel();
-        isReaderPaused = false;
         document.querySelectorAll('.highlight-word').forEach(el => el.classList.remove('highlight-word'));
         document.querySelectorAll('.reader-toolbar').forEach(tb => {
             tb.querySelector('.reader-status').innerText = "Escuchar";
             tb.querySelector('.btn-play').innerHTML = "▶️";
             tb.querySelector('.btn-play').classList.remove('active');
-            tb.querySelector('.btn-pause').disabled = true;
         });
     }
 
@@ -1587,6 +1575,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const oldShowScreen = showScreen;
     showScreen = (key, add) => {
         oldShowScreen(key, add);
+        updateBreadcrumb(key);
+        resetInactivityTimer();
         // Solo narrar si el modo lector persistente está activo (activado con ▶️, desactivado con ⏹️)
         if (autoReadMode) {
             clearTimeout(assistant._narrateTimer);
@@ -1595,5 +1585,385 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 800);
         }
     };
+
+    // --- Dark Mode ---
+    const btnDarkMode = document.getElementById('btn-dark-mode');
+    if (btnDarkMode) {
+        const savedDark = localStorage.getItem('darkMode') === 'true';
+        if (savedDark) document.body.classList.add('dark-mode');
+        btnDarkMode.classList.toggle('active', savedDark);
+
+        btnDarkMode.addEventListener('click', () => {
+            const isDark = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', isDark);
+            btnDarkMode.classList.toggle('active', isDark);
+        });
+    }
+
+    // --- Font Size Cycle ---
+    const fontSizes = [20, 26, 32];
+    let fontSizeIndex = 0;
+    const btnFontCycle = document.getElementById('btn-font-size-cycle');
+    if (btnFontCycle) {
+        btnFontCycle.addEventListener('click', () => {
+            fontSizeIndex = (fontSizeIndex + 1) % fontSizes.length;
+            document.body.style.setProperty('--base-font-size', fontSizes[fontSizeIndex] + 'px');
+            currentFontSize = fontSizes[fontSizeIndex];
+        });
+    }
+
+    // --- Breadcrumb ---
+    const breadcrumbLabels = {
+        landing: null,
+        login: ['Inicio'],
+        menu: ['Inicio', 'Menú principal'],
+        form: ['Inicio', 'Menú principal', 'Solicitar certificado'],
+        confirm: ['Inicio', 'Menú principal', 'Solicitar certificado', 'Confirmación'],
+        success: ['Inicio', 'Menú principal', 'Completado'],
+        tutorial: ['Inicio', 'Menú principal', 'Tutorial ChileAtiende'],
+        rcCategories: ['Inicio', 'Menú principal', 'Registro Civil'],
+        rcTutorial: ['Inicio', 'Menú principal', 'Registro Civil', 'Tutorial'],
+        caCategories: ['Inicio', 'Menú principal', 'ChileAtiende']
+    };
+
+    function updateBreadcrumb(key) {
+        const breadcrumb = document.getElementById('breadcrumb');
+        if (!breadcrumb) return;
+        const crumbs = breadcrumbLabels[key];
+        if (!crumbs || crumbs.length === 0) {
+            breadcrumb.style.display = 'none';
+            return;
+        }
+        breadcrumb.style.display = 'flex';
+        breadcrumb.innerHTML = crumbs.map((label, i) =>
+            i < crumbs.length - 1
+                ? `<span class="bc-item bc-link">${label}</span><span class="bc-sep">›</span>`
+                : `<span class="bc-item bc-current">${label}</span>`
+        ).join('');
+    }
+
+    // --- Inactivity Timer ---
+    let inactivityTimer = null;
+    function resetInactivityTimer() {
+        clearTimeout(inactivityTimer);
+        inactivityTimer = setTimeout(() => {
+            if (!assistant.isListening) {
+                assistant.say('¿Necesita ayuda? Puede preguntarme lo que necesite o presionar el botón de ayuda.');
+            }
+        }, 90000);
+    }
+    ['mousemove', 'keydown', 'touchstart', 'click'].forEach(evt => {
+        document.addEventListener(evt, resetInactivityTimer, { passive: true });
+    });
+    resetInactivityTimer();
+
+    // --- Touch-friendly help tooltip for password ---
+    const helpBtnTooltip = document.getElementById('btn-help-password');
+    if (helpBtnTooltip) {
+        const tooltip = helpBtnTooltip.closest('.input-wrapper')?.querySelector('.cu-help-tooltip');
+        if (tooltip) {
+            helpBtnTooltip.addEventListener('click', (e) => {
+                e.stopPropagation();
+                tooltip.classList.toggle('visible');
+            });
+            document.addEventListener('click', () => tooltip.classList.remove('visible'));
+        }
+    }
+
+    // --- Speed Control Panel ---
+    let speechRate = 0.75;
+    const btnSpeedToggle = document.getElementById('btn-speed-toggle');
+    const speedPanel = document.getElementById('speed-control-panel');
+    if (btnSpeedToggle && speedPanel) {
+        btnSpeedToggle.addEventListener('click', () => {
+            speedPanel.classList.toggle('visible');
+        });
+    }
+    document.getElementById('speed-normal')?.addEventListener('click', () => {
+        speechRate = 0.75;
+        document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('speed-normal')?.classList.add('active');
+        if (speedPanel) speedPanel.classList.remove('visible');
+        showNotification('Velocidad normal activada', 'info');
+    });
+    document.getElementById('speed-slow')?.addEventListener('click', () => {
+        speechRate = 0.55;
+        document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('speed-slow')?.classList.add('active');
+        if (speedPanel) speedPanel.classList.remove('visible');
+        showNotification('Velocidad lenta activada', 'info');
+    });
+    document.getElementById('speed-very-slow')?.addEventListener('click', () => {
+        speechRate = 0.38;
+        document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('speed-very-slow')?.classList.add('active');
+        if (speedPanel) speedPanel.classList.remove('visible');
+        showNotification('Velocidad muy lenta activada', 'info');
+    });
+
+    // Patch assistant.say to use speechRate
+    const _originalSay = assistant.say.bind(assistant);
+    assistant.say = function(text, onEnd) {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = 'es-CL';
+        utter.rate = speechRate;
+        if (typeof getFemaleLatamVoice === 'function') {
+            utter.voice = getFemaleLatamVoice();
+        }
+        if (onEnd) utter.onend = onEnd;
+        window.speechSynthesis.speak(utter);
+    };
+
+    // --- Image Zoom ---
+    const modalZoom = document.getElementById('modal-zoom');
+    const zoomImg = document.getElementById('zoom-img');
+    const btnZoomClose = document.getElementById('btn-zoom-close');
+
+    document.addEventListener('click', (e) => {
+        const img = e.target.closest('.rc-step-img');
+        if (img && modalZoom && zoomImg) {
+            zoomImg.src = img.src;
+            zoomImg.alt = img.alt;
+            modalZoom.style.display = 'flex';
+        }
+    });
+    if (btnZoomClose) {
+        btnZoomClose.addEventListener('click', () => {
+            if (modalZoom) modalZoom.style.display = 'none';
+        });
+    }
+    if (modalZoom) {
+        modalZoom.addEventListener('click', (e) => {
+            if (e.target === modalZoom) modalZoom.style.display = 'none';
+        });
+    }
+
+    // --- Exit Tutorial Confirmation ---
+    document.getElementById('btn-exit-confirm')?.addEventListener('click', () => {
+        const m = document.getElementById('modal-exit-tutorial');
+        if (m) m.style.display = 'none';
+        goBack();
+    });
+    document.getElementById('btn-exit-cancel')?.addEventListener('click', () => {
+        const m = document.getElementById('modal-exit-tutorial');
+        if (m) m.style.display = 'none';
+    });
+
+    // --- Tutorial Summary Modal ---
+    function showTutorialSummary() {
+        const modal = document.getElementById('modal-tutorial-summary');
+        if (!modal) return;
+        const steps = currentTutorialSteps;
+        const listEl = document.getElementById('summary-steps-recap');
+        if (listEl && steps) {
+            listEl.innerHTML = '<ul>' + steps.map(s =>
+                `<li><span class="summary-check">✅</span> ${s.title}</li>`
+            ).join('') + '</ul>';
+        }
+        modal.style.display = 'flex';
+        assistant.say('¡Felicitaciones! Ha completado el tutorial exitosamente. ¡Muy bien hecho!');
+    }
+
+    document.getElementById('btn-summary-ok')?.addEventListener('click', () => {
+        const modal = document.getElementById('modal-tutorial-summary');
+        if (modal) modal.style.display = 'none';
+        showScreen(currentTutorialOrigin || 'menu');
+    });
+
+    // --- Quick Help Button ---
+    const btnQuickHelp = document.getElementById('btn-quick-help');
+    if (btnQuickHelp) {
+        const isTouchDevice = window.matchMedia('(hover: none)').matches;
+
+        btnQuickHelp.addEventListener('click', () => {
+            if (isTouchDevice) {
+                if (!btnQuickHelp.classList.contains('is-expanded')) {
+                    btnQuickHelp.classList.add('is-expanded');
+                    clearTimeout(btnQuickHelp._collapseTimer);
+                    btnQuickHelp._collapseTimer = setTimeout(() => {
+                        btnQuickHelp.classList.remove('is-expanded');
+                    }, 3000);
+                } else {
+                    clearTimeout(btnQuickHelp._collapseTimer);
+                    btnQuickHelp.classList.remove('is-expanded');
+                    openFirstUseOverlay();
+                }
+            } else {
+                openFirstUseOverlay();
+            }
+        });
+    }
+
+    function openFirstUseOverlay() {
+        const overlay = document.getElementById('overlay-first-use');
+        if (overlay) {
+            overlay.classList.add('visible');
+        }
+    }
+
+    // --- Transparencia del asistente ---
+    const assistantContainer = document.querySelector('.assistant-container');
+    if (assistantContainer) {
+        const isTouchOnly = window.matchMedia('(hover: none)').matches;
+
+        // Activar al tocar: opaco mientras el dedo esté encima, luego 2s antes de volver
+        if (isTouchOnly) {
+            assistantContainer.addEventListener('touchstart', () => {
+                assistantContainer.classList.add('is-active');
+                assistantContainer.classList.remove('is-overlapping');
+                clearTimeout(assistantContainer._fadeTimer);
+            }, { passive: true });
+
+            const startFadeTimer = () => {
+                clearTimeout(assistantContainer._fadeTimer);
+                assistantContainer._fadeTimer = setTimeout(() => {
+                    assistantContainer.classList.remove('is-active');
+                    checkAssistantOverlap();
+                }, 2000);
+            };
+
+            assistantContainer.addEventListener('touchend', startFadeTimer, { passive: true });
+            assistantContainer.addEventListener('touchcancel', startFadeTimer, { passive: true });
+        }
+
+        // Detectar solapamiento con texto (mobile)
+        function checkAssistantOverlap() {
+            if (assistantContainer.classList.contains('is-active')) return;
+            const acRect = assistantContainer.getBoundingClientRect();
+            const textEls = document.querySelectorAll(
+                '#app p, #app h1, #app h2, #app h3, #app li, #app label, #app .btn-text, #app .menu-item, #app .card'
+            );
+            let overlaps = false;
+            for (const el of textEls) {
+                const r = el.getBoundingClientRect();
+                if (r.bottom > acRect.top && r.top < acRect.bottom &&
+                    r.right > acRect.left && r.left < acRect.right) {
+                    overlaps = true;
+                    break;
+                }
+            }
+            assistantContainer.classList.toggle('is-overlapping', overlaps);
+        }
+
+        if (isTouchOnly) {
+            window.addEventListener('scroll', checkAssistantOverlap, { passive: true });
+            // Re-chequear al cambiar de pantalla
+            const appEl = document.getElementById('app');
+            if (appEl) {
+                new MutationObserver(checkAssistantOverlap).observe(appEl, {
+                    attributes: true, subtree: false, attributeFilter: ['class']
+                });
+            }
+            checkAssistantOverlap();
+        }
+
+        // Hacerlo activo mientras habla o escucha
+        const avatarEl = document.getElementById('assistant-icon');
+        if (avatarEl) {
+            new MutationObserver(() => {
+                const busy = avatarEl.classList.contains('speaking') || avatarEl.classList.contains('listening');
+                assistantContainer.classList.toggle('is-active', busy);
+            }).observe(avatarEl, { attributes: true, attributeFilter: ['class'] });
+        }
+    }
+
+    // --- First-Use Onboarding Overlay ---
+    const overlay = document.getElementById('overlay-first-use');
+    if (overlay) {
+        const slides = overlay.querySelectorAll('.first-use-slide');
+        const dots = overlay.querySelectorAll('.fuse-dot');
+        const btnNext = document.getElementById('btn-fuse-next');
+        let fuseStep = 0;
+
+        const dismissOverlay = () => {
+            overlay.classList.remove('visible');
+            localStorage.setItem('firstUseShown', 'true');
+        };
+
+        const goToSlide = (n) => {
+            slides.forEach((s, i) => s.classList.toggle('active', i === n));
+            dots.forEach((d, i) => d.classList.toggle('active', i === n));
+            if (btnNext) {
+                btnNext.textContent = n === slides.length - 1 ? '¡Comenzar!' : 'Siguiente →';
+            }
+        };
+
+        dots.forEach((dot, i) => {
+            dot.addEventListener('click', () => { fuseStep = i; goToSlide(fuseStep); });
+        });
+
+        btnNext?.addEventListener('click', () => {
+            if (fuseStep < slides.length - 1) {
+                fuseStep++;
+                goToSlide(fuseStep);
+            } else {
+                dismissOverlay();
+            }
+        });
+
+        document.getElementById('btn-fuse-skip')?.addEventListener('click', dismissOverlay);
+
+        if (!localStorage.getItem('firstUseShown')) {
+            goToSlide(0);
+            overlay.classList.add('visible');
+        }
+    }
+
+    // --- Modo Daltonismo ---
+    const cbModes = ['cb-protanopia', 'cb-deuteranopia', 'cb-tritanopia'];
+    const btnColorblind = document.getElementById('btn-colorblind');
+    const cbPanel = document.getElementById('colorblind-panel');
+
+    if (btnColorblind && cbPanel) {
+        const savedCb = localStorage.getItem('colorblindMode');
+        if (savedCb && cbModes.includes(savedCb)) {
+            document.body.classList.add(savedCb);
+            document.getElementById(`cb-${savedCb.replace('cb-', '')}`)?.classList.add('active');
+            document.getElementById('cb-none')?.classList.remove('active');
+            btnColorblind.classList.add('active');
+        }
+
+        btnColorblind.addEventListener('click', () => {
+            cbPanel.classList.toggle('visible');
+        });
+
+        document.querySelectorAll('.cb-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                cbModes.forEach(m => document.body.classList.remove(m));
+                document.querySelectorAll('.cb-btn').forEach(b => b.classList.remove('active'));
+
+                const modeKey = btn.id === 'cb-none' ? null : btn.id;
+                if (modeKey) {
+                    document.body.classList.add(modeKey);
+                    localStorage.setItem('colorblindMode', modeKey);
+                    btnColorblind.classList.add('active');
+                } else {
+                    localStorage.removeItem('colorblindMode');
+                    btnColorblind.classList.remove('active');
+                }
+
+                btn.classList.add('active');
+                cbPanel.classList.remove('visible');
+
+                const names = {
+                    'cb-none': 'Modo normal activado',
+                    'cb-protanopia': 'Modo Protanopia activado',
+                    'cb-deuteranopia': 'Modo Deuteranopia activado',
+                    'cb-tritanopia': 'Modo Tritanopia activado'
+                };
+                showNotification(names[btn.id] || 'Modo actualizado', 'info');
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!cbPanel.contains(e.target) && e.target !== btnColorblind) {
+                cbPanel.classList.remove('visible');
+            }
+        });
+    }
+
+    // Initial breadcrumb
+    updateBreadcrumb('landing');
 });
 
