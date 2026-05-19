@@ -950,8 +950,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Accessibility Toolbar Logic
-    let currentFontSize = 20;
+    let currentFontSize = parseInt(localStorage.getItem('fontSize') || '20', 10);
     const body = document.body;
+    const htmlEl = document.documentElement;
+
+    // Aplicar tamaño guardado al cargar
+    htmlEl.style.setProperty('--base-font-size', currentFontSize + 'px');
+
+    function applyFontSize(size) {
+        currentFontSize = size;
+        htmlEl.style.setProperty('--base-font-size', size + 'px');
+        localStorage.setItem('fontSize', size);
+    }
 
     document.getElementById('btn-toggle-contrast').addEventListener('click', () => {
         body.classList.toggle('high-contrast');
@@ -960,17 +970,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('btn-font-plus').addEventListener('click', () => {
-        if (currentFontSize < 32) {
-            currentFontSize += 2;
-            body.style.setProperty('--base-font-size', currentFontSize + 'px');
-        }
+        if (currentFontSize < 32) applyFontSize(currentFontSize + 2);
     });
 
     document.getElementById('btn-font-minus').addEventListener('click', () => {
-        if (currentFontSize > 16) {
-            currentFontSize -= 2;
-            body.style.setProperty('--base-font-size', currentFontSize + 'px');
-        }
+        if (currentFontSize > 16) applyFontSize(currentFontSize - 2);
     });
 
     // --- Smart Assistant Logic ---
@@ -1635,8 +1639,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnFontCycle) {
         btnFontCycle.addEventListener('click', () => {
             fontSizeIndex = (fontSizeIndex + 1) % fontSizes.length;
-            document.body.style.setProperty('--base-font-size', fontSizes[fontSizeIndex] + 'px');
-            currentFontSize = fontSizes[fontSizeIndex];
+            applyFontSize(fontSizes[fontSizeIndex]);
         });
     }
 
