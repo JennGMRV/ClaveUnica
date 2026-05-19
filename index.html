@@ -16,11 +16,17 @@
         <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Logotipo_Clave_%C3%9Anica.svg"
             alt="Logo Clave Única" class="logo-small">
         <div class="access-toolbar">
+            <button class="btn-access" id="btn-dark-mode" title="Tema Oscuro">🌙</button>
+            <button class="btn-access" id="btn-font-size-cycle" title="Cambiar tamaño de letra">T</button>
+            <button class="btn-access" id="btn-speed-toggle" title="Velocidad de lectura">🔊</button>
             <button class="btn-access contrast-toggle" id="btn-toggle-contrast" title="Alto Contraste">◐</button>
             <button class="btn-access" id="btn-font-minus" title="Disminuir letra">A-</button>
             <button class="btn-access" id="btn-font-plus" title="Aumentar letra">A+</button>
         </div>
     </header>
+
+    <!-- Breadcrumb de navegación -->
+    <nav id="breadcrumb" class="breadcrumb-bar" aria-label="Ubicación actual"></nav>
 
     <main id="app">
         <!-- Screen 0: Landing (ChileAtiende Style) -->
@@ -546,6 +552,90 @@
                 micrófono!</button>
         </div>
     </div>
+
+    <!-- Modal: Zoom de imagen del tutorial -->
+    <div id="modal-zoom" class="modal modal-zoom-wrapper">
+        <div class="modal-zoom-content">
+            <button class="modal-zoom-close" id="btn-zoom-close" aria-label="Cerrar">✕</button>
+            <img id="zoom-img" src="" alt="Imagen ampliada del paso">
+        </div>
+    </div>
+
+    <!-- Modal: Confirmación para salir del tutorial -->
+    <div id="modal-exit-tutorial" class="modal">
+        <div class="modal-content modal-exit-content">
+            <div class="modal-exit-icon">⚠️</div>
+            <h2>¿Salir de la guía?</h2>
+            <p>Si sale ahora, perderá el avance en esta guía.</p>
+            <div class="modal-exit-actions">
+                <button class="btn primary" id="btn-exit-confirm">Sí, salir</button>
+                <button class="btn outline" id="btn-exit-cancel">No, continuar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Resumen al finalizar tutorial -->
+    <div id="modal-tutorial-summary" class="modal">
+        <div class="modal-content modal-summary-content">
+            <div class="summary-success-icon">🎉</div>
+            <h2>¡Felicitaciones!</h2>
+            <p id="summary-text">Usted aprendió cómo realizar este trámite.</p>
+            <div class="summary-steps-recap" id="summary-steps-recap"></div>
+            <div class="modal-exit-actions">
+                <button class="btn primary" id="btn-summary-ok">Entendido, volver</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay: Primer uso — bienvenida al asistente -->
+    <div id="overlay-first-use" class="first-use-overlay" role="dialog" aria-modal="true" aria-label="Guía de bienvenida">
+        <div class="first-use-card">
+            <!-- Slide 1 -->
+            <div class="first-use-slide active" id="fuse-slide-1">
+                <div class="fuse-icon">🤖</div>
+                <h2>¡Bienvenido!</h2>
+                <p>Esta guía le explicará cómo hacer sus trámites paso a paso.</p>
+                <p class="fuse-sub">Tiene un asistente de ayuda disponible en todo momento.</p>
+            </div>
+            <!-- Slide 2 -->
+            <div class="first-use-slide" id="fuse-slide-2">
+                <div class="fuse-icon">🎤</div>
+                <h2>Su asistente de voz</h2>
+                <p>Presione el botón azul de abajo para hablarle.</p>
+                <p class="fuse-sub">Puede decirle <strong>"ayuda"</strong>, <strong>"siguiente"</strong> o <strong>"volver"</strong>.</p>
+                <div class="fuse-demo-btn">🎤</div>
+            </div>
+            <!-- Slide 3 -->
+            <div class="first-use-slide" id="fuse-slide-3">
+                <div class="fuse-icon">▶️</div>
+                <h2>Escuchar instrucciones</h2>
+                <p>En cada pantalla hay un botón <strong>▶️ Reproducir</strong>.</p>
+                <p class="fuse-sub">Presiónelo para que el sistema le lea en voz alta lo que debe hacer.</p>
+            </div>
+            <!-- Navegación del overlay -->
+            <div class="fuse-nav">
+                <div class="fuse-dots">
+                    <span class="fuse-dot active" data-slide="1"></span>
+                    <span class="fuse-dot" data-slide="2"></span>
+                    <span class="fuse-dot" data-slide="3"></span>
+                </div>
+                <button class="btn primary" id="btn-fuse-next">Siguiente →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Control de velocidad del lector (flotante, oculto por defecto) -->
+    <div id="speed-control-panel" class="speed-panel" role="group" aria-label="Velocidad de lectura">
+        <span class="speed-label">Velocidad del lector:</span>
+        <button class="speed-btn active" data-rate="0.75" id="speed-normal">Normal</button>
+        <button class="speed-btn" data-rate="0.55" id="speed-slow">Lento</button>
+        <button class="speed-btn" data-rate="0.38" id="speed-very-slow">Muy lento</button>
+    </div>
+
+    <!-- Botón flotante de ayuda rápida -->
+    <button id="btn-quick-help" class="btn-quick-help" title="Necesito ayuda" aria-label="Pedir ayuda">
+        ❓ Ayuda
+    </button>
 
     <script src="app.js"></script>
 </body>
