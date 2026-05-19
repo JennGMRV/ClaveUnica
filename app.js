@@ -810,54 +810,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Unified Reader Logic ---
     let readerUtterance = null;
-    let isReaderPaused = false;
     let targetElement = null;
 
     document.querySelectorAll('.reader-toolbar').forEach(tb => {
         const play = tb.querySelector('.btn-play');
-        const pause = tb.querySelector('.btn-pause');
         const stop = tb.querySelector('.btn-stop');
         const status = tb.querySelector('.reader-status');
 
         play.onclick = () => {
-            if (isReaderPaused) {
-                synth.resume();
-                isReaderPaused = false;
-                status.innerText = "Leyendo...";
-                play.innerHTML = "⏸️";
-                return;
-            }
-
-            if (synth.speaking) {
-                synth.pause();
-                isReaderPaused = true;
-                status.innerText = "Pausado";
-                play.innerHTML = "▶️";
-                return;
-            }
-
-            // Activar modo lector persistente
             autoReadMode = true;
-            status.innerText = "Modo auto activo";
+            status.innerText = "Leyendo...";
 
-            // Start new reading
             const targetId = tb.getAttribute('data-reader-target');
-            let target;
-            
-            if (targetId === 'reader-target-text') {
-                target = document.getElementById('reader-target-text');
-            } else {
-                target = document.getElementById(targetId);
-                if (target) prepareTextForHighlighting(target);
-            }
+            let target = targetId ? document.getElementById(targetId) : null;
 
             if (target) {
+                prepareTextForHighlighting(target);
                 startAdvancedReader(target, tb);
+            } else {
+                // Fallback: leer la pantalla activa actual
+                assistant.narrateCurrentScreen();
+                status.innerText = "Leyendo pantalla...";
             }
         };
 
         stop.onclick = () => {
-            autoReadMode = false; // Desactivar modo lector persistente
+            autoReadMode = false;
             stopAdvancedReader();
         };
     });
@@ -922,9 +900,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         readerUtterance.onstart = () => {
             status.innerText = "Leyendo...";
-            playBtn.innerHTML = "⏸️";
             playBtn.classList.add('active');
-            toolbar.querySelector('.btn-pause').disabled = false;
         };
 
         readerUtterance.onend = () => {
@@ -936,13 +912,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function stopAdvancedReader() {
         synth.cancel();
-        isReaderPaused = false;
         document.querySelectorAll('.highlight-word').forEach(el => el.classList.remove('highlight-word'));
         document.querySelectorAll('.reader-toolbar').forEach(tb => {
             tb.querySelector('.reader-status').innerText = "Escuchar";
             tb.querySelector('.btn-play').innerHTML = "▶️";
             tb.querySelector('.btn-play').classList.remove('active');
-            tb.querySelector('.btn-pause').disabled = true;
         });
     }
 
@@ -1770,9 +1744,98 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Quick Help Button ---
     const btnQuickHelp = document.getElementById('btn-quick-help');
     if (btnQuickHelp) {
+        const isTouchDevice = window.matchMedia('(hover: none)').matches;
+
         btnQuickHelp.addEventListener('click', () => {
-            assistant.narrateCurrentScreen();
+            if (isTouchDevice) {
+                if (!btnQuickHelp.classList.contains('is-expanded')) {
+                    btnQuickHelp.classList.add('is-expanded');
+                    clearTimeout(btnQuickHelp._collapseTimer);
+                    btnQuickHelp._collapseTimer = setTimeout(() => {
+                        btnQuickHelp.classList.remove('is-expanded');
+                    }, 3000);
+                } else {
+                    clearTimeout(btnQuickHelp._collapseTimer);
+                    btnQuickHelp.classList.remove('is-expanded');
+                    openFirstUseOverlay();
+                }
+            } else {
+                openFirstUseOverlay();
+            }
         });
+    }
+
+    function openFirstUseOverlay() {
+        const overlay = document.getElementById('overlay-first-use');
+        if (overlay) {
+            overlay.classList.add('visible');
+        }
+    }
+
+    // --- Transparencia del asistente ---
+    const assistantContainer = document.querySelector('.assistant-container');
+    if (assistantContainer) {
+        const isTouchOnly = window.matchMedia('(hover: none)').matches;
+
+        // Activar al tocar: opaco mientras el dedo esté encima, luego 2s antes de volver
+        if (isTouchOnly) {
+            assistantContainer.addEventListener('touchstart', () => {
+                assistantContainer.classList.add('is-active');
+                assistantContainer.classList.remove('is-overlapping');
+                clearTimeout(assistantContainer._fadeTimer);
+            }, { passive: true });
+
+            const startFadeTimer = () => {
+                clearTimeout(assistantContainer._fadeTimer);
+                assistantContainer._fadeTimer = setTimeout(() => {
+                    assistantContainer.classList.remove('is-active');
+                    checkAssistantOverlap();
+                }, 2000);
+            };
+
+            assistantContainer.addEventListener('touchend', startFadeTimer, { passive: true });
+            assistantContainer.addEventListener('touchcancel', startFadeTimer, { passive: true });
+        }
+
+        // Detectar solapamiento con texto (mobile)
+        function checkAssistantOverlap() {
+            if (assistantContainer.classList.contains('is-active')) return;
+            const acRect = assistantContainer.getBoundingClientRect();
+            const textEls = document.querySelectorAll(
+                '#app p, #app h1, #app h2, #app h3, #app li, #app label, #app .btn-text, #app .menu-item, #app .card'
+            );
+            let overlaps = false;
+            for (const el of textEls) {
+                const r = el.getBoundingClientRect();
+                if (r.bottom > acRect.top && r.top < acRect.bottom &&
+                    r.right > acRect.left && r.left < acRect.right) {
+                    overlaps = true;
+                    break;
+                }
+            }
+            assistantContainer.classList.toggle('is-overlapping', overlaps);
+        }
+
+        if (isTouchOnly) {
+            window.addEventListener('scroll', checkAssistantOverlap, { passive: true });
+            // Re-chequear al cambiar de pantalla
+            const appEl = document.getElementById('app');
+            if (appEl) {
+                new MutationObserver(checkAssistantOverlap).observe(appEl, {
+                    attributes: true, subtree: false, attributeFilter: ['class']
+                });
+            }
+            checkAssistantOverlap();
+        }
+
+        // Hacerlo activo mientras habla o escucha
+        const avatarEl = document.getElementById('assistant-icon');
+        if (avatarEl) {
+            new MutationObserver(() => {
+                const busy = avatarEl.classList.contains('speaking') || avatarEl.classList.contains('listening');
+                assistantContainer.classList.toggle('is-active', busy);
+            }).observe(avatarEl, { attributes: true, attributeFilter: ['class'] });
+        }
     }
 
     // --- First-Use Onboarding Overlay ---
@@ -1815,6 +1878,59 @@ document.addEventListener('DOMContentLoaded', () => {
             goToSlide(0);
             overlay.classList.add('visible');
         }
+    }
+
+    // --- Modo Daltonismo ---
+    const cbModes = ['cb-protanopia', 'cb-deuteranopia', 'cb-tritanopia'];
+    const btnColorblind = document.getElementById('btn-colorblind');
+    const cbPanel = document.getElementById('colorblind-panel');
+
+    if (btnColorblind && cbPanel) {
+        const savedCb = localStorage.getItem('colorblindMode');
+        if (savedCb && cbModes.includes(savedCb)) {
+            document.body.classList.add(savedCb);
+            document.getElementById(`cb-${savedCb.replace('cb-', '')}`)?.classList.add('active');
+            document.getElementById('cb-none')?.classList.remove('active');
+            btnColorblind.classList.add('active');
+        }
+
+        btnColorblind.addEventListener('click', () => {
+            cbPanel.classList.toggle('visible');
+        });
+
+        document.querySelectorAll('.cb-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                cbModes.forEach(m => document.body.classList.remove(m));
+                document.querySelectorAll('.cb-btn').forEach(b => b.classList.remove('active'));
+
+                const modeKey = btn.id === 'cb-none' ? null : btn.id;
+                if (modeKey) {
+                    document.body.classList.add(modeKey);
+                    localStorage.setItem('colorblindMode', modeKey);
+                    btnColorblind.classList.add('active');
+                } else {
+                    localStorage.removeItem('colorblindMode');
+                    btnColorblind.classList.remove('active');
+                }
+
+                btn.classList.add('active');
+                cbPanel.classList.remove('visible');
+
+                const names = {
+                    'cb-none': 'Modo normal activado',
+                    'cb-protanopia': 'Modo Protanopia activado',
+                    'cb-deuteranopia': 'Modo Deuteranopia activado',
+                    'cb-tritanopia': 'Modo Tritanopia activado'
+                };
+                showNotification(names[btn.id] || 'Modo actualizado', 'info');
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!cbPanel.contains(e.target) && e.target !== btnColorblind) {
+                cbPanel.classList.remove('visible');
+            }
+        });
     }
 
     // Initial breadcrumb

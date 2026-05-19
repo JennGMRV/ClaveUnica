@@ -17,8 +17,8 @@
             alt="Logo Clave Única" class="logo-small">
         <div class="access-toolbar">
             <button class="btn-access" id="btn-dark-mode" title="Tema Oscuro">🌙</button>
-            <button class="btn-access" id="btn-font-size-cycle" title="Cambiar tamaño de letra">T</button>
             <button class="btn-access" id="btn-speed-toggle" title="Velocidad de lectura">🔊</button>
+            <button class="btn-access" id="btn-colorblind" title="Modo daltonismo">👁</button>
             <button class="btn-access contrast-toggle" id="btn-toggle-contrast" title="Alto Contraste">◐</button>
             <button class="btn-access" id="btn-font-minus" title="Disminuir letra">A-</button>
             <button class="btn-access" id="btn-font-plus" title="Aumentar letra">A+</button>
@@ -48,6 +48,44 @@
 
                     <div class="friction-alert" style="margin-top: 20px;">
                         <p>💡 Tip: Para este trámite necesitará su ClaveÚnica. Si no la tiene, puede obtenerla desde aquí: <a href="https://claveunica.gob.cl/sucursales" target="_blank" style="color: inherit; font-weight: 700;">claveunica.gob.cl/sucursales</a></p>
+                    </div>
+
+                    <!-- Leyenda de botones de accesibilidad -->
+                    <div class="toolbar-legend-section" style="margin-top: 24px;">
+                        <h3 class="toolbar-legend-title">🛠️ Botones de accesibilidad</h3>
+                        <p class="toolbar-legend-subtitle">Estos botones están siempre disponibles en la parte superior de la pantalla:</p>
+                        <div class="toolbar-legend-grid">
+                            <div class="toolbar-legend-item">
+                                <span class="tl-icon">🌙</span>
+                                <span class="tl-name">Modo Oscuro</span>
+                                <span class="tl-desc">Cambia los colores a tonos oscuros para descansar la vista</span>
+                            </div>
+                            <div class="toolbar-legend-item">
+                                <span class="tl-icon">🔊</span>
+                                <span class="tl-name">Velocidad de voz</span>
+                                <span class="tl-desc">Ajusta la rapidez con que el asistente habla</span>
+                            </div>
+                            <div class="toolbar-legend-item">
+                                <span class="tl-icon">👁</span>
+                                <span class="tl-name">Modo daltonismo</span>
+                                <span class="tl-desc">Filtra los colores para personas con daltonismo</span>
+                            </div>
+                            <div class="toolbar-legend-item">
+                                <span class="tl-icon">◐</span>
+                                <span class="tl-name">Alto Contraste</span>
+                                <span class="tl-desc">Aumenta el contraste para ver mejor el texto</span>
+                            </div>
+                            <div class="toolbar-legend-item">
+                                <span class="tl-icon tl-icon-text">A−</span>
+                                <span class="tl-name">Letra más pequeña</span>
+                                <span class="tl-desc">Reduce el tamaño del texto en toda la página</span>
+                            </div>
+                            <div class="toolbar-legend-item">
+                                <span class="tl-icon tl-icon-text">A+</span>
+                                <span class="tl-name">Letra más grande</span>
+                                <span class="tl-desc">Aumenta el tamaño del texto en toda la página</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -113,7 +151,6 @@
                 <!-- Accessibility Toolbar (Floating/Integrated) -->
                 <div class="reader-toolbar-cu" id="reader-login" data-reader-target="screen-login">
                     <button class="reader-btn btn-play" title="Escuchar instrucciones">▶️</button>
-                    <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
                     <button class="reader-btn btn-stop" title="Detener">⏹️</button>
                     <div class="reader-divider"></div>
                     <div class="reader-status">Asistente de voz disponible</div>
@@ -148,7 +185,6 @@
 
                 <div class="reader-toolbar" id="reader-menu" data-reader-target="menu-card">
                     <button class="reader-btn btn-play" title="Reproducir">▶️</button>
-                    <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
                     <button class="reader-btn btn-stop" title="Detener">⏹️</button>
                     <div class="reader-divider"></div>
                     <div class="reader-status">Escuchar opciones</div>
@@ -189,7 +225,6 @@
 
                 <div class="reader-toolbar" id="reader-form" data-reader-target="form-card">
                     <button class="reader-btn btn-play" title="Reproducir">▶️</button>
-                    <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
                     <button class="reader-btn btn-stop" title="Detener">⏹️</button>
                     <div class="reader-divider"></div>
                     <div class="reader-status">Escuchar pasos</div>
@@ -225,7 +260,6 @@
 
                 <div class="reader-toolbar" id="reader-confirm" data-reader-target="confirm-card">
                     <button class="reader-btn btn-play" title="Reproducir">▶️</button>
-                    <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
                     <button class="reader-btn btn-stop" title="Detener">⏹️</button>
                     <div class="reader-divider"></div>
                     <div class="reader-status">Escuchar confirmación</div>
@@ -247,7 +281,6 @@
 
                 <div class="reader-toolbar" id="reader-success" data-reader-target="success-card">
                     <button class="reader-btn btn-play" title="Reproducir">▶️</button>
-                    <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
                     <button class="reader-btn btn-stop" title="Detener">⏹️</button>
                     <div class="reader-divider"></div>
                     <div class="reader-status">Escuchar éxito</div>
@@ -347,7 +380,6 @@
 
             <div class="reader-toolbar" id="reader-tutorial" data-reader-target="tutorial-card" style="margin-top: 40px; width: 100%;">
                 <button class="reader-btn btn-play" title="Reproducir">▶️</button>
-                <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
                 <button class="reader-btn btn-stop" title="Detener">⏹️</button>
                 <div class="reader-divider"></div>
                 <div class="reader-status">Escuchar centro de ayuda</div>
@@ -369,7 +401,6 @@
                 
                 <div class="reader-toolbar" id="reader-rc-cats">
                     <button class="reader-btn btn-play" title="Reproducir">▶️</button>
-                    <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
                     <button class="reader-btn btn-stop" title="Detener">⏹️</button>
                     <div class="reader-divider"></div>
                     <div class="reader-status">Presione "Reproducir" para escuchar.</div>
@@ -421,7 +452,6 @@
 
                 <div class="reader-toolbar" id="reader-ca-cats">
                     <button class="reader-btn btn-play" title="Reproducir">▶️</button>
-                    <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
                     <button class="reader-btn btn-stop" title="Detener">⏹️</button>
                     <div class="reader-divider"></div>
                     <div class="reader-status">Presione "Reproducir" para escuchar.</div>
@@ -470,7 +500,6 @@
                 
                 <div class="reader-toolbar" id="reader-rc-steps">
                     <button class="reader-btn btn-play" title="Reproducir">▶️</button>
-                    <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
                     <button class="reader-btn btn-stop" title="Detener">⏹️</button>
                     <div class="reader-divider"></div>
                     <div class="reader-status">Escuchando guía...</div>
@@ -625,6 +654,27 @@
         </div>
     </div>
 
+    <!-- Panel modo daltonismo (flotante, oculto por defecto) -->
+    <div id="colorblind-panel" class="colorblind-panel" role="group" aria-label="Modo para daltonismo">
+        <span class="cb-panel-label">Tipo de daltonismo</span>
+        <button class="cb-btn active" id="cb-none">
+            <span class="cb-name">Normal</span>
+            <span class="cb-desc">Sin filtro de color</span>
+        </button>
+        <button class="cb-btn" id="cb-protanopia">
+            <span class="cb-name">Protanopia</span>
+            <span class="cb-desc">No distingue el rojo</span>
+        </button>
+        <button class="cb-btn" id="cb-deuteranopia">
+            <span class="cb-name">Deuteranopia</span>
+            <span class="cb-desc">No distingue el verde</span>
+        </button>
+        <button class="cb-btn" id="cb-tritanopia">
+            <span class="cb-name">Tritanopia</span>
+            <span class="cb-desc">No distingue el azul</span>
+        </button>
+    </div>
+
     <!-- Control de velocidad del lector (flotante, oculto por defecto) -->
     <div id="speed-control-panel" class="speed-panel" role="group" aria-label="Velocidad de lectura">
         <span class="speed-label">Velocidad del lector:</span>
@@ -635,10 +685,42 @@
 
     <!-- Botón flotante de ayuda rápida -->
     <button id="btn-quick-help" class="btn-quick-help" title="Necesito ayuda" aria-label="Pedir ayuda">
-        ❓ Ayuda
+        <span class="qh-icon" aria-hidden="true">❓</span>
+        <span class="qh-label">Ayuda</span>
     </button>
 
     <script src="app.js"></script>
+    <!-- Filtros SVG para simulación de daltonismo (científicamente precisos) -->
+    <svg id="colorblind-filters" aria-hidden="true" focusable="false"
+         style="position:absolute;width:0;height:0;overflow:hidden">
+        <defs>
+            <!-- Protanopia: ausencia de conos L (rojo) -->
+            <filter id="filter-protanopia" color-interpolation-filters="sRGB">
+                <feColorMatrix type="matrix" values="
+                    0.567 0.433 0.000 0 0
+                    0.558 0.442 0.000 0 0
+                    0.000 0.242 0.758 0 0
+                    0     0     0     1 0"/>
+            </filter>
+            <!-- Deuteranopia: ausencia de conos M (verde) -->
+            <filter id="filter-deuteranopia" color-interpolation-filters="sRGB">
+                <feColorMatrix type="matrix" values="
+                    0.625 0.375 0.000 0 0
+                    0.700 0.300 0.000 0 0
+                    0.000 0.300 0.700 0 0
+                    0     0     0     1 0"/>
+            </filter>
+            <!-- Tritanopia: ausencia de conos S (azul) -->
+            <filter id="filter-tritanopia" color-interpolation-filters="sRGB">
+                <feColorMatrix type="matrix" values="
+                    0.950 0.050 0.000 0 0
+                    0.000 0.433 0.567 0 0
+                    0.000 0.475 0.525 0 0
+                    0     0     0     1 0"/>
+            </filter>
+        </defs>
+    </svg>
+
 </body>
 
 </html>
