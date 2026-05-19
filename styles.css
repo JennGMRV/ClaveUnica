@@ -2810,8 +2810,18 @@ body.dark-mode .btn-toggle-pass {
 }
 
 body.dark-mode .landing-container .btn-premium-simulation {
-    background: var(--card-bg);
+    background: #383838;
     border-color: var(--border);
+    color: #f0f0f0;
+}
+
+body.dark-mode .landing-container .btn-premium-simulation .btn-text {
+    color: #f0f0f0;
+}
+
+body.dark-mode .landing-container .btn-premium-simulation:hover {
+    background: #444;
+    border-color: var(--primary);
 }
 
 body.dark-mode #btn-dark-mode.active {
@@ -2874,7 +2884,6 @@ body.high-contrast .tutorial-progress-fill {
 
 /* == Modal de zoom de imagen == */
 .modal-zoom-wrapper {
-    display: flex;
     align-items: center;
     justify-content: center;
     padding: 20px;

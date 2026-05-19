@@ -1777,47 +1777,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- First-Use Onboarding Overlay ---
     const overlay = document.getElementById('overlay-first-use');
-    if (overlay && !localStorage.getItem('firstUseShown')) {
-        overlay.style.display = 'flex';
-        let fuseStep = 0;
+    if (overlay) {
         const slides = overlay.querySelectorAll('.first-use-slide');
         const dots = overlay.querySelectorAll('.fuse-dot');
         const btnNext = document.getElementById('btn-fuse-next');
-
-        function goToSlide(n) {
-            slides.forEach((s, i) => s.classList.toggle('active', i === n));
-            dots.forEach((d, i) => d.classList.toggle('active', i === n));
-            if (btnNext) {
-                btnNext.textContent = n === slides.length - 1 ? 'Comenzar' : 'Siguiente →';
-            }
-        }
-
-        dots.forEach((dot, i) => {
-            dot.addEventListener('click', () => {
-                fuseStep = i;
-                goToSlide(fuseStep);
-            });
-        });
+        let fuseStep = 0;
 
         const dismissOverlay = () => {
-            overlay.style.display = 'none';
+            overlay.classList.remove('visible');
             localStorage.setItem('firstUseShown', 'true');
         };
 
-        if (btnNext) {
-            btnNext.addEventListener('click', () => {
-                if (fuseStep < slides.length - 1) {
-                    fuseStep++;
-                    goToSlide(fuseStep);
-                } else {
-                    dismissOverlay();
-                }
-            });
-        }
+        const goToSlide = (n) => {
+            slides.forEach((s, i) => s.classList.toggle('active', i === n));
+            dots.forEach((d, i) => d.classList.toggle('active', i === n));
+            if (btnNext) {
+                btnNext.textContent = n === slides.length - 1 ? '¡Comenzar!' : 'Siguiente →';
+            }
+        };
+
+        dots.forEach((dot, i) => {
+            dot.addEventListener('click', () => { fuseStep = i; goToSlide(fuseStep); });
+        });
+
+        btnNext?.addEventListener('click', () => {
+            if (fuseStep < slides.length - 1) {
+                fuseStep++;
+                goToSlide(fuseStep);
+            } else {
+                dismissOverlay();
+            }
+        });
 
         document.getElementById('btn-fuse-skip')?.addEventListener('click', dismissOverlay);
 
-        goToSlide(0);
+        if (!localStorage.getItem('firstUseShown')) {
+            goToSlide(0);
+            overlay.classList.add('visible');
+        }
     }
 
     // Initial breadcrumb
