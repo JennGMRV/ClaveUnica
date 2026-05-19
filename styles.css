@@ -3798,3 +3798,207 @@ body.dark-mode .cb-desc {
         min-width: unset;
     }
 }
+
+
+/* ============================================================
+   AUDITORÍA RESPONSIVA — Correcciones de desborde
+   ============================================================ */
+
+/* Tooltips: nunca más anchos que la pantalla */
+.tooltip-box,
+.cu-help-tooltip {
+    max-width: calc(100vw - 40px);
+    box-sizing: border-box;
+}
+
+/* Paso X de Y: puede saltar de línea en pantallas muy pequeñas */
+.tutorial-step-counter {
+    white-space: normal;
+}
+
+/* Botones de navegación del tutorial: nunca salen del contenedor */
+.action-row {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.action-row .btn {
+    box-sizing: border-box;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* key-ui en tutorial: solo nowrap si cabe, si no que baje */
+.key-ui {
+    white-space: normal;
+    word-break: break-word;
+}
+
+/* Card con padding inline fijo — se reduce en móvil */
+@media (max-width: 640px) {
+    .card[style*="padding: 30px"],
+    .card[style*="padding:30px"] {
+        padding: 16px !important;
+    }
+}
+
+/* Toolbar: ajuste fino cuando quedan 6 botones */
+@media (max-width: 420px) {
+    .access-header {
+        gap: 4px;
+        padding: 8px 8px;
+    }
+
+    .logo-small {
+        height: 20px;
+        flex-shrink: 0;
+    }
+
+    .access-toolbar {
+        gap: 4px;
+    }
+
+    .btn-access {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+        padding: 0;
+    }
+}
+
+/* Landing: card no desborda en ningún tamaño */
+.landing-container {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.btn-premium-simulation {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+/* Pantalla login: formulario siempre dentro */
+.cu-login-card {
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+.cu-form-body input,
+.cu-form-body .btn-cu-primary {
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+/* Menú: grid siempre dentro del card */
+.grid-menu {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+/* RC Tutorial mockup: nunca desborda, scroll si el contenido es más ancho */
+.rc-official-mockup {
+    box-sizing: border-box;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Categorías RC y CA: el grid se adapta automáticamente */
+.rc-categories-grid,
+.ca-grid {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+/* Elementos de certificado: texto no desborda la tarjeta */
+.rc-cert-item,
+.ca-service-item {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+}
+
+/* Resumen de confirmación: valores largos (RUN) no rompen el layout */
+.summary-box {
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.summary-value {
+    word-break: break-all;
+}
+
+/* Pantalla éxito: centrado y nunca desborda */
+.success-icon {
+    display: block;
+    text-align: center;
+}
+
+/* Modales: siempre dentro del viewport */
+.modal-content {
+    box-sizing: border-box;
+    max-width: min(95vw, 560px);
+}
+
+/* Panel daltonismo y velocidad: nunca salen de la pantalla */
+.colorblind-panel,
+.speed-panel {
+    box-sizing: border-box;
+    max-width: calc(100vw - 20px);
+}
+
+/* Breadcrumb: items no rompen el layout */
+.bc-link,
+.bc-current,
+.bc-sep {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.bc-current {
+    white-space: normal;
+    flex-shrink: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Texto de botones del asistente y demás flotantes */
+.btn-quick-help {
+    box-sizing: border-box;
+    max-width: calc(100vw - 30px);
+    white-space: nowrap;
+}
+
+/* Pantalla muy pequeña (≤ 360px): ajustes finales */
+@media (max-width: 360px) {
+    .btn-premium-simulation {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 12px;
+    }
+
+    .btn-premium-simulation .premium-icon {
+        width: 36px;
+        height: 36px;
+    }
+
+    .action-row {
+        flex-direction: column;
+    }
+
+    .action-row .btn {
+        width: 100%;
+    }
+
+    .rc-categories-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-content {
+        padding: 14px 10px;
+    }
+}
