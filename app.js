@@ -1076,8 +1076,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
 
                 this.recognition.onerror = (e) => {
-                    console.error("Mic error:", e);
-                    this.showBubble("No pude escucharte bien. ¿Podrías repetir?");
+                    if (e.error === 'not-allowed' || e.error === 'permission-denied') {
+                        setInputMode('text');
+                        localStorage.removeItem('micPermissionGranted');
+                        this.showBubble("No se pudo acceder al micrófono. Puede seguir escribiendo normalmente.");
+                    } else if (e.error !== 'aborted') {
+                        this.showBubble("No pude escucharte bien. ¿Podrías repetir?");
+                    }
                 };
 
                 this.recognition.onresult = (event) => {
@@ -1106,13 +1111,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
 
                 this.mainBtn.addEventListener('click', () => {
-                    if (this.isListening) {
-                        this.recognition.stop();
-                    } else {
-                        if (localStorage.getItem('micPermissionGranted') !== 'true') {
-                            showMicGuide();
+                    const mode = localStorage.getItem('inputMode') || 'text';
+                    if (mode === 'voice') {
+                        if (this.isListening) {
+                            this.recognition.stop();
                         } else {
-                            this.recognition.start();
+                            try { this.recognition.start(); } catch (_) {}
+                        }
+                    } else {
+                        // Modo texto: mostrar burbuja con el chat
+                        if (this.bubble) {
+                            const visible = this.bubble.style.display === 'block';
+                            this.bubble.style.display = visible ? 'none' : 'block';
+                            if (!visible) {
+                                document.getElementById('assistant-chat-input')?.focus();
+                            }
                         }
                     }
                 });
@@ -1515,7 +1528,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Helper for Microphone Guide
     const modal = document.getElementById('modal-mic-guide');
     const closeBtn = document.querySelector('.close-modal');
-    const understoodBtn = document.getElementById('btn-close-guide');
 
     function showMicGuide() {
         if (modal) modal.style.display = 'block';
@@ -1524,20 +1536,66 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function hideMicGuide() {
         if (modal) modal.style.display = 'none';
-        assistant.recognition?.start();
     }
 
     if (closeBtn) closeBtn.onclick = hideMicGuide;
-    if (understoodBtn) {
-        understoodBtn.onclick = () => {
-            localStorage.setItem('micPermissionGranted', 'true');
-            hideMicGuide();
-        };
-    }
+
+    // Opción: solo escribir
+    document.getElementById('btn-choose-text')?.addEventListener('click', () => {
+        localStorage.setItem('micPermissionGranted', 'true');
+        setInputMode('text');
+        hideMicGuide();
+    });
+
+    // Opción: usar micrófono
+    document.getElementById('btn-choose-voice')?.addEventListener('click', () => {
+        localStorage.setItem('micPermissionGranted', 'true');
+        setInputMode('voice');
+        hideMicGuide();
+        if (assistant.recognition && !assistant.isListening) {
+            try { assistant.recognition.start(); } catch (_) {}
+        }
+    });
 
     window.onclick = (event) => {
-        if (event.target == modal) hideMicGuide();
+        if (event.target === modal) hideMicGuide();
     };
+
+    // --- Toggle de modo de entrada (texto / voz) ---
+    function setInputMode(mode) {
+        localStorage.setItem('inputMode', mode);
+        const btnText = document.getElementById('btn-mode-text');
+        const btnVoice = document.getElementById('btn-mode-voice');
+        const icon = document.getElementById('assistant-icon');
+        if (btnText) btnText.classList.toggle('active', mode === 'text');
+        if (btnVoice) btnVoice.classList.toggle('active', mode === 'voice');
+        if (icon) icon.textContent = mode === 'voice' ? '🎤' : '💬';
+        if (mode === 'text' && assistant.isListening) {
+            assistant.recognition?.stop();
+        }
+    }
+
+    // Restaurar modo guardado al cargar
+    setInputMode(localStorage.getItem('inputMode') || 'text');
+
+    document.getElementById('btn-mode-text')?.addEventListener('click', () => {
+        setInputMode('text');
+    });
+
+    document.getElementById('btn-mode-voice')?.addEventListener('click', () => {
+        if (!assistant.recognition) {
+            showNotification('Tu navegador no soporta comandos de voz. Usa el chat de texto.', 'warning');
+            return;
+        }
+        if (localStorage.getItem('micPermissionGranted') !== 'true') {
+            showMicGuide();
+        } else {
+            setInputMode('voice');
+            if (!assistant.isListening) {
+                try { assistant.recognition.start(); } catch (_) {}
+            }
+        }
+    });
 
     assistant.init();
 
@@ -1671,9 +1729,11 @@ document.addEventListener('DOMContentLoaded', () => {
         showNotification('Velocidad muy lenta activada', 'info');
     });
 
-    // Patch assistant.say to use speechRate
-    const _originalSay = assistant.say.bind(assistant);
+    // Patch assistant.say: muestra el texto en la burbuja Y lo habla
     assistant.say = function(text, onEnd) {
+        // Siempre mostrar en burbuja (modo texto o voz)
+        assistant.showBubble(text, false);
+
         window.speechSynthesis.cancel();
         const utter = new SpeechSynthesisUtterance(text);
         utter.lang = 'es-CL';

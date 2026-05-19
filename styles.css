@@ -4162,3 +4162,63 @@ body.dark-mode .cb-desc {
 body.dark-mode .toolbar-legend-item {
     border-color: var(--border);
 }
+
+/* ── Toggle modo texto / voz ── */
+.input-mode-toggle {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+}
+
+.mode-btn {
+    background: rgba(255,255,255,0.7);
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    line-height: 1;
+}
+
+.mode-btn.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+    transform: scale(1.08);
+}
+
+.mode-btn:not(.active):hover {
+    background: rgba(255,255,255,0.95);
+    border-color: var(--primary);
+}
+
+body.dark-mode .mode-btn {
+    background: rgba(45,45,45,0.8);
+    border-color: var(--border);
+    color: var(--text);
+}
+
+body.dark-mode .mode-btn.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+/* ── Opciones de modo en el modal del micrófono ── */
+.mic-guide-choice {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+.btn-mode-choice {
+    flex: 1;
+    min-width: 140px;
+    padding: 14px 10px;
+    font-size: 17px;
+    font-weight: 700;
+    border-radius: 12px;
+    cursor: pointer;
+}

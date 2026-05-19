@@ -543,6 +543,11 @@
                 🎤
             </div>
         </div>
+        <!-- Toggle modo texto / voz -->
+        <div class="input-mode-toggle" id="input-mode-toggle">
+            <button class="mode-btn active" id="btn-mode-text" title="Solo escribir" aria-label="Modo texto">⌨️</button>
+            <button class="mode-btn" id="btn-mode-voice" title="Usar micrófono" aria-label="Modo voz">🎤</button>
+        </div>
     </div>
     <div style="display:none">
         <div id="voice-transcript" class="voice-transcript"></div>
@@ -577,8 +582,11 @@
                 </div>
             </div>
 
-            <button class="btn primary" id="btn-close-guide" style="margin-top: 20px;">¡Entendido, abrir
-                micrófono!</button>
+            <p style="margin-top: 20px; font-weight: 600;">¿Cómo prefiere comunicarse?</p>
+            <div class="mic-guide-choice">
+                <button class="btn btn-mode-choice" id="btn-choose-text">⌨️ Prefiero escribir</button>
+                <button class="btn primary btn-mode-choice" id="btn-choose-voice">🎤 Usar micrófono</button>
+            </div>
         </div>
     </div>
 
