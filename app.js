@@ -642,7 +642,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
             <h2>${step.title}</h2>
-            <div id="reader-target-text" class="step-text" style="font-size: 24px; margin-bottom: 25px; line-height: 1.8;">
+            <div id="reader-target-text" class="step-text">
                 ${wrappedText}
             </div>
             <div class="rc-official-mockup">
