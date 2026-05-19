@@ -1817,6 +1817,59 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // --- Modo Daltonismo ---
+    const cbModes = ['cb-protanopia', 'cb-deuteranopia', 'cb-tritanopia'];
+    const btnColorblind = document.getElementById('btn-colorblind');
+    const cbPanel = document.getElementById('colorblind-panel');
+
+    if (btnColorblind && cbPanel) {
+        const savedCb = localStorage.getItem('colorblindMode');
+        if (savedCb && cbModes.includes(savedCb)) {
+            document.body.classList.add(savedCb);
+            document.getElementById(`cb-${savedCb.replace('cb-', '')}`)?.classList.add('active');
+            document.getElementById('cb-none')?.classList.remove('active');
+            btnColorblind.classList.add('active');
+        }
+
+        btnColorblind.addEventListener('click', () => {
+            cbPanel.classList.toggle('visible');
+        });
+
+        document.querySelectorAll('.cb-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                cbModes.forEach(m => document.body.classList.remove(m));
+                document.querySelectorAll('.cb-btn').forEach(b => b.classList.remove('active'));
+
+                const modeKey = btn.id === 'cb-none' ? null : btn.id;
+                if (modeKey) {
+                    document.body.classList.add(modeKey);
+                    localStorage.setItem('colorblindMode', modeKey);
+                    btnColorblind.classList.add('active');
+                } else {
+                    localStorage.removeItem('colorblindMode');
+                    btnColorblind.classList.remove('active');
+                }
+
+                btn.classList.add('active');
+                cbPanel.classList.remove('visible');
+
+                const names = {
+                    'cb-none': 'Modo normal activado',
+                    'cb-protanopia': 'Modo Protanopia activado',
+                    'cb-deuteranopia': 'Modo Deuteranopia activado',
+                    'cb-tritanopia': 'Modo Tritanopia activado'
+                };
+                showNotification(names[btn.id] || 'Modo actualizado', 'info');
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!cbPanel.contains(e.target) && e.target !== btnColorblind) {
+                cbPanel.classList.remove('visible');
+            }
+        });
+    }
+
     // Initial breadcrumb
     updateBreadcrumb('landing');
 });

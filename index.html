@@ -17,8 +17,8 @@
             alt="Logo Clave Única" class="logo-small">
         <div class="access-toolbar">
             <button class="btn-access" id="btn-dark-mode" title="Tema Oscuro">🌙</button>
-            <button class="btn-access" id="btn-font-size-cycle" title="Cambiar tamaño de letra">T</button>
             <button class="btn-access" id="btn-speed-toggle" title="Velocidad de lectura">🔊</button>
+            <button class="btn-access" id="btn-colorblind" title="Modo daltonismo">👁</button>
             <button class="btn-access contrast-toggle" id="btn-toggle-contrast" title="Alto Contraste">◐</button>
             <button class="btn-access" id="btn-font-minus" title="Disminuir letra">A-</button>
             <button class="btn-access" id="btn-font-plus" title="Aumentar letra">A+</button>
@@ -625,6 +625,27 @@
         </div>
     </div>
 
+    <!-- Panel modo daltonismo (flotante, oculto por defecto) -->
+    <div id="colorblind-panel" class="colorblind-panel" role="group" aria-label="Modo para daltonismo">
+        <span class="cb-panel-label">Tipo de daltonismo</span>
+        <button class="cb-btn active" id="cb-none">
+            <span class="cb-name">Normal</span>
+            <span class="cb-desc">Sin filtro de color</span>
+        </button>
+        <button class="cb-btn" id="cb-protanopia">
+            <span class="cb-name">Protanopia</span>
+            <span class="cb-desc">No distingue el rojo</span>
+        </button>
+        <button class="cb-btn" id="cb-deuteranopia">
+            <span class="cb-name">Deuteranopia</span>
+            <span class="cb-desc">No distingue el verde</span>
+        </button>
+        <button class="cb-btn" id="cb-tritanopia">
+            <span class="cb-name">Tritanopia</span>
+            <span class="cb-desc">No distingue el azul</span>
+        </button>
+    </div>
+
     <!-- Control de velocidad del lector (flotante, oculto por defecto) -->
     <div id="speed-control-panel" class="speed-panel" role="group" aria-label="Velocidad de lectura">
         <span class="speed-label">Velocidad del lector:</span>
@@ -639,6 +660,37 @@
     </button>
 
     <script src="app.js"></script>
+    <!-- Filtros SVG para simulación de daltonismo (científicamente precisos) -->
+    <svg id="colorblind-filters" aria-hidden="true" focusable="false"
+         style="position:absolute;width:0;height:0;overflow:hidden">
+        <defs>
+            <!-- Protanopia: ausencia de conos L (rojo) -->
+            <filter id="filter-protanopia" color-interpolation-filters="sRGB">
+                <feColorMatrix type="matrix" values="
+                    0.567 0.433 0.000 0 0
+                    0.558 0.442 0.000 0 0
+                    0.000 0.242 0.758 0 0
+                    0     0     0     1 0"/>
+            </filter>
+            <!-- Deuteranopia: ausencia de conos M (verde) -->
+            <filter id="filter-deuteranopia" color-interpolation-filters="sRGB">
+                <feColorMatrix type="matrix" values="
+                    0.625 0.375 0.000 0 0
+                    0.700 0.300 0.000 0 0
+                    0.000 0.300 0.700 0 0
+                    0     0     0     1 0"/>
+            </filter>
+            <!-- Tritanopia: ausencia de conos S (azul) -->
+            <filter id="filter-tritanopia" color-interpolation-filters="sRGB">
+                <feColorMatrix type="matrix" values="
+                    0.950 0.050 0.000 0 0
+                    0.000 0.433 0.567 0 0
+                    0.000 0.475 0.525 0 0
+                    0     0     0     1 0"/>
+            </filter>
+        </defs>
+    </svg>
+
 </body>
 
 </html>

@@ -3397,3 +3397,404 @@ body.dark-mode .btn-print {
 .inactivity-hint {
     animation: slideInRight 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
+
+
+/* ============================================================
+   RESPONSIVE INTEGRAL — Prevención desborde + breakpoints
+   ============================================================ */
+
+/* --- Global: texto siempre contenido, sin scroll horizontal --- */
+html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+/* Todos los contenedores de texto envuelven palabras largas */
+.card, .info-card, .modal-content, .modal-summary-content,
+.menu-item, .btn-premium-simulation,
+.rc-cert-item, .ca-service-item, .rc-category-card,
+.cu-banner, .cu-info-banner, .friction-alert, .insight-box,
+.assistant-chat-bubble, .custom-toast, .breadcrumb-bar,
+.tutorial-progress-header, h1, h2, h3, p, label, span, li {
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+/* Imágenes siempre dentro de su contenedor */
+img, svg, iframe {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Iconos de flex no se encogen — texto sí puede usar el espacio restante */
+.menu-item .icon,
+.premium-icon,
+.rc-category-card .icon {
+    flex-shrink: 0;
+}
+
+/* Texto dentro de flex: nunca desborda su celda */
+.menu-item .label,
+.btn-premium-simulation .btn-text,
+.rc-cert-name, .rc-cert-desc,
+.check-content, .bc-item {
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+/* Botones: texto puede envolverse */
+.btn-premium-simulation {
+    height: auto;
+    min-height: 64px;
+    align-items: center;
+}
+
+/* Toolbar: permite segunda fila si la pantalla es muy angosta */
+.access-toolbar {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+/* --- Tablet (≤ 768px) --- */
+@media (max-width: 768px) {
+    #app {
+        padding: 12px;
+    }
+
+    .screen {
+        max-width: 100%;
+    }
+
+    .card {
+        padding: 24px 18px;
+    }
+
+    .btn-premium-simulation {
+        padding: 18px 14px;
+        gap: 14px;
+    }
+}
+
+/* --- Mobile medio (≤ 480px) --- */
+@media (max-width: 480px) {
+    #app {
+        padding: 6px;
+    }
+
+    .card {
+        padding: 18px 14px;
+        border-radius: 16px;
+    }
+
+    /* Tipografía escalable con clamp */
+    h1 {
+        font-size: clamp(19px, 5vw, 26px);
+    }
+    h2 {
+        font-size: clamp(17px, 4.5vw, 22px);
+    }
+
+    /* Botones de acción */
+    .btn {
+        padding: 12px 16px;
+        font-size: clamp(16px, 4vw, 20px);
+    }
+
+    /* Toolbar */
+    .btn-access {
+        width: 34px;
+        height: 34px;
+        font-size: 14px;
+    }
+
+    /* Landing */
+    .btn-premium-simulation {
+        padding: 14px 12px;
+        gap: 10px;
+    }
+
+    .btn-premium-simulation .btn-text {
+        font-size: clamp(15px, 4vw, 19px);
+    }
+
+    .premium-icon {
+        width: 36px;
+        height: 46px;
+        font-size: 22px;
+    }
+
+    /* Menú */
+    .menu-item {
+        padding: 14px 12px;
+        gap: 12px;
+    }
+
+    .menu-item .label {
+        font-size: clamp(15px, 4vw, 19px);
+    }
+
+    /* RC tutorial mockup: scroll horizontal si es necesario */
+    .rc-official-mockup {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Modales */
+    .modal-content {
+        padding: 18px 12px;
+        width: 98%;
+        max-height: 92vh;
+        overflow-y: auto;
+    }
+
+    /* Overlay primer uso */
+    .first-use-card {
+        padding: 24px 16px;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    /* Breadcrumb compacto */
+    .breadcrumb-bar {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+
+    /* Categorías RC: 2 columnas fijas */
+    .rc-categories-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    /* Progress tutorial */
+    .tutorial-progress-header {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+}
+
+/* --- Mobile pequeño (≤ 380px) --- */
+@media (max-width: 380px) {
+    #app {
+        padding: 4px;
+    }
+
+    .card {
+        padding: 14px 10px;
+    }
+
+    .logo-small {
+        height: 22px;
+    }
+
+    .btn-access {
+        width: 28px;
+        height: 28px;
+        font-size: 11px;
+    }
+
+    h1 {
+        font-size: clamp(17px, 5.5vw, 21px);
+    }
+    h2 {
+        font-size: clamp(15px, 5vw, 19px);
+    }
+
+    .btn {
+        padding: 11px 12px;
+        font-size: clamp(15px, 4vw, 18px);
+    }
+
+    .btn-premium-simulation {
+        padding: 12px 10px;
+        gap: 8px;
+    }
+
+    .btn-premium-simulation .btn-text {
+        font-size: clamp(14px, 4.5vw, 17px);
+    }
+
+    .premium-icon {
+        width: 30px;
+        height: 38px;
+        font-size: 18px;
+    }
+
+    .menu-item {
+        padding: 12px 10px;
+        gap: 8px;
+    }
+
+    .menu-item .label {
+        font-size: clamp(14px, 4vw, 17px);
+    }
+
+    .menu-item .icon {
+        font-size: 26px;
+    }
+
+    /* Modal: ocupa casi toda la pantalla */
+    .modal-content {
+        padding: 14px 10px;
+        width: 100%;
+        border-radius: 12px;
+    }
+
+    /* Categorías RC: 1 columna en pantallas muy pequeñas */
+    .rc-categories-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Breadcrumb aún más compacto */
+    .breadcrumb-bar {
+        font-size: 11px;
+        padding: 5px 8px;
+    }
+}
+
+
+/* ============================================================
+   MODO DALTONISMO
+   ============================================================ */
+
+/* --- Panel flotante --- */
+.colorblind-panel {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    background: white;
+    border: 2px solid var(--primary);
+    border-radius: 16px;
+    padding: 14px 16px;
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 950;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.18);
+    min-width: 220px;
+}
+
+.colorblind-panel.visible {
+    display: flex;
+}
+
+.cb-panel-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #666;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #eee;
+}
+
+.cb-btn {
+    background: #f5f8ff;
+    border: 2px solid #d0e0ff;
+    border-radius: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.cb-btn:hover:not(.active) {
+    background: #e0ecff;
+    border-color: var(--primary);
+}
+
+.cb-btn.active {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.cb-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1a1a;
+    display: block;
+}
+
+.cb-desc {
+    font-size: 12px;
+    color: #666;
+    display: block;
+}
+
+.cb-btn.active .cb-name,
+.cb-btn.active .cb-desc {
+    color: white;
+}
+
+/* Icono activo en toolbar */
+#btn-colorblind.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* --- Filtros SVG: simulación científica de daltonismo ---
+   Se aplican al contenido principal (header + nav + app).
+   Las matrices son las de Brettel-Viénot-Mollon (1997),
+   estándar en herramientas de accesibilidad. */
+
+body.cb-protanopia .access-header,
+body.cb-protanopia #breadcrumb,
+body.cb-protanopia #app {
+    filter: url(#filter-protanopia);
+}
+
+body.cb-deuteranopia .access-header,
+body.cb-deuteranopia #breadcrumb,
+body.cb-deuteranopia #app {
+    filter: url(#filter-deuteranopia);
+}
+
+body.cb-tritanopia .access-header,
+body.cb-tritanopia #breadcrumb,
+body.cb-tritanopia #app {
+    filter: url(#filter-tritanopia);
+}
+
+/* Panel en dark mode */
+body.dark-mode .colorblind-panel {
+    background: #2d2d2d;
+    border-color: var(--primary);
+}
+
+body.dark-mode .cb-panel-label {
+    color: #aaa;
+    border-color: #444;
+}
+
+body.dark-mode .cb-btn {
+    background: #383838;
+    border-color: #505050;
+}
+
+body.dark-mode .cb-btn:hover:not(.active) {
+    background: #444;
+}
+
+body.dark-mode .cb-name {
+    color: #f0f0f0;
+}
+
+body.dark-mode .cb-desc {
+    color: #999;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+    .colorblind-panel {
+        top: auto;
+        bottom: 160px;
+        right: 10px;
+        left: 10px;
+        min-width: unset;
+    }
+}
