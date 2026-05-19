@@ -1780,7 +1780,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (overlay && !localStorage.getItem('firstUseShown')) {
         overlay.style.display = 'flex';
         let fuseStep = 0;
-        const slides = overlay.querySelectorAll('.fuse-slide');
+        const slides = overlay.querySelectorAll('.first-use-slide');
         const dots = overlay.querySelectorAll('.fuse-dot');
         const btnNext = document.getElementById('btn-fuse-next');
 
@@ -1799,17 +1799,23 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
+        const dismissOverlay = () => {
+            overlay.style.display = 'none';
+            localStorage.setItem('firstUseShown', 'true');
+        };
+
         if (btnNext) {
             btnNext.addEventListener('click', () => {
                 if (fuseStep < slides.length - 1) {
                     fuseStep++;
                     goToSlide(fuseStep);
                 } else {
-                    overlay.style.display = 'none';
-                    localStorage.setItem('firstUseShown', 'true');
+                    dismissOverlay();
                 }
             });
         }
+
+        document.getElementById('btn-fuse-skip')?.addEventListener('click', dismissOverlay);
 
         goToSlide(0);
     }
