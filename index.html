@@ -533,7 +533,7 @@
             <div id="assistant-text">Hola, soy tu asistente virtual. ¿En qué puedo ayudarte hoy?</div>
             <div class="assistant-chat-input-container" style="display: flex; margin-top: 10px; gap: 5px;">
                 <input type="text" id="assistant-chat-input" placeholder="Escribe aquí..." 
-                       style="flex: 1; border-radius: 20px; padding: 8px 15px; border: 1px solid #ccc; font-size: 16px; width: 100%;">
+                       style="flex: 1; border-radius: 20px; padding: 8px 15px; border: 1px solid #ccc; font-size: 0.8rem; width: 100%;">
                 <button id="btn-assistant-send" style="background: var(--primary); color: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; display: flex; align-items: center; justify-content: center;">➔</button>
             </div>
         </div>
@@ -542,6 +542,11 @@
             <div class="assistant-avatar" id="assistant-icon">
                 🎤
             </div>
+        </div>
+        <!-- Toggle modo texto / voz -->
+        <div class="input-mode-toggle" id="input-mode-toggle">
+            <button class="mode-btn active" id="btn-mode-text" title="Solo escribir" aria-label="Modo texto">⌨️</button>
+            <button class="mode-btn" id="btn-mode-voice" title="Usar micrófono" aria-label="Modo voz">🎤</button>
         </div>
     </div>
     <div style="display:none">
@@ -577,8 +582,11 @@
                 </div>
             </div>
 
-            <button class="btn primary" id="btn-close-guide" style="margin-top: 20px;">¡Entendido, abrir
-                micrófono!</button>
+            <p style="margin-top: 20px; font-weight: 600;">¿Cómo prefiere comunicarse?</p>
+            <div class="mic-guide-choice">
+                <button class="btn btn-mode-choice" id="btn-choose-text">⌨️ Prefiero escribir</button>
+                <button class="btn primary btn-mode-choice" id="btn-choose-voice">🎤 Usar micrófono</button>
+            </div>
         </div>
     </div>
 
