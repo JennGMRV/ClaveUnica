@@ -1683,10 +1683,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 90000);
     }
-    ['mousemove', 'keydown', 'touchstart', 'click'].forEach(evt => {
-        document.addEventListener(evt, resetInactivityTimer, { passive: true });
-    });
-    resetInactivityTimer();
+    // ['mousemove', 'keydown', 'touchstart', 'click'].forEach(evt => {
+    //     document.addEventListener(evt, resetInactivityTimer, { passive: true });
+    // });
+    // resetInactivityTimer();
 
     // --- Touch-friendly help tooltip for password ---
     const helpBtnTooltip = document.getElementById('btn-help-password');
