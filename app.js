@@ -1943,58 +1943,89 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Modo Daltonismo ---
-    const cbModes = ['cb-protanopia', 'cb-deuteranopia', 'cb-tritanopia'];
+    // --- Modo Daltonismo (ciclo) ---
+    const cbCycle = [
+        { cls: null,              label: 'Normal'      },
+        { cls: 'cb-protanopia',   label: 'Protanopia'  },
+        { cls: 'cb-deuteranopia', label: 'Deuteranopia'},
+        { cls: 'cb-tritanopia',   label: 'Tritanopia'  },
+    ];
+    const cbModes = cbCycle.slice(1).map(m => m.cls);
     const btnColorblind = document.getElementById('btn-colorblind');
+    const cbBadge = document.getElementById('cb-current-badge');
     const cbPanel = document.getElementById('colorblind-panel');
+    if (cbPanel) cbPanel.style.display = 'none';
 
-    if (btnColorblind && cbPanel) {
-        const savedCb = localStorage.getItem('colorblindMode');
-        if (savedCb && cbModes.includes(savedCb)) {
+    let cbIndex = 0;
+    const savedCb = localStorage.getItem('colorblindMode');
+    if (savedCb) {
+        const found = cbCycle.findIndex(m => m.cls === savedCb);
+        if (found >= 0) {
+            cbIndex = found;
             document.body.classList.add(savedCb);
-            document.getElementById(`cb-${savedCb.replace('cb-', '')}`)?.classList.add('active');
-            document.getElementById('cb-none')?.classList.remove('active');
-            btnColorblind.classList.add('active');
+            if (btnColorblind) btnColorblind.classList.add('active');
         }
+    }
+    if (cbBadge) cbBadge.textContent = cbCycle[cbIndex].label;
 
+    let cbFlashTimer = null;
+    function applyCbMode(index) {
+        cbModes.forEach(m => document.body.classList.remove(m));
+        const mode = cbCycle[index];
+        if (mode.cls) {
+            document.body.classList.add(mode.cls);
+            localStorage.setItem('colorblindMode', mode.cls);
+            btnColorblind.classList.add('active');
+        } else {
+            localStorage.removeItem('colorblindMode');
+            btnColorblind.classList.remove('active');
+        }
+        if (cbBadge) {
+            cbBadge.textContent = mode.label;
+            cbBadge.classList.add('flash');
+            clearTimeout(cbFlashTimer);
+            cbFlashTimer = setTimeout(() => cbBadge.classList.remove('flash'), 2200);
+        }
+        showNotification(`Daltonismo: ${mode.label}`, 'info');
+    }
+
+    if (btnColorblind) {
         btnColorblind.addEventListener('click', () => {
-            cbPanel.classList.toggle('visible');
+            cbIndex = (cbIndex + 1) % cbCycle.length;
+            applyCbMode(cbIndex);
         });
+    }
 
-        document.querySelectorAll('.cb-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                cbModes.forEach(m => document.body.classList.remove(m));
-                document.querySelectorAll('.cb-btn').forEach(b => b.classList.remove('active'));
+    // --- Legend items interactivos ---
+    const toggleTargets = new Set(['btn-dark-mode', 'btn-toggle-contrast', 'btn-colorblind']);
 
-                const modeKey = btn.id === 'cb-none' ? null : btn.id;
-                if (modeKey) {
-                    document.body.classList.add(modeKey);
-                    localStorage.setItem('colorblindMode', modeKey);
-                    btnColorblind.classList.add('active');
-                } else {
-                    localStorage.removeItem('colorblindMode');
-                    btnColorblind.classList.remove('active');
-                }
-
-                btn.classList.add('active');
-                cbPanel.classList.remove('visible');
-
-                const names = {
-                    'cb-none': 'Modo normal activado',
-                    'cb-protanopia': 'Modo Protanopia activado',
-                    'cb-deuteranopia': 'Modo Deuteranopia activado',
-                    'cb-tritanopia': 'Modo Tritanopia activado'
-                };
-                showNotification(names[btn.id] || 'Modo actualizado', 'info');
-            });
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!cbPanel.contains(e.target) && e.target !== btnColorblind) {
-                cbPanel.classList.remove('visible');
+    function syncLegendItems() {
+        document.querySelectorAll('.toolbar-legend-item[data-target]').forEach(item => {
+            const btn = document.getElementById(item.dataset.target);
+            if (btn && toggleTargets.has(item.dataset.target)) {
+                item.classList.toggle('active', btn.classList.contains('active'));
             }
         });
     }
+
+    document.querySelectorAll('.toolbar-legend-item[data-target]').forEach(item => {
+        item.addEventListener('click', () => {
+            const btn = document.getElementById(item.dataset.target);
+            if (!btn) return;
+            item.classList.add('clicking');
+            setTimeout(() => item.classList.remove('clicking'), 180);
+            btn.click();
+            setTimeout(syncLegendItems, 40);
+        });
+        item.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                item.click();
+            }
+        });
+    });
+
+    syncLegendItems();
 
     // Initial breadcrumb
     updateBreadcrumb('landing');

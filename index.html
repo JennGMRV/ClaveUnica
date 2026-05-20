@@ -18,7 +18,10 @@
         <div class="access-toolbar">
             <button class="btn-access" id="btn-dark-mode" title="Tema Oscuro">🌙</button>
             <button class="btn-access" id="btn-speed-toggle" title="Velocidad de lectura">🔊</button>
-            <button class="btn-access" id="btn-colorblind" title="Modo daltonismo">👁</button>
+            <div class="cb-btn-wrapper">
+                <button class="btn-access" id="btn-colorblind" title="Modo daltonismo">👁</button>
+                <span class="cb-current-badge" id="cb-current-badge">Normal</span>
+            </div>
             <button class="btn-access contrast-toggle" id="btn-toggle-contrast" title="Alto Contraste">◐</button>
             <button class="btn-access" id="btn-font-minus" title="Disminuir letra">A-</button>
             <button class="btn-access" id="btn-font-plus" title="Aumentar letra">A+</button>
@@ -55,32 +58,32 @@
                         <h3 class="toolbar-legend-title">🛠️ Botones de accesibilidad</h3>
                         <p class="toolbar-legend-subtitle">Estos botones están siempre disponibles en la parte superior de la pantalla:</p>
                         <div class="toolbar-legend-grid">
-                            <div class="toolbar-legend-item">
+                            <div class="toolbar-legend-item" data-target="btn-dark-mode" role="button" tabindex="0" aria-label="Activar Modo Oscuro">
                                 <span class="tl-icon">🌙</span>
                                 <span class="tl-name">Modo Oscuro</span>
                                 <span class="tl-desc">Cambia los colores a tonos oscuros para descansar la vista</span>
                             </div>
-                            <div class="toolbar-legend-item">
+                            <div class="toolbar-legend-item" data-target="btn-speed-toggle" role="button" tabindex="0" aria-label="Ajustar velocidad de voz">
                                 <span class="tl-icon">🔊</span>
                                 <span class="tl-name">Velocidad de voz</span>
                                 <span class="tl-desc">Ajusta la rapidez con que el asistente habla</span>
                             </div>
-                            <div class="toolbar-legend-item">
+                            <div class="toolbar-legend-item" data-target="btn-colorblind" role="button" tabindex="0" aria-label="Activar Modo daltonismo">
                                 <span class="tl-icon">👁</span>
                                 <span class="tl-name">Modo daltonismo</span>
                                 <span class="tl-desc">Filtra los colores para personas con daltonismo</span>
                             </div>
-                            <div class="toolbar-legend-item">
+                            <div class="toolbar-legend-item" data-target="btn-toggle-contrast" role="button" tabindex="0" aria-label="Activar Alto Contraste">
                                 <span class="tl-icon">◐</span>
                                 <span class="tl-name">Alto Contraste</span>
                                 <span class="tl-desc">Aumenta el contraste para ver mejor el texto</span>
                             </div>
-                            <div class="toolbar-legend-item">
+                            <div class="toolbar-legend-item" data-target="btn-font-minus" role="button" tabindex="0" aria-label="Letra más pequeña">
                                 <span class="tl-icon tl-icon-text">A−</span>
                                 <span class="tl-name">Letra más pequeña</span>
                                 <span class="tl-desc">Reduce el tamaño del texto en toda la página</span>
                             </div>
-                            <div class="toolbar-legend-item">
+                            <div class="toolbar-legend-item" data-target="btn-font-plus" role="button" tabindex="0" aria-label="Letra más grande">
                                 <span class="tl-icon tl-icon-text">A+</span>
                                 <span class="tl-name">Letra más grande</span>
                                 <span class="tl-desc">Aumenta el tamaño del texto en toda la página</span>
