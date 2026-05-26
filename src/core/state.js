@@ -1,0 +1,12 @@
+// Estado global compartido entre módulos.
+// Se muta directamente (no se reemplaza el objeto).
+export const state = {
+    currentScreenKey:    'landing',
+    history:             ['landing'],
+    postLoginTarget:     'menu',
+    autoReadMode:        false,
+    currentTutorialSteps:  [],
+    currentStepIndex:      0,
+    currentTutorialOrigin: 'rcCategories',
+    speechRate: 0.75,
+};
