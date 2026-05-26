@@ -35,6 +35,14 @@ export const rcData = {
                 { id: "veh-anotaciones", name: "Anotaciones Vigentes de Vehículos",            cu: false, desc: "Muestra multas y datos del dueño." },
                 { id: "veh-multas",      name: "Certificado de Multas de Tránsito",            cu: false, desc: "Revisa si tiene deudas de patentes." }
             ]
+        },
+        identidad: {
+            title: "Identidad",
+            certs: [
+                { id: "id-cedula",     name: "Cédula de Identidad",              cu: false, desc: "Solicitud o renovación de su cédula de identidad." },
+                { id: "id-pasaporte",  name: "Pasaporte",                        cu: false, desc: "Solicitud o renovación de pasaporte chileno." },
+                { id: "id-cedula-ext", name: "Cédula de Identidad Extranjero",   cu: false, desc: "Para extranjeros con residencia en Chile." }
+            ]
         }
     },
     steps: {

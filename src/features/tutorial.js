@@ -67,6 +67,8 @@ export function initTutorial() {
 export function selectRCCategory(catId) {
     const cat = rcData.categories[catId];
     if (!cat) {
+        // Siempre navegar a la pantalla RC para que el usuario vea las categorías disponibles
+        showScreen('rcCategories');
         showNotification('Esta categoría estará disponible próximamente.', 'info');
         return;
     }

@@ -47,12 +47,14 @@ export const assistant = {
     bubbleTimeout: null,
 
     certificateKnowledge: [
-        { id: 'afiliacion',  type: 'fonasa', name: 'Certificado de Afiliación',   desc: 'acredita que usted está en FONASA actualmente', keywords: ['afiliación','afiliado','pertenezco','salud','fonasa','papel azul','inscrito','isapre no','pertenecer'] },
-        { id: 'cotizaciones',type: 'fonasa', name: 'Certificado de Cotizaciones', desc: 'muestra sus pagos de salud de los últimos meses', keywords: ['pagos','platas','plata','dinero','cotización','cotizaciones','descuentos','sueldo','cuánto tengo','ahorros','pagado'] },
-        { id: 'nacimiento',  type: 'rc',     name: 'Certificado de Nacimiento',   desc: 'documento que acredita su nacimiento y datos de sus padres', keywords: ['nacimiento','nacer','parto','bebé','hijo','hija','nací'] },
-        { id: 'matrimonio',  type: 'rc',     name: 'Certificado de Matrimonio',   desc: 'documento que acredita su estado civil de casado o casada', keywords: ['matrimonio','casado','casada','boda','casamiento','pareja'] },
-        { id: 'defuncion',   type: 'rc',     name: 'Certificado de Defunción',    desc: 'documento que acredita el fallecimiento de una persona', keywords: ['defunción','muerte','fallecido','fallecimiento','muerto','velorio'] },
-        { id: 'antecedentes',type: 'rc',     name: 'Certificado de Antecedentes', desc: 'muestra si usted tiene registros penales. Requiere Clave Única.', keywords: ['antecedentes','penales','papel de antecedentes','policía','carcel','limpio'] }
+        { id: 'afiliacion',   type: 'fonasa', name: 'Certificado de Afiliación',     desc: 'acredita que usted está en FONASA actualmente',                              keywords: ['afiliación','afiliado','pertenezco','salud','fonasa','papel azul','inscrito','isapre no','pertenecer'] },
+        { id: 'cotizaciones', type: 'fonasa', name: 'Certificado de Cotizaciones',   desc: 'muestra sus pagos de salud de los últimos meses',                            keywords: ['pagos','platas','plata','dinero','cotización','cotizaciones','descuentos','sueldo','cuánto tengo','ahorros','pagado'] },
+        { id: 'nacimiento',   type: 'rc',     name: 'Certificado de Nacimiento',     desc: 'documento que acredita su nacimiento y datos de sus padres',                 keywords: ['nacimiento','nacer','naci','parto','bebé','bebe','hijo','hija','nació'] },
+        { id: 'matrimonio',   type: 'rc',     name: 'Certificado de Matrimonio',     desc: 'documento que acredita su estado civil de casado o casada',                  keywords: ['matrimonio','casado','casada','boda','casamiento','pareja','estado civil'] },
+        { id: 'defuncion',    type: 'rc',     name: 'Certificado de Defunción',      desc: 'documento que acredita el fallecimiento de una persona',                    keywords: ['defunción','defuncion','defunci','muerte','fallecido','fallecimiento','falleci','muerto','velorio','difunto','finado','óbito'] },
+        { id: 'antecedentes', type: 'rc',     name: 'Certificado de Antecedentes',   desc: 'muestra si usted tiene registros penales. Requiere Clave Única.',           keywords: ['antecedentes','antecedente','penales','penal','policía','carcel','limpio','conducta','registro policial'] },
+        { id: 'vehiculos',    type: 'rc',     name: 'Certificados de Vehículos',     desc: 'muestra multas, anotaciones y datos del dueño del vehículo',                keywords: ['vehículo','vehiculo','auto','carro','patente','multa','tránsito','transito','anotaciones','camión','camion','moto','automovil','vehículo','permiso circulación'] },
+        { id: 'identidad',    type: 'rc',     name: 'Certificados de Identidad',     desc: 'documentos relacionados con su cédula de identidad y pasaporte',            keywords: ['identidad','cédula','cedula','carnet','pasaporte','renovar carnet','documento de identidad','cédula de identidad','ci'] }
     ],
 
     formatNumbersForSeniors(str) {
@@ -355,7 +357,7 @@ export const assistant = {
         }
 
         // Búsqueda difusa de certificados
-        const certKeywords = ['certificado','papel','comprobante','necesito','quiero','dame','obtener','sacar','el de','la de','los de','nacimiento','matrimonio','antecedentes','defuncion','fonasa'];
+        const certKeywords = ['certificado','papel','comprobante','necesito','quiero','dame','obtener','sacar','el de','la de','los de','nacimiento','matrimonio','antecedentes','antecedente','defunci','vehiculo','vehículo','identidad','cedula','cédula','fonasa'];
         if (certKeywords.some(kw => cmd.includes(kw))) {
             let bestMatch = null;
             let maxScore  = 0;
@@ -366,7 +368,11 @@ export const assistant = {
                 if (score > maxScore) { maxScore = score; bestMatch = cert; }
             });
 
-            if (bestMatch && maxScore >= 10) {
+            // RC certs tienen nombres únicos: 1 keyword match ya es alta confianza.
+            // FONASA certs son más ambiguos: requieren mayor puntaje.
+            const directThreshold = bestMatch?.type === 'rc' ? 5 : 10;
+
+            if (bestMatch && maxScore >= directThreshold) {
                 this.say(`Perfecto. Preparando de inmediato su ${bestMatch.name}.`);
                 setTimeout(() => {
                     if (bestMatch.type === 'rc') {
