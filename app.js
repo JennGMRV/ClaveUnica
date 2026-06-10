@@ -2143,7 +2143,7 @@ document.addEventListener('DOMContentLoaded', () => {
             clearTimeout(cbFlashTimer);
             cbFlashTimer = setTimeout(() => cbBadge.classList.remove('flash'), 2200);
         }
-        showNotification(`Ajuste de colores: ${mode.label}`, 'info');
+
     }
 
     if (btnColorblind) {

@@ -105,7 +105,7 @@ export function initColorblindMode() {
             clearTimeout(cbFlashTimer);
             cbFlashTimer = setTimeout(() => badge.classList.remove('flash'), 2200);
         }
-        showNotification(`Ajuste de colores: ${mode.label}`, 'info');
+
     }
 
     btn.addEventListener('click', () => {
