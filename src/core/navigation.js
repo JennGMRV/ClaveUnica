@@ -13,6 +13,7 @@ const breadcrumbLabels = {
     tutorial:     ['Inicio', 'Menú principal', 'Tutorial ChileAtiende'],
     rcCategories: ['Inicio', 'Menú principal', 'Registro Civil'],
     rcTutorial:   ['Inicio', 'Menú principal', 'Registro Civil', 'Tutorial'],
+    rcInteractiveSimulation: ['Inicio', 'Menú principal', 'Registro Civil', 'Simulación'],
     caCategories: ['Inicio', 'Menú principal', 'ChileAtiende']
 };
 
@@ -38,6 +39,7 @@ export function initNavigation() {
         tutorial:     document.getElementById('screen-tutorial'),
         rcCategories: document.getElementById('screen-rc-categories'),
         rcTutorial:   document.getElementById('screen-rc-tutorial'),
+        rcInteractiveSimulation: document.getElementById('screen-rc-interactive-simulation'),
         caCategories: document.getElementById('screen-ca-categories')
     };
 

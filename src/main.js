@@ -12,6 +12,7 @@ import { initFontControls, initDarkMode, initContrastToggle, initColorblindMode,
 import { initTutorial, setStepChangeCallback, setOnTutorialComplete, updateStepUI } from './features/tutorial.js';
 import { assistant, initAssistant } from './features/assistant.js';
 import { initModals, showTutorialSummary, setSayCallback } from './features/modals.js';
+import { initSimulation, startInteractiveSimulation } from './features/simulation.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -40,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initColorblindMode();
     initSpeedPanel();
     initLegendItems();
+    initSimulation();
 
     // ----------------------------------------------------------
     // 3. Tutorial (Registro Civil y ChileAtiende)
@@ -131,8 +133,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        if (state.postLoginTarget === 'rcTutorial') updateStepUI();
-        showScreen(state.postLoginTarget);
+        if (state.postLoginTarget === 'rcTutorial') {
+            updateStepUI();
+            showScreen(state.postLoginTarget);
+        } else if (state.postLoginTarget === 'rcInteractiveSimulation') {
+            startInteractiveSimulation(state.choiceCertId, state.choiceCertName);
+        } else {
+            showScreen(state.postLoginTarget);
+        }
         state.postLoginTarget = 'menu';
     });
 
