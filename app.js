@@ -698,7 +698,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
             <h2>${step.title}</h2>
-            <div id="reader-target-text" class="step-text" style="font-size: 24px; margin-bottom: 25px; line-height: 1.8;">
+            <div id="reader-target-text" class="step-text">
                 ${wrappedText}
             </div>
             <div class="rc-official-mockup">
@@ -1006,8 +1006,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Accessibility Toolbar Logic
-    let currentFontSize = 20;
+    let currentFontSize = parseInt(localStorage.getItem('fontSize') || '20', 10);
     const body = document.body;
+    const htmlEl = document.documentElement;
+
+    // Aplicar tamaño guardado al cargar
+    htmlEl.style.setProperty('--base-font-size', currentFontSize + 'px');
+
+    function applyFontSize(size) {
+        currentFontSize = size;
+        htmlEl.style.setProperty('--base-font-size', size + 'px');
+        localStorage.setItem('fontSize', size);
+    }
 
     document.getElementById('btn-toggle-contrast').addEventListener('click', () => {
         body.classList.toggle('high-contrast');
@@ -1016,17 +1026,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('btn-font-plus').addEventListener('click', () => {
-        if (currentFontSize < 32) {
-            currentFontSize += 2;
-            body.style.setProperty('--base-font-size', currentFontSize + 'px');
-        }
+        if (currentFontSize < 32) applyFontSize(currentFontSize + 2);
     });
 
     document.getElementById('btn-font-minus').addEventListener('click', () => {
-        if (currentFontSize > 16) {
-            currentFontSize -= 2;
-            body.style.setProperty('--base-font-size', currentFontSize + 'px');
-        }
+        if (currentFontSize > 16) applyFontSize(currentFontSize - 2);
     });
 
     // --- Smart Assistant Logic ---
@@ -1166,8 +1170,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
 
                 this.recognition.onerror = (e) => {
-                    console.error("Mic error:", e);
-                    this.showBubble("No pude escucharte bien. ¿Podrías repetir?");
+                    if (e.error === 'not-allowed' || e.error === 'permission-denied') {
+                        setInputMode('text');
+                        localStorage.removeItem('micPermissionGranted');
+                        this.showBubble("No se pudo acceder al micrófono. Puede seguir escribiendo normalmente.");
+                    } else if (e.error !== 'aborted') {
+                        this.showBubble("No pude escucharte bien. ¿Podrías repetir?");
+                    }
                 };
 
                 this.recognition.onresult = (event) => {
@@ -1210,13 +1219,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             this.mainBtn.addEventListener('click', () => {
-                if (this.inputMode === 'keyboard') {
-                    const isVisible = this.bubble.style.display === 'block';
-                    this.bubble.style.display = isVisible ? 'none' : 'block';
-                    if (!isVisible && this.chatInput) {
-                        this.chatInput.focus();
-                    }
-                } else {
+                const mode = this.inputMode || localStorage.getItem('inputMode') || 'text';
+                if (mode === 'voice') {
                     if (this.isListening) {
                         this.recognition?.stop();
                     } else {
@@ -1227,6 +1231,21 @@ document.addEventListener('DOMContentLoaded', () => {
                                 this.recognition?.start();
                             } catch(e) {
                                 console.error(e);
+                            }
+                        }
+                    }
+                } else {
+                    // Modo teclado/texto: mostrar burbuja con el chat
+                    if (this.bubble) {
+                        const visible = this.bubble.style.display === 'block';
+                        this.bubble.style.display = visible ? 'none' : 'block';
+                        if (!visible) {
+                            const inputEl = this.chatInput || document.getElementById('assistant-chat-input');
+                            if (inputEl) inputEl.focus();
+                        }
+                    }
+                }
+            });
                             }
                         }
                     }
@@ -1638,7 +1657,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Helper for Microphone Guide
     const modal = document.getElementById('modal-mic-guide');
     const closeBtn = document.querySelector('.close-modal');
-    const understoodBtn = document.getElementById('btn-close-guide');
 
     function showMicGuide() {
         if (modal) modal.style.display = 'block';
@@ -1647,20 +1665,66 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function hideMicGuide() {
         if (modal) modal.style.display = 'none';
-        assistant.recognition?.start();
     }
 
     if (closeBtn) closeBtn.onclick = hideMicGuide;
-    if (understoodBtn) {
-        understoodBtn.onclick = () => {
-            localStorage.setItem('micPermissionGranted', 'true');
-            hideMicGuide();
-        };
-    }
+
+    // Opción: solo escribir
+    document.getElementById('btn-choose-text')?.addEventListener('click', () => {
+        localStorage.setItem('micPermissionGranted', 'true');
+        setInputMode('text');
+        hideMicGuide();
+    });
+
+    // Opción: usar micrófono
+    document.getElementById('btn-choose-voice')?.addEventListener('click', () => {
+        localStorage.setItem('micPermissionGranted', 'true');
+        setInputMode('voice');
+        hideMicGuide();
+        if (assistant.recognition && !assistant.isListening) {
+            try { assistant.recognition.start(); } catch (_) {}
+        }
+    });
 
     window.onclick = (event) => {
-        if (event.target == modal) hideMicGuide();
+        if (event.target === modal) hideMicGuide();
     };
+
+    // --- Toggle de modo de entrada (texto / voz) ---
+    function setInputMode(mode) {
+        localStorage.setItem('inputMode', mode);
+        const btnText = document.getElementById('btn-mode-text');
+        const btnVoice = document.getElementById('btn-mode-voice');
+        const icon = document.getElementById('assistant-icon');
+        if (btnText) btnText.classList.toggle('active', mode === 'text');
+        if (btnVoice) btnVoice.classList.toggle('active', mode === 'voice');
+        if (icon) icon.textContent = mode === 'voice' ? '🎤' : '💬';
+        if (mode === 'text' && assistant.isListening) {
+            assistant.recognition?.stop();
+        }
+    }
+
+    // Restaurar modo guardado al cargar
+    setInputMode(localStorage.getItem('inputMode') || 'text');
+
+    document.getElementById('btn-mode-text')?.addEventListener('click', () => {
+        setInputMode('text');
+    });
+
+    document.getElementById('btn-mode-voice')?.addEventListener('click', () => {
+        if (!assistant.recognition) {
+            showNotification('Tu navegador no soporta comandos de voz. Usa el chat de texto.', 'warning');
+            return;
+        }
+        if (localStorage.getItem('micPermissionGranted') !== 'true') {
+            showMicGuide();
+        } else {
+            setInputMode('voice');
+            if (!assistant.isListening) {
+                try { assistant.recognition.start(); } catch (_) {}
+            }
+        }
+    });
 
     assistant.init();
 
@@ -1700,8 +1764,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnFontCycle) {
         btnFontCycle.addEventListener('click', () => {
             fontSizeIndex = (fontSizeIndex + 1) % fontSizes.length;
-            document.body.style.setProperty('--base-font-size', fontSizes[fontSizeIndex] + 'px');
-            currentFontSize = fontSizes[fontSizeIndex];
+            applyFontSize(fontSizes[fontSizeIndex]);
         });
     }
 
@@ -1746,10 +1809,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 90000);
     }
-    ['mousemove', 'keydown', 'touchstart', 'click'].forEach(evt => {
-        document.addEventListener(evt, resetInactivityTimer, { passive: true });
-    });
-    resetInactivityTimer();
+    // ['mousemove', 'keydown', 'touchstart', 'click'].forEach(evt => {
+    //     document.addEventListener(evt, resetInactivityTimer, { passive: true });
+    // });
+    // resetInactivityTimer();
 
     // --- Touch-friendly help tooltip for password ---
     const helpBtnTooltip = document.getElementById('btn-help-password');
@@ -1795,9 +1858,11 @@ document.addEventListener('DOMContentLoaded', () => {
         showNotification('Velocidad muy lenta activada', 'info');
     });
 
-    // Patch assistant.say to use speechRate
-    const _originalSay = assistant.say.bind(assistant);
+    // Patch assistant.say: muestra el texto en la burbuja Y lo habla
     assistant.say = function(text, onEnd) {
+        // Siempre mostrar en burbuja (modo texto o voz)
+        assistant.showBubble(text, false);
+
         window.speechSynthesis.cancel();
         const utter = new SpeechSynthesisUtterance(text);
         utter.lang = 'es-CL';
@@ -2004,55 +2069,67 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Modo Daltonismo ---
-    const cbModes = ['cb-protanopia', 'cb-deuteranopia', 'cb-tritanopia'];
+    // --- Modo Daltonismo (ciclo) ---
+    const cbCycle = [
+        { cls: null,              label: 'Normal'      },
+        { cls: 'cb-protanopia',   label: 'Protanopia'  },
+        { cls: 'cb-deuteranopia', label: 'Deuteranopia'},
+        { cls: 'cb-tritanopia',   label: 'Tritanopia'  },
+    ];
+    const cbModes = cbCycle.slice(1).map(m => m.cls);
     const btnColorblind = document.getElementById('btn-colorblind');
+    const cbBadge = document.getElementById('cb-current-badge');
     const cbPanel = document.getElementById('colorblind-panel');
+    if (cbPanel) cbPanel.style.display = 'none';
 
-    if (btnColorblind && cbPanel) {
-        const savedCb = localStorage.getItem('colorblindMode');
-        if (savedCb && cbModes.includes(savedCb)) {
+    let cbIndex = 0;
+    const savedCb = localStorage.getItem('colorblindMode');
+    if (savedCb) {
+        const found = cbCycle.findIndex(m => m.cls === savedCb);
+        if (found >= 0) {
+            cbIndex = found;
             document.body.classList.add(savedCb);
-            document.getElementById(`cb-${savedCb.replace('cb-', '')}`)?.classList.add('active');
-            document.getElementById('cb-none')?.classList.remove('active');
-            btnColorblind.classList.add('active');
+            if (btnColorblind) btnColorblind.classList.add('active');
         }
+    }
+    if (cbBadge) cbBadge.textContent = cbCycle[cbIndex].label;
 
+    let cbFlashTimer = null;
+    function applyCbMode(index) {
+        cbModes.forEach(m => document.body.classList.remove(m));
+        const mode = cbCycle[index];
+        if (mode.cls) {
+            document.body.classList.add(mode.cls);
+            localStorage.setItem('colorblindMode', mode.cls);
+            btnColorblind.classList.add('active');
+        } else {
+            localStorage.removeItem('colorblindMode');
+            btnColorblind.classList.remove('active');
+        }
+        if (cbBadge) {
+            cbBadge.textContent = mode.label;
+            cbBadge.classList.add('flash');
+            clearTimeout(cbFlashTimer);
+            cbFlashTimer = setTimeout(() => cbBadge.classList.remove('flash'), 2200);
+        }
+        showNotification(`Daltonismo: ${mode.label}`, 'info');
+    }
+
+    if (btnColorblind) {
         btnColorblind.addEventListener('click', () => {
-            cbPanel.classList.toggle('visible');
+            cbIndex = (cbIndex + 1) % cbCycle.length;
+            applyCbMode(cbIndex);
         });
+    }
 
-        document.querySelectorAll('.cb-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                cbModes.forEach(m => document.body.classList.remove(m));
-                document.querySelectorAll('.cb-btn').forEach(b => b.classList.remove('active'));
+    // --- Legend items interactivos ---
+    const toggleTargets = new Set(['btn-dark-mode', 'btn-toggle-contrast', 'btn-colorblind']);
 
-                const modeKey = btn.id === 'cb-none' ? null : btn.id;
-                if (modeKey) {
-                    document.body.classList.add(modeKey);
-                    localStorage.setItem('colorblindMode', modeKey);
-                    btnColorblind.classList.add('active');
-                } else {
-                    localStorage.removeItem('colorblindMode');
-                    btnColorblind.classList.remove('active');
-                }
-
-                btn.classList.add('active');
-                cbPanel.classList.remove('visible');
-
-                const names = {
-                    'cb-none': 'Modo normal activado',
-                    'cb-protanopia': 'Modo Protanopia activado',
-                    'cb-deuteranopia': 'Modo Deuteranopia activado',
-                    'cb-tritanopia': 'Modo Tritanopia activado'
-                };
-                showNotification(names[btn.id] || 'Modo actualizado', 'info');
-            });
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!cbPanel.contains(e.target) && e.target !== btnColorblind) {
-                cbPanel.classList.remove('visible');
+    function syncLegendItems() {
+        document.querySelectorAll('.toolbar-legend-item[data-target]').forEach(item => {
+            const btn = document.getElementById(item.dataset.target);
+            if (btn && toggleTargets.has(item.dataset.target)) {
+                item.classList.toggle('active', btn.classList.contains('active'));
             }
         });
     }
@@ -2737,6 +2814,24 @@ document.addEventListener('DOMContentLoaded', () => {
             showScreen('success');
         };
     }
+    document.querySelectorAll('.toolbar-legend-item[data-target]').forEach(item => {
+        item.addEventListener('click', () => {
+            const btn = document.getElementById(item.dataset.target);
+            if (!btn) return;
+            item.classList.add('clicking');
+            setTimeout(() => item.classList.remove('clicking'), 180);
+            btn.click();
+            setTimeout(syncLegendItems, 40);
+        });
+        item.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                item.click();
+            }
+        });
+    });
+
+    syncLegendItems();
 
     // Initial breadcrumb
     updateBreadcrumb('landing');

@@ -18,7 +18,10 @@
         <div class="access-toolbar">
             <button class="btn-access" id="btn-dark-mode" title="Tema Oscuro">🌙</button>
             <button class="btn-access" id="btn-speed-toggle" title="Velocidad de lectura">🔊</button>
-            <button class="btn-access" id="btn-colorblind" title="Modo daltonismo">👁</button>
+            <div class="cb-btn-wrapper">
+                <button class="btn-access" id="btn-colorblind" title="Modo daltonismo">👁</button>
+                <span class="cb-current-badge" id="cb-current-badge">Normal</span>
+            </div>
             <button class="btn-access contrast-toggle" id="btn-toggle-contrast" title="Alto Contraste">◐</button>
             <button class="btn-access" id="btn-font-minus" title="Disminuir letra">A-</button>
             <button class="btn-access" id="btn-font-plus" title="Aumentar letra">A+</button>
@@ -64,27 +67,27 @@
                             <h3 class="toolbar-legend-title" style="margin-top: 0;">🛠️ Botones de accesibilidad</h3>
                             <p class="toolbar-legend-subtitle" style="margin-bottom: 12px;">Disponibles en la parte superior de la pantalla:</p>
                             <div class="toolbar-legend-grid">
-                                <div class="toolbar-legend-item" title="Tema Oscuro: Cambia los colores a tonos oscuros para descansar la vista">
+                                <div class="toolbar-legend-item" data-target="btn-dark-mode" role="button" tabindex="0" aria-label="Activar Modo Oscuro" title="Tema Oscuro: Cambia los colores a tonos oscuros para descansar la vista">
                                     <span class="tl-icon">🌙</span>
                                     <span class="tl-name">Modo Oscuro</span>
                                 </div>
-                                <div class="toolbar-legend-item" title="Velocidad de voz: Ajusta la rapidez con que el asistente habla">
+                                <div class="toolbar-legend-item" data-target="btn-speed-toggle" role="button" tabindex="0" aria-label="Ajustar velocidad de voz" title="Velocidad de voz: Ajusta la rapidez con que el asistente habla">
                                     <span class="tl-icon">🔊</span>
                                     <span class="tl-name">Velocidad</span>
                                 </div>
-                                <div class="toolbar-legend-item" title="Modo daltonismo: Filtra los colores para personas con daltonismo">
+                                <div class="toolbar-legend-item" data-target="btn-colorblind" role="button" tabindex="0" aria-label="Activar Modo daltonismo" title="Modo daltonismo: Filtra los colores para personas con daltonismo">
                                     <span class="tl-icon">👁</span>
                                     <span class="tl-name">Daltonismo</span>
                                 </div>
-                                <div class="toolbar-legend-item" title="Alto Contraste: Aumenta el contraste para ver mejor el texto">
+                                <div class="toolbar-legend-item" data-target="btn-toggle-contrast" role="button" tabindex="0" aria-label="Activar Alto Contraste" title="Alto Contraste: Aumenta el contraste para ver mejor el texto">
                                     <span class="tl-icon">◐</span>
                                     <span class="tl-name">Contraste</span>
                                 </div>
-                                <div class="toolbar-legend-item" title="Letra más pequeña: Reduce el tamaño del texto en toda la página">
+                                <div class="toolbar-legend-item" data-target="btn-font-minus" role="button" tabindex="0" aria-label="Letra más pequeña" title="Letra más pequeña: Reduce el tamaño del texto en toda la página">
                                     <span class="tl-icon tl-icon-text">A−</span>
                                     <span class="tl-name">Letra −</span>
                                 </div>
-                                <div class="toolbar-legend-item" title="Letra más grande: Aumenta el tamaño del texto en toda la página">
+                                <div class="toolbar-legend-item" data-target="btn-font-plus" role="button" tabindex="0" aria-label="Letra más grande" title="Letra más grande: Aumenta el tamaño del texto en toda la página">
                                     <span class="tl-icon tl-icon-text">A+</span>
                                     <span class="tl-name">Letra +</span>
                                 </div>
@@ -1029,7 +1032,7 @@
             <div id="assistant-text">Hola, soy tu asistente virtual. ¿En qué puedo ayudarte hoy?</div>
             <div class="assistant-chat-input-container" style="display: flex; margin-top: 10px; gap: 5px;">
                 <input type="text" id="assistant-chat-input" placeholder="Escribe aquí..." 
-                       style="flex: 1; border-radius: 20px; padding: 8px 15px; border: 1px solid #ccc; font-size: 16px; width: 100%;">
+                       style="flex: 1; border-radius: 20px; padding: 8px 15px; border: 1px solid #ccc; font-size: 0.8rem; width: 100%;">
                 <button id="btn-assistant-send" style="background: var(--primary); color: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; display: flex; align-items: center; justify-content: center;">➔</button>
             </div>
         </div>
@@ -1039,13 +1042,12 @@
                 💬
             </div>
         </div>
-        
         <!-- Selector de Modo de Asistente (Teclado / Voz) -->
-        <div class="assistant-mode-switcher">
-            <button class="btn-mode-toggle active" id="btn-mode-keyboard" title="Usar Teclado" aria-label="Usar Teclado">
+        <div class="assistant-mode-switcher input-mode-toggle" id="input-mode-toggle">
+            <button class="btn-mode-toggle mode-btn active" id="btn-mode-text" title="Solo escribir" aria-label="Modo texto">
                 <span class="mode-icon">⌨️</span>
             </button>
-            <button class="btn-mode-toggle" id="btn-mode-voice" title="Usar Voz" aria-label="Usar Voz">
+            <button class="btn-mode-toggle mode-btn" id="btn-mode-voice" title="Usar micrófono" aria-label="Modo voz">
                 <span class="mode-icon">🎤</span>
             </button>
         </div>
@@ -1083,8 +1085,11 @@
                 </div>
             </div>
 
-            <button class="btn primary" id="btn-close-guide" style="margin-top: 20px;">¡Entendido, abrir
-                micrófono!</button>
+            <p style="margin-top: 20px; font-weight: 600;">¿Cómo prefiere comunicarse?</p>
+            <div class="mic-guide-choice">
+                <button class="btn btn-mode-choice" id="btn-choose-text">⌨️ Prefiero escribir</button>
+                <button class="btn primary btn-mode-choice" id="btn-choose-voice">🎤 Usar micrófono</button>
+            </div>
         </div>
     </div>
 
@@ -1225,7 +1230,7 @@
         <span class="qh-label">Ayuda</span>
     </button>
 
-    <script src="app.js"></script>
+    <script type="module" src="/src/main.js"></script>
     <!-- Filtros SVG para simulación de daltonismo (científicamente precisos) -->
     <svg id="colorblind-filters" aria-hidden="true" focusable="false"
          style="position:absolute;width:0;height:0;overflow:hidden">
