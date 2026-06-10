@@ -158,6 +158,7 @@ export const assistant = {
         const utter = new SpeechSynthesisUtterance(text);
         utter.lang  = 'es-CL';
         utter.rate  = state.speechRate;
+        utter.pitch = 1.05;
         const voice = getFemaleLatamVoice();
         if (voice) utter.voice = voice;
 

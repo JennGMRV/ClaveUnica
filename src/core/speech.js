@@ -5,21 +5,50 @@ let readerUtterance = null;
 
 export function getFemaleLatamVoice() {
     const voices = synth.getVoices();
-    const preferredLangs = ['es-CL', 'es-MX', 'es-AR', 'es-CO', 'es-US', 'es-ES'];
-
+    
+    // 1. Intentar buscar voz femenina en dialectos latinoamericanos / neutros preferidos (incluido es-419)
+    const preferredLangs = ['es-CL', 'es-MX', 'es-419', 'es-AR', 'es-CO', 'es-US'];
     for (const lang of preferredLangs) {
-        const voice = voices.find(v =>
-            v.lang.replace('_', '-').startsWith(lang) &&
-            (v.name.toLowerCase().includes('female') ||
-             v.name.toLowerCase().includes('mujer')  ||
-             v.name.toLowerCase().includes('sabina') ||
-             v.name.toLowerCase().includes('helena') ||
-             v.name.toLowerCase().includes('zira')   ||
-             v.name.toLowerCase().includes('paul'))
-        );
+        const voice = voices.find(v => {
+            const normalizedLang = v.lang.replace('_', '-').toLowerCase();
+            const normalizedName = v.name.toLowerCase();
+            return normalizedLang.startsWith(lang.toLowerCase()) && (
+                normalizedName.includes('female') ||
+                normalizedName.includes('mujer') ||
+                normalizedName.includes('sabina') ||
+                normalizedName.includes('helena') ||
+                normalizedName.includes('dalia') ||
+                normalizedName.includes('zira') ||
+                normalizedName.includes('paul') ||
+                normalizedName.includes('google')
+            );
+        });
         if (voice) return voice;
     }
-    return voices.find(v => v.lang.startsWith('es')) || null;
+
+    // 2. Intentar buscar cualquier voz en dialectos latinoamericanos / neutros (no es-ES)
+    const latamVoice = voices.find(v => {
+        const normalizedLang = v.lang.replace('_', '-').toLowerCase();
+        return normalizedLang.startsWith('es') && !normalizedLang.startsWith('es-es');
+    });
+    if (latamVoice) return latamVoice;
+
+    // 3. Fallback: buscar voz femenina en español de España (es-ES)
+    const esFemaleVoice = voices.find(v => {
+        const normalizedLang = v.lang.replace('_', '-').toLowerCase();
+        const normalizedName = v.name.toLowerCase();
+        return normalizedLang.startsWith('es-es') && (
+            normalizedName.includes('female') ||
+            normalizedName.includes('mujer') ||
+            normalizedName.includes('sabina') ||
+            normalizedName.includes('helena') ||
+            normalizedName.includes('zira')
+        );
+    });
+    if (esFemaleVoice) return esFemaleVoice;
+
+    // 4. Último recurso: cualquier voz que empiece por 'es'
+    return voices.find(v => v.lang.toLowerCase().startsWith('es')) || null;
 }
 
 export function stopSpeaking() {
@@ -68,7 +97,9 @@ export function startAdvancedReader(textElement, toolbar) {
         const utt = new SpeechSynthesisUtterance(fullText);
         const v = getFemaleLatamVoice();
         if (v) utt.voice = v;
+        utt.lang = 'es-CL';
         utt.rate = 0.7;
+        utt.pitch = 1.05;
         synth.speak(utt);
         return;
     }
@@ -78,6 +109,7 @@ export function startAdvancedReader(textElement, toolbar) {
     if (voice) readerUtterance.voice = voice;
     readerUtterance.lang = 'es-CL';
     readerUtterance.rate = 0.7;
+    readerUtterance.pitch = 1.05;
 
     const status  = toolbar.querySelector('.reader-status');
     const playBtn = toolbar.querySelector('.btn-play');
