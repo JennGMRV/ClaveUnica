@@ -1,3 +1,5 @@
+import { state } from './state.js';
+
 const synth = window.speechSynthesis;
 
 // Variables de módulo para el lector avanzado
@@ -67,7 +69,7 @@ export function speakText(text, button) {
     const voice = getFemaleLatamVoice();
     if (voice) utterance.voice = voice;
     utterance.lang  = 'es-CL';
-    utterance.rate  = 0.9;
+    utterance.rate  = state.speechRate;
     utterance.pitch = 1.05;
 
     utterance.onstart = () => button.classList.add('playing');
@@ -98,7 +100,7 @@ export function startAdvancedReader(textElement, toolbar) {
         const v = getFemaleLatamVoice();
         if (v) utt.voice = v;
         utt.lang = 'es-CL';
-        utt.rate = 0.85;
+        utt.rate = state.speechRate;
         utt.pitch = 1.05;
         synth.speak(utt);
         return;
@@ -108,7 +110,7 @@ export function startAdvancedReader(textElement, toolbar) {
     const voice = getFemaleLatamVoice();
     if (voice) readerUtterance.voice = voice;
     readerUtterance.lang = 'es-CL';
-    readerUtterance.rate = 0.85;
+    readerUtterance.rate = state.speechRate;
     readerUtterance.pitch = 1.05;
 
     const status  = toolbar.querySelector('.reader-status');
