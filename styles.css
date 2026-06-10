@@ -5207,6 +5207,7 @@ body.dark-mode .btn-mode-toggle.active {
     background: #3a5b7d;
     border-color: #5b7da1;
     color: white;
+}
 /* ── Toggle modo texto / voz ── */
 .input-mode-toggle {
     display: flex;
