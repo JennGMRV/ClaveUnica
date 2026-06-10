@@ -192,6 +192,12 @@ export const assistant = {
             return;
         }
 
+        if (state.currentScreenKey === 'rcInteractiveSimulation') {
+            const textEl = document.getElementById('sim-assistant-text');
+            if (textEl) this.say(textEl.innerText);
+            return;
+        }
+
         const text = screenTexts[state.currentScreenKey];
         if (text) this.say(text);
     },

@@ -9,4 +9,17 @@ export const state = {
     currentStepIndex:      0,
     currentTutorialOrigin: 'rcCategories',
     speechRate: 0.75,
+
+    // Variables de selección de certificado
+    choiceCertId: null,
+    choiceCertName: null,
+    choiceCertCu: false,
+
+    // Variables de simulación interactiva
+    simActiveCertId: '',
+    simActiveCertName: '',
+    simActiveCatId: '',
+    simCurrentStep: 0,
+    simCaptchaText: '',
+    simCartRUT: '',
 };

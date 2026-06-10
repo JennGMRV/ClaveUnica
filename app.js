@@ -48,13 +48,21 @@ document.addEventListener('DOMContentLoaded', () => {
         tutorial: document.getElementById('screen-tutorial'),
         rcCategories: document.getElementById('screen-rc-categories'),
         rcTutorial: document.getElementById('screen-rc-tutorial'),
-        caCategories: document.getElementById('screen-ca-categories')
+        caCategories: document.getElementById('screen-ca-categories'),
+        rcInteractiveSimulation: document.getElementById('screen-rc-interactive-simulation')
     };
 
     let history = ['landing'];
     let currentScreenKey = 'landing';
     let postLoginTarget = 'menu'; // Default target after login
     let autoReadMode = false; // Modo lector persistente: lee cada pantalla automáticamente
+
+    // variables for learning mode choice
+    let choiceCertId = '';
+    let choiceCertName = '';
+    let choiceCertCu = false;
+    let currentTutorialCertId = '';
+    let currentTutorialCertName = '';
 
     function showScreen(key, addToHistory = true) {
         // Hide all
@@ -164,6 +172,17 @@ document.addEventListener('DOMContentLoaded', () => {
         showScreen('caCategories');
     });
 
+    const btnRecoverGuide = document.getElementById('btn-recover-guide');
+    if (btnRecoverGuide) {
+        btnRecoverGuide.addEventListener('click', () => {
+            currentTutorialOrigin = 'landing';
+            currentTutorialSteps = cuData['recuperar-pass'].steps;
+            currentStepIndex = 0;
+            updateStepUI();
+            showScreen('rcTutorial');
+        });
+    }
+
     // Login -> Menu or Simulation Target
     document.getElementById('btn-login').addEventListener('click', () => {
         const rutElement = document.getElementById('rut');
@@ -198,8 +217,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Success: Go to the intended target
         if (postLoginTarget === 'rcTutorial') {
             updateStepUI();
+            showScreen(postLoginTarget);
+        } else if (postLoginTarget === 'rcInteractiveSimulation') {
+            startInteractiveSimulation(choiceCertId, choiceCertName);
+        } else {
+            showScreen(postLoginTarget);
         }
-        showScreen(postLoginTarget);
         // Reset postLoginTarget for next time
         postLoginTarget = 'menu';
     });
@@ -493,6 +516,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    const cuData = {
+        'recuperar-pass': {
+            name: 'Recuperar Contraseña de ClaveÚnica',
+            steps: [
+                { title: "Paso 1: Entrar a la página", text: "Abra el navegador y vaya a la página claveunica.gob.cl/recuperar. Verá un recuadro blanco que dice 'Recuperar ClaveÚnica'.", visual: "🌐 Presione aquí para ir a: <br><a href='https://claveunica.gob.cl/recuperar' target='_blank' style='display: inline-block; margin-top: 10px; color: white; background: var(--primary); padding: 10px 20px; border-radius: 8px; text-decoration: none; font-size: 20px;'>claveunica.gob.cl/recuperar</a>" },
+                { title: "Paso 2: Ingresar su RUN", text: "Escriba su RUN en el recuadro blanco. Luego apriete el botón azul que dice 'Continuar'.", visual: "<div style='text-align: left; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); color: #333; font-family: sans-serif; font-weight: normal; line-height: 1.4;'><h2 style='margin: 0; color: #222; font-size: 26px; font-weight: 800;'>RECUPERA</h2><div style='font-size: 18px; margin-bottom: 5px; color: #444;'>Tu ClaveÚnica</div><hr style='border: 0; border-top: 2px solid #555; width: 140px; margin: 0 0 15px 0;'><p style='font-size: 14px; color: #333; margin-bottom: 30px;'>Necesitas tu cédula de identidad y acceso a tu correo registrado en ClaveÚnica. (Si ya tienes un código del Registro Civil, <span style=\"color: #0066cc; text-decoration: underline;\">ve a la sección Activa</span>).</p><label style='display: block; font-size: 14px; margin-bottom: 8px; color: #444;'>RUN</label><div style='position: relative; margin-bottom: 5px; max-width: 400px; box-shadow: 0 0 0 4px #FF9800, 0 0 15px rgba(255,152,0,0.5); border-radius: 6px; padding: 2px;'><div style='position: absolute; left: -40px; top: 8px; font-size: 25px;'>👉</div><input type='text' value='11.111.111-1' readonly style='width: 100%; padding: 12px; border: 1px solid #1abc9c; border-radius: 4px; font-size: 16px; color: #555; outline: none; box-sizing: border-box; background: white;'><span style='position: absolute; right: 15px; top: 14px; color: #1abc9c; font-size: 18px; font-weight: bold;'>✓</span></div><div style='color: #1abc9c; font-size: 13px; margin-bottom: 30px;'>RUN con formato correcto</div><button style='background: #0056b3; color: white; border: none; padding: 12px 30px; font-size: 16px; font-weight: bold; border-radius: 4px; text-decoration: underline;'>Continuar</button></div>" },
+                { title: "Paso 3: Elegir cómo recuperar", text: "El sistema le preguntará cómo quiere recuperar su contraseña. Asegúrese de elegir la opción 'Por correo electrónico' y luego presione el botón azul 'Continuar'.", visual: "<div style='text-align: left; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); color: #333; font-family: sans-serif; font-weight: normal; line-height: 1.4;'><h2 style='margin: 0; color: #222; font-size: 26px; font-weight: 800;'>RECUPERA</h2><div style='font-size: 18px; margin-bottom: 5px; color: #444;'>Tu ClaveÚnica</div><hr style='border: 0; border-top: 2px solid #555; width: 140px; margin: 0 0 25px 0;'><p style='font-size: 15px; color: #333; margin-bottom: 20px;'>Selecciona cómo quieres restablecer tu contraseña</p><div style='position: relative; display: flex; align-items: center; margin-bottom: 30px; padding: 15px; border: 4px solid #FF9800; border-radius: 8px; background-color: rgba(255,152,0,0.1); box-shadow: 0 0 15px rgba(255,152,0,0.4); max-width: 400px;'><div style='position: absolute; left: -40px; font-size: 25px;'>👉</div><input type='radio' checked style='margin-right: 15px; transform: scale(1.8); accent-color: #0056b3;'><label style='font-size: 16px; color: #333; font-weight: 600;'>Por correo electrónico</label></div><button style='background: #0056b3; color: white; border: none; padding: 12px 30px; font-size: 16px; font-weight: bold; border-radius: 4px; text-decoration: underline;'>Continuar</button></div>" },
+                { title: "Paso 4: Revisar su correo electrónico", text: "La página le confirmará que ha enviado un mensaje y le mostrará su correo con asteriscos (***) por seguridad, solo para recordarle a cuál se envió. Ahora debe abrir ese correo electrónico y buscar un mensaje del Registro Civil con el enlace para crear su nueva contraseña.", visual: "<div style='text-align: left; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); color: #333; font-family: sans-serif; font-weight: normal; line-height: 1.4;'><h2 style='margin: 0; color: #222; font-size: 26px; font-weight: 800;'>RECUPERA</h2><div style='font-size: 18px; margin-bottom: 5px; color: #444;'>Tu ClaveÚnica</div><hr style='border: 0; border-top: 2px solid #555; width: 140px; margin: 0 0 25px 0;'><div style='position: relative; padding: 15px; border: 4px solid #FF9800; border-radius: 8px; background-color: rgba(255,152,0,0.1); box-shadow: 0 0 15px rgba(255,152,0,0.4); margin-bottom: 25px;'><div style='position: absolute; left: -40px; top: 10px; font-size: 25px;'>👉</div><p style='font-size: 15px; color: #333; margin: 0;'>Hemos enviado un mensaje a <strong>mail*********@gmai*****</strong> con instrucciones para restablecer tu contraseña.</p></div><p style='font-size: 14px; color: #555; margin-bottom: 5px;'>¿No llega el correo?</p><p style='font-size: 14px; color: #555; margin-top: 0; margin-bottom: 30px;'>Revisa la carpeta de spam o verifica si tu servicio de correo lo está bloqueando. Si el problema persiste llámanos al 600 360 3303 para ayudarte.</p><span style='color: #4b0082; text-decoration: underline; font-size: 14px;'>Vuelve al inicio</span></div>" },
+                { title: "Paso 5: Buscar el correo en su bandeja", text: "Vaya a su bandeja de entrada (por ejemplo, Gmail o Outlook) y busque un correo nuevo que diga 'no-reply' con el asunto 'ClaveÚnica - Recuperación'. Presione sobre ese mensaje para abrirlo.", visual: "<div style='position: relative; display: inline-block;'><img src='rc-cu-inbox.png' style='width: 100%; max-width: 600px; border-radius: 8px; border: 2px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1);'><div style='position: absolute; left: 30%; top: 55%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👆</div></div>" },
+                { title: "Paso 6: Leer el código en el correo", text: "Al abrir el correo, verá un saludo y un número llamado 'Código de Recuperación'. Anote ese código en un papel (letras mayúsculas y números) y luego presione el enlace azul que dice 'claveunica.gob.cl/restaurar'.", visual: "<div style='position: relative; display: inline-block;'><img src='rc-cu-email.png' style='width: 100%; max-width: 500px; border-radius: 8px; border: 2px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1);'><div style='position: absolute; left: 18%; top: 45%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div><div style='position: absolute; left: 15%; top: 68%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div></div>" },
+                { title: "Paso 7: Ingresar el código en la página", text: "En la nueva página, escriba su RUN arriba y en el recuadro de abajo escriba el código que le mandaron a su correo (por ejemplo, DNE8KI). Luego, presione el cuadrito en blanco que está al lado de 'Acepto los Términos y condiciones'.", visual: "<div style='position: relative; display: inline-block;'><img src='rc-cu-restaurar.png' style='width: 100%; max-width: 600px; border-radius: 8px; border: 2px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1);'><div style='position: absolute; left: 8%; top: 65%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div><div style='position: absolute; left: 15%; top: 80%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div></div>" },
+                { title: "Paso 8: Aceptar los Términos", text: "Se abrirá una ventana con un texto largo. Estos 'Términos y condiciones' son simplemente las reglas de seguridad del Estado para proteger sus datos personales. Mueva la ruedita del ratón (o deslice el dedo hacia arriba en su celular) hasta llegar al final del texto. Allí presione el botón azul 'Aceptar términos y condiciones', y luego ya podrá apretar 'Continuar'.", visual: "<div style='position: relative; display: inline-block;'><img src='rc-cu-terms-bottom.png' style='width: 100%; max-width: 600px; border-radius: 8px; border: 2px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1);'><div style='position: absolute; right: 10%; top: 80%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👆</div></div>" },
+                { title: "Paso 9: Crear nueva contraseña", text: "¡Último paso! Ahora podrá crear su nueva Clave Única. Escríbala en el primer recuadro y vuelva a escribirla exactamente igual en el recuadro de abajo. Recuerde que para que sea segura debe tener al menos 8 letras, números y algún símbolo (como un punto o un guión).", visual: "<div style='position: relative; display: inline-block;'><img src='rc-cu-password.png' style='width: 100%; max-width: 600px; border-radius: 8px; border: 2px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1);'><div style='position: absolute; left: 2%; top: 32%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div><div style='position: absolute; left: 2%; top: 85%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div></div>" },
+                { title: "Paso 10: Guardar y finalizar", text: "Una vez que haya escrito su contraseña en ambos recuadros y cumpla los requisitos (se marcarán con un visto verde ✔️), presione el botón azul 'Continuar' que está abajo a la derecha. ¡Felicidades, ha recuperado su Clave Única con éxito!", visual: "<div style='position: relative; display: inline-block;'><img src='rc-cu-password-done.png' style='width: 100%; max-width: 600px; border-radius: 8px; border: 2px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1);'><div style='position: absolute; left: 70%; top: 80%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div></div>" },
+                { title: "Paso 11: ¡Proceso Terminado!", text: "La página le mostrará un mensaje de éxito indicando que ha recuperado su Clave Única. Ahora ya puede presionar 'Volver al inicio' y realizar todos sus trámites con su nueva contraseña. ¡Excelente trabajo!", visual: "<div style='position: relative; display: inline-block;'><img src='rc-cu-success.png' style='width: 100%; max-width: 600px; border-radius: 8px; border: 2px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1);'><div style='position: absolute; left: 30%; top: 40%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div></div>" }
+            ]
+        }
+    };
+
     let currentTutorialSteps = [];
     let currentStepIndex = 0;
     let currentTutorialOrigin = 'rcCategories';
@@ -561,14 +603,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${cert.cu ? '<div class="cu-badge"><span class="icon">🔑</span> Requiere Clave Única</div>' : ''}
                 `;
                 item.onclick = () => {
-                    if (cert.cu) {
-                        postLoginTarget = 'rcTutorial';
-                        currentTutorialOrigin = 'rcCategories';
-                        currentTutorialSteps = rcData.steps[cert.id] || [];
-                        currentStepIndex = 0;
-                        showScreen('login');
+                    choiceCertId = cert.id;
+                    choiceCertName = cert.name;
+                    choiceCertCu = cert.cu;
+                    
+                    const choiceModal = document.getElementById('modal-rc-learn-choice');
+                    if (choiceModal) {
+                        choiceModal.style.display = 'flex';
+                        // Highlight appropriate cards
+                        document.getElementById('choice-modal-title').innerText = `¿Cómo desea realizar: ${cert.name}?`;
                     } else {
-                        startTutorial(cert.id, cert.name);
+                        // Fallback
+                        if (cert.cu) {
+                            postLoginTarget = 'rcTutorial';
+                            currentTutorialOrigin = 'rcCategories';
+                            currentTutorialSteps = rcData.steps[cert.id] || [];
+                            currentStepIndex = 0;
+                            showScreen('login');
+                        } else {
+                            startTutorial(cert.id, cert.name);
+                        }
                     }
                 };
                 container.appendChild(item);
@@ -595,6 +649,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function startTutorial(certId, certName) {
         currentTutorialOrigin = 'rcCategories';
+        currentTutorialCertId = certId;
+        currentTutorialCertName = certName;
         currentTutorialSteps = rcData.steps[certId] || [
             { title: "Paso 1: Ingresar", text: `Para obtener el ${certName}, primero debe ir al sitio oficial del Registro Civil.`, visual: "🌐 www.registrocivil.cl" },
             { title: "Paso 2: Selección", text: "Busque el nombre del certificado en la lista de servicios en línea.", visual: "🖱️ Clic en la lista." },
@@ -1039,9 +1095,43 @@ document.addEventListener('DOMContentLoaded', () => {
             return str.split('').join(', ').replace(/-/g, ' guion ');
         },
 
+        inputMode: 'keyboard',
+
+        setMode(mode) {
+            this.inputMode = mode;
+            if (mode === 'keyboard') {
+                if (this.keyboardModeBtn) this.keyboardModeBtn.classList.add('active');
+                if (this.voiceModeBtn) this.voiceModeBtn.classList.remove('active');
+                if (this.chatInputContainer) this.chatInputContainer.style.display = 'flex';
+                if (this.isListening && this.recognition) {
+                    this.recognition.stop();
+                }
+                this.showBubble("Modo teclado activo. ¿En qué puedo ayudarte?");
+            } else {
+                if (this.voiceModeBtn) this.voiceModeBtn.classList.add('active');
+                if (this.keyboardModeBtn) this.keyboardModeBtn.classList.remove('active');
+                if (this.chatInputContainer) this.chatInputContainer.style.display = 'none';
+                
+                if (!this.isListening) {
+                    if (localStorage.getItem('micPermissionGranted') !== 'true') {
+                        showMicGuide();
+                    } else {
+                        try {
+                            this.recognition?.start();
+                        } catch(e) {
+                            console.error(e);
+                        }
+                    }
+                }
+            }
+        },
+
         init() {
             this.chatInput = document.getElementById('assistant-chat-input');
             this.chatSendBtn = document.getElementById('btn-assistant-send');
+            this.keyboardModeBtn = document.getElementById('btn-mode-keyboard');
+            this.voiceModeBtn = document.getElementById('btn-mode-voice');
+            this.chatInputContainer = document.querySelector('.assistant-chat-input-container');
 
             if (this.chatSendBtn) {
                 this.chatSendBtn.addEventListener('click', () => {
@@ -1109,31 +1199,61 @@ document.addEventListener('DOMContentLoaded', () => {
                         const cmd = finalTranscript.trim();
                         this.showBubble('"' + cmd + '"', true);
                         this.handleCommand(cmd, true);
-                        // Optional: stop after each final command to prevent ghosting
                         this.recognition.stop();
                     }
                 };
+            }
 
-                this.mainBtn.addEventListener('click', () => {
-                    const mode = localStorage.getItem('inputMode') || 'text';
-                    if (mode === 'voice') {
-                        if (this.isListening) {
-                            this.recognition.stop();
-                        } else {
-                            try { this.recognition.start(); } catch (_) {}
-                        }
+            if (this.keyboardModeBtn) {
+                this.keyboardModeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.setMode('keyboard');
+                });
+            }
+
+            if (this.voiceModeBtn) {
+                this.voiceModeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.setMode('voice');
+                });
+            }
+
+            this.mainBtn.addEventListener('click', () => {
+                const mode = this.inputMode || localStorage.getItem('inputMode') || 'text';
+                if (mode === 'voice') {
+                    if (this.isListening) {
+                        this.recognition?.stop();
                     } else {
-                        // Modo texto: mostrar burbuja con el chat
-                        if (this.bubble) {
-                            const visible = this.bubble.style.display === 'block';
-                            this.bubble.style.display = visible ? 'none' : 'block';
-                            if (!visible) {
-                                document.getElementById('assistant-chat-input')?.focus();
+                        if (localStorage.getItem('micPermissionGranted') !== 'true') {
+                            showMicGuide();
+                        } else {
+                            try {
+                                this.recognition?.start();
+                            } catch(e) {
+                                console.error(e);
                             }
                         }
                     }
-                });
-            }
+                } else {
+                    // Modo teclado/texto: mostrar burbuja con el chat
+                    if (this.bubble) {
+                        const visible = this.bubble.style.display === 'block';
+                        this.bubble.style.display = visible ? 'none' : 'block';
+                        if (!visible) {
+                            const inputEl = this.chatInput || document.getElementById('assistant-chat-input');
+                            if (inputEl) inputEl.focus();
+                        }
+                    }
+                }
+            });
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Initialize mode
+            this.setMode('keyboard');
         },
 
         showBubble(text, isUser = false) {
@@ -1522,6 +1642,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     text = step ? step.title + '. ' + step.text : '';
                     break;
                 }
+                case 'rcInteractiveSimulation': {
+                    const textEl = document.getElementById('sim-assistant-text');
+                    text = textEl ? textEl.innerText : 'Modo de simulación interactiva.';
+                    break;
+                }
                 default:
                     text = '';
             }
@@ -1654,7 +1779,8 @@ document.addEventListener('DOMContentLoaded', () => {
         tutorial: ['Inicio', 'Menú principal', 'Tutorial ChileAtiende'],
         rcCategories: ['Inicio', 'Menú principal', 'Registro Civil'],
         rcTutorial: ['Inicio', 'Menú principal', 'Registro Civil', 'Tutorial'],
-        caCategories: ['Inicio', 'Menú principal', 'ChileAtiende']
+        caCategories: ['Inicio', 'Menú principal', 'ChileAtiende'],
+        rcInteractiveSimulation: ['Inicio', 'Menú principal', 'Registro Civil', 'Simulación Interactiva']
     };
 
     function updateBreadcrumb(key) {
@@ -2008,6 +2134,686 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Lógica del Modal de Elección de Modo de Aprendizaje ---
+    const choiceModal = document.getElementById('modal-rc-learn-choice');
+    const btnCloseChoice = document.getElementById('btn-close-choice');
+    const btnChoiceTutorial = document.getElementById('btn-choice-tutorial');
+    const btnChoiceSimulate = document.getElementById('btn-choice-simulate');
+
+    if (btnCloseChoice && choiceModal) {
+        btnCloseChoice.onclick = () => {
+            choiceModal.style.display = 'none';
+        };
+        // close when clicking outside
+        window.addEventListener('click', (event) => {
+            if (event.target == choiceModal) {
+                choiceModal.style.display = 'none';
+            }
+        });
+    }
+
+    if (btnChoiceTutorial && choiceModal) {
+        btnChoiceTutorial.onclick = () => {
+            choiceModal.style.display = 'none';
+            if (choiceCertCu) {
+                postLoginTarget = 'rcTutorial';
+                currentTutorialOrigin = 'rcCategories';
+                currentTutorialSteps = rcData.steps[choiceCertId] || [];
+                currentStepIndex = 0;
+                showScreen('login');
+            } else {
+                startTutorial(choiceCertId, choiceCertName);
+            }
+        };
+    }
+
+    if (btnChoiceSimulate && choiceModal) {
+        btnChoiceSimulate.onclick = () => {
+            choiceModal.style.display = 'none';
+            if (choiceCertCu) {
+                postLoginTarget = 'rcInteractiveSimulation';
+                currentTutorialOrigin = 'rcCategories';
+                currentStepIndex = 0;
+                showScreen('login');
+            } else {
+                startInteractiveSimulation(choiceCertId, choiceCertName);
+            }
+        };
+    }
+
+    // --- Lógica del Botón "Practicar en Simulación" en el Modal de Felicitaciones ---
+    const btnSummarySimulate = document.getElementById('btn-summary-simulate');
+    if (btnSummarySimulate) {
+        btnSummarySimulate.onclick = () => {
+            const modalSummary = document.getElementById('modal-tutorial-summary');
+            if (modalSummary) modalSummary.style.display = 'none';
+            startInteractiveSimulation(currentTutorialCertId || 'nac-matricula', currentTutorialCertName || 'Certificado de Nacimiento');
+        };
+    }
+
+    // --- Motor de Simulación Interactiva del Registro Civil ---
+    let simActiveCertId = '';
+    let simActiveCertName = '';
+    let simActiveCatId = '';
+    let simCurrentStep = 0;
+    let simCaptchaText = '';
+    let simCartRUT = '';
+
+    // Mapear certificados a sus categorías
+    const certCategoryMap = {
+        'nac-matricula': 'nacimiento',
+        'nac-asignacion': 'nacimiento',
+        'nac-todo': 'nacimiento',
+        'mat-todo': 'matrimonio',
+        'mat-asignacion': 'matrimonio',
+        'def-todo': 'defuncion',
+        'def-asignacion': 'defuncion'
+    };
+
+    const categoryNames = {
+        'nacimiento': 'Nacimiento',
+        'matrimonio': 'Matrimonio',
+        'defuncion': 'Defunción'
+    };
+
+    function startInteractiveSimulation(certId, certName) {
+        simActiveCertId = certId;
+        simActiveCertName = certName;
+        simActiveCatId = certCategoryMap[certId] || 'nacimiento';
+        simCurrentStep = 0;
+        
+        // Limpiar inputs de RUT y formularios
+        document.querySelectorAll('.sim-input-rut').forEach(inp => inp.value = '');
+        document.getElementById('sim-sol-rut').value = '';
+        document.getElementById('sim-sol-doc').value = '';
+        document.getElementById('sim-sol-email').value = '';
+        document.getElementById('sim-sol-email-confirm').value = '';
+        document.getElementById('sim-captcha-input').value = '';
+        
+        // Resetear clases de error
+        document.querySelectorAll('.error-field').forEach(el => el.classList.remove('error-field'));
+        
+        // Deshabilitar formulario del solicitante
+        const solBox = document.getElementById('sim-solicitante-box');
+        if (solBox) {
+            solBox.classList.add('disabled');
+            solBox.querySelectorAll('input, button').forEach(el => el.disabled = true);
+        }
+
+        // Colapsar todas las categorías simulated
+        document.querySelectorAll('.sim-cat-card').forEach(card => {
+            card.classList.remove('active');
+        });
+
+        // Limpiar checkboxes de certificados y ocultar action-boxes
+        document.querySelectorAll('.sim-cert-checkbox').forEach(cb => {
+            cb.checked = false;
+        });
+        document.querySelectorAll('.sim-cert-action-box').forEach(box => {
+            box.style.display = 'none';
+        });
+        const totalDisplay = document.getElementById('sim-cart-total-val-display');
+        if (totalDisplay) totalDisplay.innerText = '0';
+
+        // Limpiar carro simulated
+        const cartEmptyMsg = document.getElementById('sim-cart-empty-msg');
+        const cartTable = document.getElementById('sim-cart-table');
+        const cartTotalBox = document.getElementById('sim-cart-total-box');
+        const cartItemsBody = document.getElementById('sim-cart-items-body');
+        
+        if (cartEmptyMsg) cartEmptyMsg.style.display = 'block';
+        if (cartTable) cartTable.style.display = 'none';
+        if (cartTotalBox) cartTotalBox.style.display = 'none';
+        if (cartItemsBody) cartItemsBody.innerHTML = '';
+        document.getElementById('sim-cart-count').innerText = '0 art.';
+
+        // Ocultar pantalla de checkout y mostrar rejilla principal
+        document.getElementById('sim-main-grid').style.display = 'grid';
+        document.getElementById('sim-checkout-screen').style.display = 'none';
+
+        // Asegurar que las categorías y aviso estén visibles y el captcha oculto al iniciar
+        const infoBlock = document.getElementById('sim-info-text-block');
+        const categoriesBlock = document.getElementById('sim-categories-list-block');
+        const captchaContainer = document.getElementById('sim-captcha-container');
+        if (infoBlock) infoBlock.style.display = 'block';
+        if (categoriesBlock) categoriesBlock.style.display = 'block';
+        if (captchaContainer) captchaContainer.style.display = 'none';
+
+        // Mostrar pantalla de simulación
+        showScreen('rcInteractiveSimulation');
+
+        // Inicializar UI de pasos
+        updateSimulationStepUI();
+    }
+
+    function updateSimulationStepUI() {
+        const textEl = document.getElementById('sim-assistant-text');
+        if (!textEl) return;
+
+        let instructionText = '';
+        let targetSelector = '';
+
+        const catName = categoryNames[simActiveCatId];
+
+        switch(simCurrentStep) {
+            case 0: // Buscar y hacer clic en categoría
+                instructionText = `Paso 1: Busque y haga clic sobre la categoría "${catName}" (marcada con el borde naranja parpadeante) para abrir las opciones.`;
+                targetSelector = `#sim-cat-${simActiveCatId}`;
+                break;
+            case 1: // Rellenar RUT y agregar
+                instructionText = `Paso 2: Marque la casilla al lado de "${simActiveCertName}", escriba el RUN de la persona en el cuadro blanco y presione "Agregar al carro".`;
+                targetSelector = `#sim-cert-${simActiveCertId}`;
+                break;
+            case 2: // Resolver Captcha (inline)
+                instructionText = `Paso 3: Por seguridad, escriba el código de 6 letras y números de la imagen en el recuadro blanco y presione "submit".`;
+                targetSelector = `#sim-captcha-container`;
+                break;
+            case 3: // Rellenar datos del solicitante
+                instructionText = `Paso 4: ¡El certificado se agregó al carro! Ahora, complete los "Datos del Solicitante" a la derecha: ingrese su RUN, N° documento de carnet y su correo.`;
+                targetSelector = `#sim-solicitante-box`;
+                break;
+            case 4: // Presionar continuar del solicitante
+                instructionText = `Paso 5: Revise que sus datos estén correctos y presione el botón "Continuar" para avanzar al paso final.`;
+                targetSelector = `#sim-btn-continue`;
+                break;
+            case 5: // Confirmar y obtener
+                instructionText = `Paso 6: ¡Último paso! Revise que el valor sea $0 (estos certificados son gratis para usted) y presione el botón "Obtener Certificado" para terminar.`;
+                targetSelector = `#btn-sim-checkout-submit`;
+                break;
+        }
+
+        // Actualizar texto en panel flotante
+        textEl.innerHTML = instructionText;
+
+        // Resaltar visualmente el componente actual
+        simHighlightOnly(targetSelector);
+
+        // Narrar instrucción si corresponde
+        if (autoReadMode) {
+            assistant.say(instructionText);
+        }
+    }
+
+    function simHighlightOnly(selector) {
+        // Remover clases previas
+        document.querySelectorAll('.sim-highlight-guide, .sim-highlight-text-guide').forEach(el => {
+            el.classList.remove('sim-highlight-guide');
+            el.classList.remove('sim-highlight-text-guide');
+        });
+
+        if (selector) {
+            const el = document.querySelector(selector);
+            if (el) {
+                if (selector.includes('input') || selector.includes('group') || selector.includes('box')) {
+                    el.classList.add('sim-highlight-text-guide');
+                } else {
+                    el.classList.add('sim-highlight-guide');
+                }
+                // Scroll suave
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    }
+
+    // Configurar click en botones de reproducción de voz en la simulación
+    const btnSimVoicePlay = document.getElementById('btn-sim-voice-play');
+    if (btnSimVoicePlay) {
+        btnSimVoicePlay.onclick = () => {
+            const textEl = document.getElementById('sim-assistant-text');
+            if (textEl) {
+                assistant.say(textEl.innerText);
+            }
+        };
+    }
+
+    // Cancelar simulación
+    const btnBackRcSimulation = document.getElementById('btn-back-rc-simulation');
+    if (btnBackRcSimulation) {
+        btnBackRcSimulation.onclick = () => {
+            goBack();
+        };
+    }
+
+    // --- Manejo de Eventos en la Página Simulación ---
+
+    // 1. Clic en categorías de la simulación
+    document.querySelectorAll('.sim-cat-card .sim-cat-header').forEach(hdr => {
+        hdr.onclick = () => {
+            const card = hdr.closest('.sim-cat-card');
+            const catId = card.getAttribute('data-sim-cat');
+            
+            if (simCurrentStep === 0) {
+                if (catId === simActiveCatId) {
+                    card.classList.add('active');
+                    simCurrentStep = 1;
+                    updateSimulationStepUI();
+                } else {
+                    showNotification(`Para este trámite, busque y presione la categoría "${categoryNames[simActiveCatId]}" marcada en naranja.`, "error");
+                }
+            } else if (simCurrentStep >= 1) {
+                // Permitir abrir/cerrar libremente si ya pasamos el paso 0
+                card.classList.toggle('active');
+            }
+        };
+    });
+
+    // Manejo de checkboxes de certificados
+    document.querySelectorAll('.sim-cert-checkbox').forEach(cb => {
+        cb.onchange = () => {
+            const certId = cb.getAttribute('data-cert-id');
+            const actionBox = document.getElementById(`sim-action-${certId}`);
+            
+            if (cb.checked) {
+                // Si intenta marcar un certificado diferente al activo de la simulación
+                if (simCurrentStep === 1 && certId !== simActiveCertId) {
+                    showNotification(`Por favor, simule el certificado indicado: "${simActiveCertName}".`, "error");
+                    cb.checked = false;
+                    return;
+                }
+                
+                // Mostrar panel de entrada de RUT y botón
+                if (actionBox) actionBox.style.display = 'flex';
+                
+                // Desmarcar otros checkboxes en la misma categoría
+                document.querySelectorAll('.sim-cert-checkbox').forEach(other => {
+                    if (other !== cb && other.closest('.sim-cat-card') === cb.closest('.sim-cat-card')) {
+                        other.checked = false;
+                        const otherId = other.getAttribute('data-cert-id');
+                        const otherBox = document.getElementById(`sim-action-${otherId}`);
+                        if (otherBox) otherBox.style.display = 'none';
+                    }
+                });
+            } else {
+                if (actionBox) actionBox.style.display = 'none';
+            }
+        };
+    });
+
+    // Validar y formatear inputs de RUT en la simulación
+    document.querySelectorAll('.sim-input-rut, #sim-sol-rut').forEach(input => {
+        input.addEventListener('input', function() {
+            this.value = formatRut(this.value);
+            this.classList.remove('error-field');
+        });
+    });
+
+    // 2. Clic en "Agregar al Carro" en la simulación
+    document.querySelectorAll('.sim-btn-add-cart').forEach(btn => {
+        btn.onclick = () => {
+            const certId = btn.getAttribute('data-cert-id');
+            const inputRut = document.getElementById(`input-rut-${certId}`);
+            const rutVal = inputRut ? inputRut.value : '';
+
+            if (simCurrentStep === 1) {
+                if (certId !== simActiveCertId) {
+                    showNotification(`Por favor, simule el certificado indicado: "${simActiveCertName}".`, "error");
+                    return;
+                }
+
+                if (rutVal.trim() === '') {
+                    showNotification("Por favor, ingrese el RUT del inscrito.", "error");
+                    inputRut.classList.add('error-field');
+                    return;
+                }
+
+                if (!validateRut(rutVal)) {
+                    showNotification("Por favor, ingrese un RUT válido.", "error");
+                    inputRut.classList.add('error-field');
+                    return;
+                }
+
+                // Guardar RUT de la persona y mostrar Captcha
+                simCartRUT = rutVal;
+                showSimCaptchaModal();
+            } else {
+                showNotification("Siga las instrucciones del asistente flotante de ayuda.", "info");
+            }
+        };
+    });
+
+    // 3. Captcha simulado (Inline, reemplaza categorías)
+    const captchaContainer = document.getElementById('sim-captcha-container');
+    const infoBlock = document.getElementById('sim-info-text-block');
+    const categoriesBlock = document.getElementById('sim-categories-list-block');
+    const btnCaptchaRefresh = document.getElementById('btn-sim-captcha-refresh');
+    const inputCaptcha = document.getElementById('sim-captcha-input');
+    const btnCaptchaCancel = document.getElementById('btn-sim-captcha-cancel');
+    const btnCaptchaSubmit = document.getElementById('btn-sim-captcha-submit');
+    const btnCaptchaAudio = document.getElementById('btn-sim-captcha-audio');
+
+    function showSimCaptchaModal() {
+        simCaptchaText = generateRandomCaptcha();
+        renderCaptcha(simCaptchaText);
+        
+        if (inputCaptcha) {
+            inputCaptcha.value = '';
+            inputCaptcha.classList.remove('error-field');
+        }
+        
+        // Ocultar categorías y mostrar captcha inline
+        if (infoBlock) infoBlock.style.display = 'none';
+        if (categoriesBlock) categoriesBlock.style.display = 'none';
+        if (captchaContainer) captchaContainer.style.display = 'block';
+        
+        // Randomizar código de soporte
+        const supportCodeEl = document.getElementById('sim-captcha-support-code');
+        if (supportCodeEl) {
+            let code = '1690';
+            for (let i = 0; i < 16; i++) {
+                code += Math.floor(Math.random() * 10);
+            }
+            supportCodeEl.innerText = `Código de soporte: ${code}.`;
+        }
+        
+        simCurrentStep = 2;
+        updateSimulationStepUI();
+        if (inputCaptcha) inputCaptcha.focus();
+    }
+
+    function renderCaptcha(text) {
+        const container = document.getElementById('sim-captcha-letters-container');
+        if (!container) return;
+        container.innerHTML = '';
+        
+        for (let i = 0; i < text.length; i++) {
+            const char = text.charAt(i);
+            const span = document.createElement('span');
+            span.innerText = char;
+            
+            // Distorsión del captcha
+            const rot = Math.floor(Math.random() * 30) - 15; // -15 a 15 deg
+            const size = Math.floor(Math.random() * 8) + 26; // 26px a 34px
+            const yOffset = Math.floor(Math.random() * 10) - 5; // -5px a 5px
+            const xOffset = Math.floor(Math.random() * 6) - 3; // -3px a 3px
+            const weight = [400, 600, 800][Math.floor(Math.random() * 3)];
+            
+            // Colores oscuros legibles
+            const colors = ['#2b2b2b', '#3a3a3a', '#4a4a4a', '#1e1e1e', '#555555'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            span.style.transform = `rotate(${rot}deg) translateY(${yOffset}px) translateX(${xOffset}px)`;
+            span.style.fontSize = `${size}px`;
+            span.style.fontWeight = weight;
+            span.style.color = color;
+            span.style.display = 'inline-block';
+            span.style.fontFamily = "monospace";
+            
+            container.appendChild(span);
+        }
+    }
+
+    if (btnCaptchaRefresh) {
+        btnCaptchaRefresh.onclick = (e) => {
+            if (e) e.preventDefault();
+            simCaptchaText = generateRandomCaptcha();
+            renderCaptcha(simCaptchaText);
+            if (inputCaptcha) inputCaptcha.value = '';
+        };
+    }
+
+    if (btnCaptchaCancel) {
+        btnCaptchaCancel.onclick = (e) => {
+            if (e) e.preventDefault();
+            // Mostrar categorías y ocultar captcha inline
+            if (infoBlock) infoBlock.style.display = 'block';
+            if (categoriesBlock) categoriesBlock.style.display = 'block';
+            if (captchaContainer) captchaContainer.style.display = 'none';
+            
+            simCurrentStep = 1;
+            updateSimulationStepUI();
+        };
+    }
+
+    if (btnCaptchaSubmit) {
+        btnCaptchaSubmit.onclick = (e) => {
+            if (e) e.preventDefault();
+            const entered = inputCaptcha ? inputCaptcha.value.trim().toUpperCase() : '';
+            if (entered === simCaptchaText.toUpperCase()) {
+                // Captcha correcto: ocultar y agregar al carro
+                if (infoBlock) infoBlock.style.display = 'block';
+                if (categoriesBlock) categoriesBlock.style.display = 'block';
+                if (captchaContainer) captchaContainer.style.display = 'none';
+                addItemToSimCart();
+            } else {
+                showNotification("Código incorrecto, por favor intente de nuevo.", "error");
+                if (inputCaptcha) {
+                    inputCaptcha.classList.add('error-field');
+                    inputCaptcha.value = '';
+                }
+                simCaptchaText = generateRandomCaptcha();
+                renderCaptcha(simCaptchaText);
+            }
+        };
+    }
+
+    if (btnCaptchaAudio) {
+        btnCaptchaAudio.onclick = (e) => {
+            if (e) e.preventDefault();
+            if (!simCaptchaText) return;
+            
+            let spellOut = 'El código es: ';
+            for (let i = 0; i < simCaptchaText.length; i++) {
+                const char = simCaptchaText.charAt(i);
+                if (char >= '0' && char <= '9') {
+                    spellOut += `${char}. `;
+                } else if (char === char.toUpperCase()) {
+                    spellOut += `${char.toUpperCase()} mayúscula. `;
+                } else {
+                    spellOut += `${char.toLowerCase()} minúscula. `;
+                }
+            }
+            assistant.say(spellOut);
+        };
+    }
+
+    if (inputCaptcha) {
+        inputCaptcha.onkeypress = (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                btnCaptchaSubmit.click();
+            }
+        };
+    }
+
+    function generateRandomCaptcha() {
+        // Genera código de 6 caracteres con números y letras mayúsculas y minúsculas (filtrando ambiguas)
+        const chars = 'abcdefhkmnpqruvwxyABCDEFGHKLMNPQRSTUVWXY346789';
+        let result = '';
+        for (let i = 0; i < 6; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
+    }
+
+    function addItemToSimCart() {
+        // Mostrar en la tabla del carro
+        const cartEmptyMsg = document.getElementById('sim-cart-empty-msg');
+        const cartTable = document.getElementById('sim-cart-table');
+        const cartTotalBox = document.getElementById('sim-cart-total-box');
+        const cartItemsBody = document.getElementById('sim-cart-items-body');
+
+        // Asegurar que las categorías y aviso estén visibles y el captcha oculto
+        if (infoBlock) infoBlock.style.display = 'block';
+        if (categoriesBlock) categoriesBlock.style.display = 'block';
+        if (captchaContainer) captchaContainer.style.display = 'none';
+
+        if (cartEmptyMsg) cartEmptyMsg.style.display = 'none';
+        if (cartTable) cartTable.style.display = 'table';
+        if (cartTotalBox) cartTotalBox.style.display = 'flex';
+        
+        if (cartItemsBody) {
+            cartItemsBody.innerHTML = `
+                <tr>
+                    <td style="padding: 10px 0;"><strong>${simActiveCertName}</strong></td>
+                    <td style="padding: 10px 0;">${simCartRUT}</td>
+                    <td style="padding: 10px 0; color: #28a745; font-weight: bold;">$0</td>
+                </tr>
+            `;
+        }
+
+        document.getElementById('sim-cart-count').innerText = '1 art.';
+
+        // Habilitar Formulario de Solicitante
+        const solBox = document.getElementById('sim-solicitante-box');
+        if (solBox) {
+            solBox.classList.remove('disabled');
+            solBox.querySelectorAll('input, button').forEach(el => el.disabled = false);
+        }
+
+        // Si ya hay RUT logueado en la app principal, auto-llenarlo
+        const loggedInRut = document.getElementById('rut') ? document.getElementById('rut').value : '';
+        if (loggedInRut) {
+            document.getElementById('sim-sol-rut').value = loggedInRut;
+        }
+
+        simCurrentStep = 3;
+        updateSimulationStepUI();
+    }
+
+    // 4. Datos del solicitante inputs validation
+    const simSolRut = document.getElementById('sim-sol-rut');
+    const simSolDoc = document.getElementById('sim-sol-doc');
+    const simSolEmail = document.getElementById('sim-sol-email');
+    const simSolEmailConfirm = document.getElementById('sim-sol-email-confirm');
+    const simBtnContinue = document.getElementById('sim-btn-continue');
+
+    function checkSimFormCompletion() {
+        if (simCurrentStep === 3) {
+            const r = simSolRut ? simSolRut.value : '';
+            const d = simSolDoc ? simSolDoc.value : '';
+            const e = simSolEmail ? simSolEmail.value : '';
+            const ec = simSolEmailConfirm ? simSolEmailConfirm.value : '';
+
+            if (r.trim() !== '' && d.trim() !== '' && e.trim() !== '' && ec.trim() !== '') {
+                simCurrentStep = 4;
+                updateSimulationStepUI();
+            }
+        }
+    }
+
+    [simSolRut, simSolDoc, simSolEmail, simSolEmailConfirm].forEach(el => {
+        if (el) {
+            el.addEventListener('input', () => {
+                el.classList.remove('error-field');
+                checkSimFormCompletion();
+            });
+        }
+    });
+
+    const simHelpDoc = document.getElementById('sim-btn-help-doc');
+    if (simHelpDoc) {
+        simHelpDoc.onclick = () => {
+            showNotification("El número de documento o de serie está en el frente o reverso de su carnet de identidad. Es un número de 9 dígitos.", "info");
+        };
+    }
+
+    // Clic en Continuar (solicitante)
+    if (simBtnContinue) {
+        simBtnContinue.onclick = () => {
+            const rVal = simSolRut ? simSolRut.value : '';
+            const dVal = simSolDoc ? simSolDoc.value : '';
+            const eVal = simSolEmail ? simSolEmail.value : '';
+            const ecVal = simSolEmailConfirm ? simSolEmailConfirm.value : '';
+
+            // Validaciones
+            if (!validateRut(rVal)) {
+                showNotification("Por favor, ingrese un RUN de solicitante válido.", "error");
+                simSolRut.classList.add('error-field');
+                return;
+            }
+
+            if (dVal.trim().length < 6) {
+                showNotification("Por favor, ingrese un N° Documento válido (está en su carnet).", "error");
+                simSolDoc.classList.add('error-field');
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(eVal)) {
+                showNotification("Por favor, ingrese un correo electrónico válido.", "error");
+                simSolEmail.classList.add('error-field');
+                return;
+            }
+
+            if (eVal !== ecVal) {
+                showNotification("Los correos electrónicos ingresados no coinciden.", "error");
+                simSolEmailConfirm.classList.add('error-field');
+                return;
+            }
+
+            // Exitoso: Avanzar a la pantalla de checkout final
+            showSimCheckoutScreen();
+        };
+    }
+
+    function showSimCheckoutScreen() {
+        document.getElementById('sim-main-grid').style.display = 'none';
+        
+        // Cargar ítems en checkout
+        const checkoutItems = document.getElementById('sim-checkout-items');
+        if (checkoutItems) {
+            checkoutItems.innerHTML = `
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 12px 0;"><strong>${simActiveCertName}</strong></td>
+                    <td style="padding: 12px 0;">${simCartRUT}</td>
+                    <td style="padding: 12px 0; text-align: right; color: #28a745; font-weight: bold;">$0</td>
+                </tr>
+            `;
+        }
+
+        document.getElementById('sim-checkout-screen').style.display = 'block';
+
+        simCurrentStep = 5;
+        updateSimulationStepUI();
+    }
+
+    // Checkout Back button
+    const btnSimCheckoutBack = document.getElementById('btn-sim-checkout-back');
+    if (btnSimCheckoutBack) {
+        btnSimCheckoutBack.onclick = () => {
+            document.getElementById('sim-main-grid').style.display = 'grid';
+            document.getElementById('sim-checkout-screen').style.display = 'none';
+            simCurrentStep = 4;
+            updateSimulationStepUI();
+        };
+    }
+
+    // Checkout Submit button: Obtener Certificado (Final)
+    const btnSimCheckoutSubmit = document.getElementById('btn-sim-checkout-submit');
+    if (btnSimCheckoutSubmit) {
+        btnSimCheckoutSubmit.onclick = () => {
+            // Ir al final con Éxito personalizado!
+            const successTitle = document.querySelector('#screen-success h1');
+            const successSubtitle = document.querySelector('#screen-success .subtitle');
+            const successDesc = document.querySelector('#screen-success .success-actions p');
+            const btnFinish = document.getElementById('btn-finish');
+
+            if (successTitle) successTitle.innerHTML = '¡Simulación Completada con Éxito! 🎉';
+            if (successSubtitle) successSubtitle.innerText = `¡Felicitaciones! Ha aprendido a obtener su ${simActiveCertName}.`;
+            if (successDesc) successDesc.innerHTML = `Usted simuló correctamente todos los pasos de la página del Registro Civil. Su certificado (simulado) ha sido enviado al correo <strong>${simSolEmail.value}</strong>.`;
+            
+            if (btnFinish) {
+                btnFinish.innerText = 'Volver al Registro Civil';
+                // Cambiar el handler temporalmente
+                const oldFinishClick = btnFinish.onclick;
+                btnFinish.onclick = (e) => {
+                    e.preventDefault();
+                    // Restaurar los textos originales de screen-success
+                    if (successTitle) successTitle.innerHTML = '¡Trámite Exitoso!';
+                    if (successSubtitle) successSubtitle.innerText = 'Su certificado ha sido procesado correctamente.';
+                    if (successDesc) successDesc.innerHTML = 'Se ha enviado una copia a su correo electrónico.';
+                    btnFinish.innerText = 'Volver al Inicio';
+                    // Restaurar handler viejo
+                    btnFinish.onclick = oldFinishClick;
+                    
+                    // Ir a las categorías
+                    showScreen('rcCategories');
+                };
+            }
+
+            showScreen('success');
+        };
+    }
     document.querySelectorAll('.toolbar-legend-item[data-target]').forEach(item => {
         item.addEventListener('click', () => {
             const btn = document.getElementById(item.dataset.target);

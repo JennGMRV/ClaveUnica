@@ -4,6 +4,7 @@ import { stopAdvancedReader }              from '../core/speech.js';
 import { showNotification }               from '../utils/notifications.js';
 import { rcData }                          from '../data/rc-data.js';
 import { caData }                          from '../data/ca-data.js';
+import { startInteractiveSimulation }      from './simulation.js';
 
 // Callback inyectado desde main.js para narrar el paso actual cuando autoReadMode está activo
 let _onStepChange = null;
@@ -62,6 +63,52 @@ export function initTutorial() {
     });
 
     document.getElementById('btn-back-ca')?.addEventListener('click', goBack);
+
+    // --- Lógica del Modal de Elección de Modo de Aprendizaje ---
+    const choiceModal = document.getElementById('modal-rc-learn-choice');
+    const btnCloseChoice = document.getElementById('btn-close-choice');
+    const btnChoiceTutorial = document.getElementById('btn-choice-tutorial');
+    const btnChoiceSimulate = document.getElementById('btn-choice-simulate');
+
+    if (btnCloseChoice && choiceModal) {
+        btnCloseChoice.onclick = () => {
+            choiceModal.style.display = 'none';
+        };
+        window.addEventListener('click', (event) => {
+            if (event.target == choiceModal) {
+                choiceModal.style.display = 'none';
+            }
+        });
+    }
+
+    if (btnChoiceTutorial && choiceModal) {
+        btnChoiceTutorial.onclick = () => {
+            choiceModal.style.display = 'none';
+            if (state.choiceCertCu) {
+                state.postLoginTarget = 'rcTutorial';
+                state.currentTutorialOrigin = 'rcCategories';
+                state.currentTutorialSteps = rcData.steps[state.choiceCertId] || [];
+                state.currentStepIndex = 0;
+                showScreen('login');
+            } else {
+                startTutorial(state.choiceCertId, state.choiceCertName);
+            }
+        };
+    }
+
+    if (btnChoiceSimulate && choiceModal) {
+        btnChoiceSimulate.onclick = () => {
+            choiceModal.style.display = 'none';
+            if (state.choiceCertCu) {
+                state.postLoginTarget = 'rcInteractiveSimulation';
+                state.currentTutorialOrigin = 'rcCategories';
+                state.currentStepIndex = 0;
+                showScreen('login');
+            } else {
+                startInteractiveSimulation(state.choiceCertId, state.choiceCertName);
+            }
+        };
+    }
 }
 
 export function selectRCCategory(catId) {
@@ -97,14 +144,25 @@ export function selectRCCategory(catId) {
             ${cert.cu ? '<div class="cu-badge"><span class="icon">🔑</span> Requiere Clave Única</div>' : ''}
         `;
         item.onclick = () => {
-            if (cert.cu) {
-                state.postLoginTarget       = 'rcTutorial';
-                state.currentTutorialOrigin = 'rcCategories';
-                state.currentTutorialSteps  = rcData.steps[cert.id] || [];
-                state.currentStepIndex      = 0;
-                showScreen('login');
+            state.choiceCertId = cert.id;
+            state.choiceCertName = cert.name;
+            state.choiceCertCu = cert.cu;
+            
+            const choiceModal = document.getElementById('modal-rc-learn-choice');
+            if (choiceModal) {
+                choiceModal.style.display = 'flex';
+                const modalTitle = document.getElementById('choice-modal-title');
+                if (modalTitle) modalTitle.innerText = `¿Cómo desea realizar: ${cert.name}?`;
             } else {
-                startTutorial(cert.id, cert.name);
+                if (cert.cu) {
+                    state.postLoginTarget       = 'rcTutorial';
+                    state.currentTutorialOrigin = 'rcCategories';
+                    state.currentTutorialSteps  = rcData.steps[cert.id] || [];
+                    state.currentStepIndex      = 0;
+                    showScreen('login');
+                } else {
+                    startTutorial(cert.id, cert.name);
+                }
             }
         };
         container.appendChild(item);
