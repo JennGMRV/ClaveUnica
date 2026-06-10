@@ -825,7 +825,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         utterance.lang = 'es-CL'; // Fallback lang
-        utterance.rate = 0.75;    // Much slower for seniors as requested
+        utterance.rate = 0.9;     // Slower for seniors as requested
         utterance.pitch = 1.05;   // Slightly higher for a clearer female tone
 
         utterance.onstart = () => {
@@ -937,7 +937,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const v = getFemaleLatamVoice();
             if (v) utt.voice = v;
             utt.lang = 'es-CL';
-            utt.rate = 0.7;
+            utt.rate = 0.85;
             utt.pitch = 1.05;
             synth.speak(utt);
             return;
@@ -947,7 +947,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const voice = getFemaleLatamVoice();
         if (voice) readerUtterance.voice = voice;
         readerUtterance.lang = 'es-CL';
-        readerUtterance.rate = 0.7;
+        readerUtterance.rate = 0.85;
         readerUtterance.pitch = 1.05;
         
         const status = toolbar.querySelector('.reader-status');
@@ -1858,7 +1858,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Speed Control Panel ---
-    let speechRate = 0.75;
+    let speechRate = 0.9;
     const btnSpeedToggle = document.getElementById('btn-speed-toggle');
     const speedPanel = document.getElementById('speed-control-panel');
     if (btnSpeedToggle && speedPanel) {
@@ -1867,21 +1867,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     document.getElementById('speed-normal')?.addEventListener('click', () => {
-        speechRate = 0.75;
+        speechRate = 0.9;
         document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('speed-normal')?.classList.add('active');
         if (speedPanel) speedPanel.classList.remove('visible');
         showNotification('Velocidad normal activada', 'info');
     });
     document.getElementById('speed-slow')?.addEventListener('click', () => {
-        speechRate = 0.55;
+        speechRate = 0.65;
         document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('speed-slow')?.classList.add('active');
         if (speedPanel) speedPanel.classList.remove('visible');
         showNotification('Velocidad lenta activada', 'info');
     });
     document.getElementById('speed-very-slow')?.addEventListener('click', () => {
-        speechRate = 0.38;
+        speechRate = 0.45;
         document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('speed-very-slow')?.classList.add('active');
         if (speedPanel) speedPanel.classList.remove('visible');

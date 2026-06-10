@@ -8,7 +8,7 @@ export const state = {
     currentTutorialSteps:  [],
     currentStepIndex:      0,
     currentTutorialOrigin: 'rcCategories',
-    speechRate: 0.75,
+    speechRate: 0.9,
 
     // Variables de selección de certificado
     choiceCertId: null,

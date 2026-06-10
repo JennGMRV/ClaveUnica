@@ -124,9 +124,9 @@ export function initSpeedPanel() {
     btnToggle.addEventListener('click', () => panel.classList.toggle('visible'));
 
     const speeds = [
-        { id: 'speed-normal',     rate: 0.75, label: 'Velocidad normal activada' },
-        { id: 'speed-slow',       rate: 0.55, label: 'Velocidad lenta activada'  },
-        { id: 'speed-very-slow',  rate: 0.38, label: 'Velocidad muy lenta activada' },
+        { id: 'speed-normal',     rate: 0.9,  label: 'Velocidad normal activada' },
+        { id: 'speed-slow',       rate: 0.65, label: 'Velocidad lenta activada'  },
+        { id: 'speed-very-slow',  rate: 0.45, label: 'Velocidad muy lenta activada' },
     ];
 
     speeds.forEach(({ id, rate, label }) => {
