@@ -1093,6 +1093,7 @@ body.high-contrast .highlight-word {
     position: sticky;
     top: 0;
     z-index: 500;
+    overflow: visible;
 }
 
 .logo-small {
@@ -3206,11 +3207,19 @@ body.dark-mode .fuse-sub {
     color: #888;
 }
 
+/* == Wrapper del botón de velocidad (dropdown desde el header) == */
+.speed-dropdown-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
 /* == Panel de control de velocidad del lector == */
 .speed-panel {
-    position: fixed;
-    bottom: 140px;
-    right: 20px;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
     background: white;
     border: 2px solid var(--primary);
     border-radius: 14px;
@@ -3218,9 +3227,10 @@ body.dark-mode .fuse-sub {
     display: none;
     flex-direction: column;
     gap: 8px;
-    z-index: 900;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    z-index: 9999;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
     min-width: 160px;
+    white-space: nowrap;
 }
 
 .speed-panel.visible {
@@ -3458,9 +3468,8 @@ body.dark-mode .btn-print {
         padding: 8px 14px;
     }
 
-    .speed-panel {
-        bottom: 90px;
-        right: 10px;
+    .speed-dropdown-wrapper {
+        position: relative;
     }
 
     .breadcrumb-bar {

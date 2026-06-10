@@ -17,7 +17,15 @@
             alt="Logo Clave Única" class="logo-small">
         <div class="access-toolbar">
             <button class="btn-access" id="btn-dark-mode" title="Tema Oscuro">🌙</button>
-            <button class="btn-access" id="btn-speed-toggle" title="Velocidad de lectura">🔊</button>
+            <div class="speed-dropdown-wrapper">
+                <button class="btn-access" id="btn-speed-toggle" title="Velocidad de lectura">🔊</button>
+                <div id="speed-control-panel" class="speed-panel" role="group" aria-label="Velocidad de lectura">
+                    <span class="speed-label">Velocidad del lector:</span>
+                    <button class="speed-btn active" data-rate="0.9" id="speed-normal">Normal</button>
+                    <button class="speed-btn" data-rate="0.65" id="speed-slow">Lento</button>
+                    <button class="speed-btn" data-rate="0.45" id="speed-very-slow">Muy lento</button>
+                </div>
+            </div>
             <div class="cb-btn-wrapper">
                 <button class="btn-access" id="btn-colorblind" title="Modo daltonismo">👁</button>
                 <span class="cb-current-badge" id="cb-current-badge">Normal</span>
@@ -1216,13 +1224,7 @@
         </button>
     </div>
 
-    <!-- Control de velocidad del lector (flotante, oculto por defecto) -->
-    <div id="speed-control-panel" class="speed-panel" role="group" aria-label="Velocidad de lectura">
-        <span class="speed-label">Velocidad del lector:</span>
-        <button class="speed-btn active" data-rate="0.9" id="speed-normal">Normal</button>
-        <button class="speed-btn" data-rate="0.65" id="speed-slow">Lento</button>
-        <button class="speed-btn" data-rate="0.45" id="speed-very-slow">Muy lento</button>
-    </div>
+
 
     <!-- Botón flotante de ayuda rápida -->
     <button id="btn-quick-help" class="btn-quick-help" title="Necesito ayuda" aria-label="Pedir ayuda">
