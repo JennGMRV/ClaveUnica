@@ -290,8 +290,14 @@
                 <p class="subtitle">Su certificado ha sido procesado correctamente.</p>
 
                 <div class="success-actions">
-                    <p>Se ha enviado una copia a su correo electrónico.</p>
-                    <button id="btn-finish" class="btn primary block">Volver al Inicio</button>
+                    <p id="success-desc">Se ha enviado una copia a su correo electrónico.</p>
+                    <div id="success-buttons-default">
+                        <button id="btn-finish" class="btn primary block" style="width: 100%;">Volver al Inicio</button>
+                    </div>
+                    <div id="success-buttons-simulation" style="display: none; flex-direction: column; gap: 12px; width: 100%; margin-top: 15px;">
+                        <button id="btn-success-to-menu" class="btn primary" style="width: 100%; font-size: 17px; padding: 14px; border-radius: 12px;">Volver al Menú Principal</button>
+                        <button id="btn-success-to-rc" class="btn outline" style="width: 100%; font-size: 17px; padding: 14px; border-radius: 12px; border: 3px solid var(--primary); color: var(--primary);">Volver a Categorías (Registro Civil)</button>
+                    </div>
                 </div>
 
                 <div class="reader-toolbar" id="reader-success" data-reader-target="success-card">
@@ -547,6 +553,20 @@
             <button class="btn-back-manual" id="btn-back-rc-simulation">⬅ Cancelar y Volver</button>
             <div class="card" style="text-align: left; padding: 25px; max-width: 1300px; margin: 0 auto; border: 2px solid #ddd; background: #fff;">
                 <div class="training-banner" style="background-color: var(--secondary); margin-bottom: 15px;">Modo Simulación Interactiva</div>
+
+                <!-- Floating Assistant Guidance (Moved to Top) -->
+                <div class="simulation-assistant-guidance" id="sim-assistant-box">
+                    <div class="sim-assistant-header">
+                        <div class="sim-assistant-avatar-mini">👵</div>
+                        <div class="sim-assistant-title">Guía de Práctica Asistida</div>
+                    </div>
+                    <div class="sim-assistant-body">
+                        <p id="sim-assistant-text">Cargando instrucciones...</p>
+                    </div>
+                    <div class="sim-assistant-actions">
+                        <button class="sim-assistant-voice-btn" id="btn-sim-voice-play">🔊 Escuchar Instrucción</button>
+                    </div>
+                </div>
 
                 <div class="simulation-browser-frame">
                     <div class="browser-toolbar">
@@ -1009,20 +1029,6 @@
                         <!-- Footer -->
                         <div class="sim-rc-footer">
                             <p>© 2026 Servicio de Registro Civil e Identificación - Chile</p>
-                        </div>
-                    </div>
-
-                    <!-- Floating Assistant Guidance -->
-                    <div class="simulation-assistant-guidance" id="sim-assistant-box">
-                        <div class="sim-assistant-header">
-                            <div class="sim-assistant-avatar-mini">👵</div>
-                            <div class="sim-assistant-title">Guía de Práctica Asistida</div>
-                        </div>
-                        <div class="sim-assistant-body">
-                            <p id="sim-assistant-text">Cargando instrucciones...</p>
-                        </div>
-                        <div class="sim-assistant-actions">
-                            <button class="sim-assistant-voice-btn" id="btn-sim-voice-play">🔊 Escuchar Instrucción</button>
                         </div>
                     </div>
 
