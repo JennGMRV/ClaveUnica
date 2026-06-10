@@ -60,10 +60,10 @@ export function initContrastToggle() {
 // --- Modo daltonismo (ciclo) ---
 
 const cbCycle = [
-    { cls: null,               label: 'Normal'       },
-    { cls: 'cb-protanopia',    label: 'Protanopia'   },
-    { cls: 'cb-deuteranopia',  label: 'Deuteranopia' },
-    { cls: 'cb-tritanopia',    label: 'Tritanopia'   },
+    { cls: null,               label: 'Normal'    },
+    { cls: 'cb-protanopia',    label: 'Opción 1'  },
+    { cls: 'cb-deuteranopia',  label: 'Opción 2'  },
+    { cls: 'cb-tritanopia',    label: 'Opción 3'  },
 ];
 const cbModes = cbCycle.slice(1).map(m => m.cls);
 
@@ -105,7 +105,7 @@ export function initColorblindMode() {
             clearTimeout(cbFlashTimer);
             cbFlashTimer = setTimeout(() => badge.classList.remove('flash'), 2200);
         }
-        showNotification(`Daltonismo: ${mode.label}`, 'info');
+        showNotification(`Ajuste de colores: ${mode.label}`, 'info');
     }
 
     btn.addEventListener('click', () => {

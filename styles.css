@@ -3801,14 +3801,14 @@ img, svg, iframe {
 }
 
 .cb-panel-label {
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: #666;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #555;
     text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding-bottom: 4px;
+    padding-bottom: 6px;
     border-bottom: 1px solid #eee;
+    line-height: 1.4;
+    max-width: 200px;
 }
 
 .cb-btn {
