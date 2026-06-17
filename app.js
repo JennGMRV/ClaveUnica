@@ -1858,7 +1858,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Speed Control Panel ---
-    let speechRate = 0.9;
+    let speechRate = 1.05;
     const btnSpeedToggle = document.getElementById('btn-speed-toggle');
     const speedPanel = document.getElementById('speed-control-panel');
     if (btnSpeedToggle && speedPanel) {
@@ -1866,22 +1866,29 @@ document.addEventListener('DOMContentLoaded', () => {
             speedPanel.classList.toggle('visible');
         });
     }
+    document.getElementById('speed-fast')?.addEventListener('click', () => {
+        speechRate = 1.3;
+        document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('speed-fast')?.classList.add('active');
+        if (speedPanel) speedPanel.classList.remove('visible');
+        showNotification('Velocidad rápida activada', 'info');
+    });
     document.getElementById('speed-normal')?.addEventListener('click', () => {
-        speechRate = 0.9;
+        speechRate = 1.05;
         document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('speed-normal')?.classList.add('active');
         if (speedPanel) speedPanel.classList.remove('visible');
         showNotification('Velocidad normal activada', 'info');
     });
     document.getElementById('speed-slow')?.addEventListener('click', () => {
-        speechRate = 0.65;
+        speechRate = 0.8;
         document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('speed-slow')?.classList.add('active');
         if (speedPanel) speedPanel.classList.remove('visible');
         showNotification('Velocidad lenta activada', 'info');
     });
     document.getElementById('speed-very-slow')?.addEventListener('click', () => {
-        speechRate = 0.45;
+        speechRate = 0.55;
         document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('speed-very-slow')?.classList.add('active');
         if (speedPanel) speedPanel.classList.remove('visible');
