@@ -1,6 +1,6 @@
 import { state }                from '../core/state.js';
 import { showScreen, goBack, getScreen } from '../core/navigation.js';
-import { getFemaleLatamVoice } from '../core/speech.js';
+import { getFemaleLatamVoice, preprocessTextForTTS } from '../core/speech.js';
 import { selectRCCategory }    from './tutorial.js';
 import { showNotification }    from '../utils/notifications.js';
 
@@ -155,7 +155,8 @@ export const assistant = {
         this.showBubble(text, false);
         window.speechSynthesis.cancel();
 
-        const utter = new SpeechSynthesisUtterance(text);
+        const cleanedText = preprocessTextForTTS(text);
+        const utter = new SpeechSynthesisUtterance(cleanedText);
         utter.lang  = 'es-CL';
         utter.rate  = state.speechRate;
         utter.pitch = 1.05;
@@ -175,7 +176,7 @@ export const assistant = {
         if (this.synth.speaking) return;
         const screenTexts = {
             landing:      'Bienvenido al portal de trámites. Puede elegir obtener un certificado del Registro Civil, o explorar los servicios de ChileAtiende.',
-            login:        'Pantalla de inicio de sesión. Por favor ingrese su RUN en el primer campo, y su Clave Única en el segundo. Luego presione el botón Autenticar.',
+            login:        'Pantalla de inicio de sesión. Por favor ingrese su RUT en el primer campo, y su Clave Única en el segundo. Luego presione el botón Autenticar.',
             menu:         'Menú principal. Tiene tres opciones: Obtener Certificado, Guía del Registro Civil, o Guía de ChileAtiende.',
             form:         'Selección de certificado. Elija entre el Certificado de Afiliación, que acredita que está en FONASA, o el de Cotizaciones, que muestra sus pagos de salud. Luego presione Siguiente paso.',
             confirm:      'Pantalla de confirmación. Revise bien su información. Si todo está correcto, presione el botón que dice: Sí, Confirmar Trámite.',

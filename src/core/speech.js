@@ -2,6 +2,26 @@ import { state } from './state.js';
 
 const synth = window.speechSynthesis;
 
+export function preprocessTextForTTS(text) {
+    if (!text) return '';
+    let clean = text;
+    
+    // Convertir "$" a "pesos chilenos"
+    clean = clean.replace(/\$\s*([\d\.]+)/g, '$1 pesos chilenos');
+    clean = clean.replace(/\$/g, ' pesos chilenos');
+    
+    // Reemplazar RUN por RUT
+    clean = clean.replace(/\bRUN\b/g, 'RUT');
+    
+    // Siglas y abreviaciones comunes chilenas
+    clean = clean.replace(/\bPGU\b/g, 'P G U');
+    clean = clean.replace(/\bIPS\b/g, 'I P S');
+    clean = clean.replace(/\bAFP\b/g, 'A F P');
+    clean = clean.replace(/\bFONASA\b/gi, 'Fonasa');
+    
+    return clean;
+}
+
 // Variables de módulo para el lector avanzado
 let readerUtterance = null;
 
@@ -65,7 +85,8 @@ export function speakText(text, button) {
     }
     stopSpeaking();
 
-    const utterance = new SpeechSynthesisUtterance(text);
+    const cleanedText = preprocessTextForTTS(text);
+    const utterance = new SpeechSynthesisUtterance(cleanedText);
     const voice = getFemaleLatamVoice();
     if (voice) utterance.voice = voice;
     utterance.lang  = 'es-CL';
@@ -96,7 +117,8 @@ export function startAdvancedReader(textElement, toolbar) {
     const fullText  = textElement.innerText;
 
     if (wordSpans.length === 0) {
-        const utt = new SpeechSynthesisUtterance(fullText);
+        const cleanedText = preprocessTextForTTS(fullText);
+        const utt = new SpeechSynthesisUtterance(cleanedText);
         const v = getFemaleLatamVoice();
         if (v) utt.voice = v;
         utt.lang = 'es-CL';

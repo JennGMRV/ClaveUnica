@@ -114,7 +114,7 @@ export function updateSimulationStepUI() {
             targetSelector = `#sim-cat-${state.simActiveCatId}`;
             break;
         case 1: // Rellenar RUT y agregar
-            instructionText = `Paso 2: Marque la casilla al lado de "${state.simActiveCertName}", escriba el RUN de la persona en el cuadro blanco y presione "Agregar al carro".`;
+            instructionText = `Paso 2: Marque la casilla al lado de "${state.simActiveCertName}", escriba el RUT de la persona en el cuadro blanco y presione "Agregar al carro".`;
             targetSelector = `#sim-cert-${state.simActiveCertId}`;
             break;
         case 2: // Resolver Captcha (inline)
@@ -122,7 +122,7 @@ export function updateSimulationStepUI() {
             targetSelector = `#sim-captcha-container`;
             break;
         case 3: // Rellenar datos del solicitante
-            instructionText = `Paso 4: ¡El certificado se agregó al carro! Ahora, complete los "Datos del Solicitante" a la derecha: ingrese su RUN, N° documento de carnet y su correo.`;
+            instructionText = `Paso 4: ¡El certificado se agregó al carro! Ahora, complete los "Datos del Solicitante" a la derecha: ingrese su RUT, N° documento de carnet y su correo.`;
             targetSelector = `#sim-solicitante-box`;
             break;
         case 4: // Presionar continuar del solicitante
@@ -513,7 +513,7 @@ export function initSimulation() {
             const ecVal = simSolEmailConfirm ? simSolEmailConfirm.value : '';
 
             if (!validateRut(rVal)) {
-                showNotification("Por favor, ingrese un RUN de solicitante válido.", "error");
+                showNotification("Por favor, ingrese un RUT de solicitante válido.", "error");
                 if (simSolRut) simSolRut.classList.add('error-field');
                 return;
             }
