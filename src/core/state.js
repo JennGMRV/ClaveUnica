@@ -9,6 +9,7 @@ export const state = {
     currentStepIndex:      0,
     currentTutorialOrigin: 'rcCategories',
     speechRate: 1.2,
+    rcLearnMode: 'guide', // 'guide' o 'simulation'
 
     // Variables de selección de certificado
     choiceCertId: null,

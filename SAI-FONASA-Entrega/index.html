@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAI-FONASA: Gestión de Trámites Senior</title>
+    <title>[Simulador Académico] Portal de Trámites Senior</title>
     <style>
 :root {
     --primary: #004A99;
@@ -2107,6 +2107,133 @@ body.high-contrast .simulation-disclaimer-banner h3,
 body.high-contrast .simulation-disclaimer-banner p {
     color: yellow;
 }
+
+/* --- Banner Académico Superior (Anti-Phishing) --- */
+.academic-disclaimer-banner {
+    background: #fff3cd;
+    border-bottom: 2px solid #ffeeba;
+    color: #856404;
+    padding: 10px 15px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-align: center;
+    position: relative;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+body.dark-mode .academic-disclaimer-banner {
+    background: #3a2e05;
+    border-bottom: 2px solid #54440c;
+    color: #ffd966;
+}
+
+body.high-contrast .academic-disclaimer-banner {
+    background: #000;
+    border-bottom: 3px solid yellow;
+    color: yellow;
+}
+
+/* --- Selector de Modo de Aprendizaje (Switch/Slider) --- */
+.learning-mode-selector-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+    padding: 14px 20px;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    margin: 15px 0 20px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.learning-mode-selector-container .selector-label {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.mode-slider-switch {
+    display: flex;
+    background: #f1f3f5;
+    padding: 4px;
+    border-radius: 30px;
+    position: relative;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.mode-slider-btn {
+    border: none;
+    background: transparent;
+    padding: 8px 20px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    border-radius: 26px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #495057;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.mode-slider-btn.active {
+    background: #ffffff;
+    color: var(--primary);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Adaptaciones Modo Oscuro */
+body.dark-mode .learning-mode-selector-container {
+    background: #1e1e1e;
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+body.dark-mode .learning-mode-selector-container .selector-label {
+    color: #ffffff;
+}
+
+body.dark-mode .mode-slider-switch {
+    background: #2b2b2b;
+}
+
+body.dark-mode .mode-slider-btn {
+    color: #b0b0b0;
+}
+
+body.dark-mode .mode-slider-btn.active {
+    background: #3e3e3e;
+    color: #ffffff;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Adaptaciones Alto Contraste */
+body.high-contrast .learning-mode-selector-container {
+    background: #000000;
+    border: 3px solid yellow;
+}
+
+body.high-contrast .learning-mode-selector-container .selector-label {
+    color: yellow;
+}
+
+body.high-contrast .mode-slider-switch {
+    background: #000000;
+    border: 2px solid yellow;
+}
+
+body.high-contrast .mode-slider-btn {
+    color: yellow;
+}
+
+body.high-contrast .mode-slider-btn.active {
+    background: yellow;
+    color: #000000;
+}
 </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2114,9 +2241,11 @@ body.high-contrast .simulation-disclaimer-banner p {
 </head>
 
 <body>
+    <div class="academic-disclaimer-banner" role="alert">
+        <span>⚠️ <strong>SITIO DE PRÁCTICA ACADÉMICA:</strong> Esta es una simulación educativa. NO recopila datos y NO pertenece al Gobierno de Chile. <strong>Nunca ingrese datos reales</strong>.</span>
+    </div>
     <header class="access-header">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Logotipo_Clave_%C3%9Anica.svg"
-            alt="Logo Clave Única" class="logo-small">
+        <div class="academic-logo-badge">🔑 Simulación Académica</div>
         <div class="access-toolbar">
             <button class="btn-access contrast-toggle" id="btn-toggle-contrast" title="Alto Contraste">◐</button>
             <button class="btn-access" id="btn-font-minus" title="Disminuir letra">A-</button>
@@ -2163,44 +2292,46 @@ body.high-contrast .simulation-disclaimer-banner p {
             </div>
             <div class="cu-login-card">
                 <div class="cu-card-header">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Gobierno_de_Chile_logo.svg/512px-Gobierno_de_Chile_logo.svg.png" 
-                         alt="Gobierno de Chile" class="gov-logo">
+                    <div class="gov-logo-text" style="font-weight: 800; font-size: 14px; color: #555;">🇨🇱 SIMULADOR ACADÉMICO</div>
                     <div class="cu-header-right">
                          <div class="cu-close-icon">➖</div>
-                         <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Logotipo_Clave_%C3%9Anica.svg" 
-                              alt="Clave Única" class="cu-logo-main">
+                         <div class="cu-logo-text-main" style="font-weight: 800; font-size: 16px; color: #004a99; display: flex; align-items: center; gap: 4px;">🔑 Simulación ClaveÚnica</div>
                     </div>
                 </div>
 
                 <div class="cu-banner">
-                    <h2>OficinaInternet</h2>
-                    <p>requiere autenticación</p>
+                    <h2>OficinaInternet (Sitio de Práctica)</h2>
+                    <p>requiere autenticación simulada</p>
+                </div>
+
+                <div class="cu-info-banner" style="background-color: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; padding: 12px; margin-bottom: 15px; color: #856404; font-size: 14px;">
+                    <span>⚠️ <strong>NUNCA ingrese su ClaveÚnica o contraseña real aquí.</strong> Este es un sitio de práctica. Use la clave de prueba de ejemplo.</span>
                 </div>
 
                 <div class="cu-form-body">
                     <div class="form-group">
-                        <label for="rut">RUT</label>
-                        <input type="text" id="rut" placeholder="Ej: 12345678-9" autocomplete="off">
+                        <label for="rut">RUT de ejemplo (Use datos ficticios)</label>
+                        <input type="text" id="rut" placeholder="Ej: 11.111.111-1" autocomplete="off">
                     </div>
 
                     <div class="form-group">
                         <div class="label-with-help">
-                            <label for="password">Tu ClaveÚnica</label>
+                            <label for="password">Clave de prueba (No use su clave real)</label>
                             <button class="btn-help-inline" id="btn-help-password" title="¿Qué es la Clave Única?">❓</button>
                         </div>
                         <div class="input-with-tools">
-                            <input type="password" id="password" placeholder="">
+                            <input type="text" id="password" placeholder="Ej: Clave123">
                             <div class="input-actions">
                                 <button class="btn-toggle-pass" id="btn-toggle-password" type="button" title="Ver contraseña">👁️</button>
                             </div>
                         </div>
-                        <a href="#" class="cu-link">¿Olvidaste tu ClaveÚnica?</a>
+                        <span class="cu-link" style="color: #666; font-size: 13px; text-decoration: none;">Recuperación de contraseña ficticia</span>
                     </div>
 
-                    <button id="btn-login" class="btn-cu-primary">Autenticar</button>
+                    <button id="btn-login" class="btn-cu-primary">Autenticar (Ingresar)</button>
 
                     <div class="cu-footer">
-                        <p>¿No tienes ClaveÚnica? <a href="#" class="cu-link">Consigue la tuya</a></p>
+                        <p>¿No tienes ClaveÚnica? <span class="cu-link" style="color: #666;">Obtener en sucursal real</span></p>
                     </div>
                 </div>
 
@@ -2461,6 +2592,14 @@ body.high-contrast .simulation-disclaimer-banner p {
                 <h1>Servicios del Registro Civil</h1>
                 <p class="subtitle">Seleccione una categoría para ver los certificados disponibles.</p>
                 
+                <div class="learning-mode-selector-container">
+                    <span class="selector-label">Modo de aprendizaje:</span>
+                    <div class="mode-slider-switch">
+                        <button class="mode-slider-btn active" id="btn-mode-guide" data-mode="guide">📖 Guía Paso a Paso</button>
+                        <button class="mode-slider-btn" id="btn-mode-simulation" data-mode="simulation">🎮 Simulación Interactiva</button>
+                    </div>
+                </div>
+                
                 <div class="reader-toolbar" id="reader-rc-cats">
                     <button class="reader-btn btn-play" title="Reproducir">▶️</button>
                     <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
@@ -2574,7 +2713,7 @@ body.high-contrast .simulation-disclaimer-banner p {
                     <!-- Tutorial steps injected here via JS -->
                     <div class="rc-official-mockup">
                          <div class="rc-official-header">
-                             <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Logotipo_Clave_%C3%9Anica.svg" alt="Logo CU" class="rc-official-logo">
+                             <div class="rc-official-logo-text" style="font-weight: 800; font-size: 16px; color: #004a99;">🔑 Simulación ClaveÚnica</div>
                              <div class="rc-guide-overlay" title="Aquí debe poner su RUT">?</div>
                          </div>
                          <div id="rc-step-visual">
@@ -3282,7 +3421,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="rc-official-mockup">
                  <div class="rc-official-header">
-                     <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Logotipo_Clave_%C3%9Anica.svg" alt="Logo CU" class="rc-official-logo">
+                     <div class="rc-official-logo-text" style="font-weight: 800; font-size: 16px; color: #004a99; display: flex; align-items: center; gap: 4px;">🔑 Simulación ClaveÚnica</div>
                      <div class="rc-guide-overlay" title="Ayuda" onclick="showNotification('${step.text.replace(/'/g, "\\'")}', 'info')">?</div>
                  </div>
                  ${visualHtml}

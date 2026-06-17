@@ -538,6 +538,23 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentTutorialSteps = [];
     let currentStepIndex = 0;
     let currentTutorialOrigin = 'rcCategories';
+    let rcLearnMode = 'guide'; // 'guide' o 'simulation'
+
+    const btnModeGuide = document.getElementById('btn-mode-guide');
+    const btnModeSimulation = document.getElementById('btn-mode-simulation');
+    
+    if (btnModeGuide && btnModeSimulation) {
+        btnModeGuide.onclick = () => {
+            rcLearnMode = 'guide';
+            btnModeGuide.classList.add('active');
+            btnModeSimulation.classList.remove('active');
+        };
+        btnModeSimulation.onclick = () => {
+            rcLearnMode = 'simulation';
+            btnModeSimulation.classList.add('active');
+            btnModeGuide.classList.remove('active');
+        };
+    }
 
     // Menu -> RC Categories
     document.getElementById('btn-rc-guide').addEventListener('click', () => {
@@ -607,13 +624,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     choiceCertName = cert.name;
                     choiceCertCu = cert.cu;
                     
-                    const choiceModal = document.getElementById('modal-rc-learn-choice');
-                    if (choiceModal) {
-                        choiceModal.style.display = 'flex';
-                        // Highlight appropriate cards
-                        document.getElementById('choice-modal-title').innerText = `¿Cómo desea realizar: ${cert.name}?`;
-                    } else {
-                        // Fallback
+                    if (rcLearnMode === 'guide') {
                         if (cert.cu) {
                             postLoginTarget = 'rcTutorial';
                             currentTutorialOrigin = 'rcCategories';
@@ -622,6 +633,15 @@ document.addEventListener('DOMContentLoaded', () => {
                             showScreen('login');
                         } else {
                             startTutorial(cert.id, cert.name);
+                        }
+                    } else { // 'simulation'
+                        if (cert.cu) {
+                            postLoginTarget = 'rcInteractiveSimulation';
+                            currentTutorialOrigin = 'rcCategories';
+                            currentStepIndex = 0;
+                            showScreen('login');
+                        } else {
+                            startInteractiveSimulation(cert.id, cert.name);
                         }
                     }
                 };

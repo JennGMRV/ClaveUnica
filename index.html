@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAI-FONASA: Gestión de Trámites Senior</title>
+    <title>[Simulador Académico] Portal de Trámites Senior</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,9 +12,11 @@
 </head>
 
 <body>
+    <div class="academic-disclaimer-banner" role="alert">
+        <span>⚠️ <strong>SITIO DE PRÁCTICA ACADÉMICA:</strong> Esta es una simulación educativa. NO recopila datos y NO pertenece al Gobierno de Chile. <strong>Nunca ingrese datos reales</strong>.</span>
+    </div>
     <header class="access-header">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Logotipo_Clave_%C3%9Anica.svg"
-            alt="Logo Clave Única" class="logo-small">
+        <div class="academic-logo-badge">🔑 Simulación Académica</div>
         <div class="access-toolbar">
             <button class="btn-access" id="btn-dark-mode" title="Tema Oscuro">🌙</button>
             <div class="speed-dropdown-wrapper">
@@ -121,56 +123,53 @@
             </div>
             <div class="cu-login-card">
                 <div class="cu-card-header">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Gobierno_de_Chile_logo.svg/512px-Gobierno_de_Chile_logo.svg.png" 
-                         alt="Gobierno de Chile" class="gov-logo">
+                    <div class="gov-logo-text" style="font-weight: 800; font-size: 14px; color: #555;">🇨🇱 SIMULADOR ACADÉMICO</div>
                     <div class="cu-header-right">
                          <div class="cu-close-icon">➖</div>
-                         <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Logotipo_Clave_%C3%9Anica.svg" 
-                              alt="Clave Única" class="cu-logo-main">
+                         <div class="cu-logo-text-main" style="font-weight: 800; font-size: 16px; color: #004a99; display: flex; align-items: center; gap: 4px;">🔑 Simulación ClaveÚnica</div>
                     </div>
                 </div>
 
                 <div class="cu-banner">
-                    <h2>OficinaInternet</h2>
-                    <p>requiere autenticación</p>
+                    <h2>OficinaInternet (Sitio de Práctica)</h2>
+                    <p>requiere autenticación simulada</p>
                 </div>
 
                 <div class="cu-info-banner">
-                    <span class="info-icon">ℹ️</span>
-                    <p>La clave es su Clave Única, una contraseña secreta de 8 caracteres o más que le entregó el Registro Civil. Pueden ser <strong>letras, números o símbolos</strong>.</p>
+                    <span class="info-icon">⚠️</span>
+                    <p><strong>NUNCA ingrese su ClaveÚnica o contraseña real aquí.</strong> Este es un sitio de práctica. Use la clave de prueba de ejemplo.</p>
                 </div>
 
                 <div class="cu-form-body">
                     <div class="form-group">
-                        <label for="rut">RUT</label>
-                        <input type="text" id="rut" placeholder="Ej: 12345678-9" autocomplete="off">
+                        <label for="rut">RUT de ejemplo (Use datos ficticios)</label>
+                        <input type="text" id="rut" placeholder="Ej: 11.111.111-1" autocomplete="off">
                     </div>
 
                     <div class="form-group">
                         <div class="label-with-help">
-                            <label for="password">Tu ClaveÚnica</label>
+                            <label for="password">Clave de prueba (No use su clave real)</label>
                             <div class="help-container">
                                 <button class="btn-help-inline" id="btn-help-password">❓</button>
                                 <div class="cu-help-tooltip">
                                     <strong>Información de ClaveÚnica:</strong>
-                                    <p>Es una contraseña secreta de 8 caracteres o más que le entregó el Registro Civil.</p>
-                                    <p>Puede contener <strong>letras, números o símbolos</strong>.</p>
+                                    <p>En este simulador, puede usar cualquier texto como contraseña (ej: 12345678).</p>
                                 </div>
                             </div>
                         </div>
                         <div class="input-with-tools">
-                            <input type="password" id="password" placeholder="">
+                            <input type="text" id="password" placeholder="Ej: Clave123">
                             <div class="input-actions">
                                 <button class="btn-toggle-pass" id="btn-toggle-password" type="button" title="Ver contraseña">👁️</button>
                             </div>
                         </div>
-                        <a href="#" class="cu-link">¿Olvidaste tu ClaveÚnica?</a>
+                        <span class="cu-link" style="color: #666; font-size: 13px; text-decoration: none;">Recuperación de contraseña ficticia</span>
                     </div>
 
-                    <button id="btn-login" class="btn-cu-primary">Autenticar</button>
+                    <button id="btn-login" class="btn-cu-primary">Autenticar (Ingresar)</button>
 
                     <div class="cu-footer">
-                        <p>¿No tienes ClaveÚnica? <a href="#" class="cu-link">Consigue la tuya</a></p>
+                        <p>¿No tienes ClaveÚnica? <span class="cu-link" style="color: #666;">Obtener en sucursal real</span></p>
                     </div>
                 </div>
 
@@ -433,6 +432,14 @@
                 <h1>Servicios del Registro Civil</h1>
                 <p class="subtitle">Seleccione una categoría para ver los certificados disponibles.</p>
                 
+                <div class="learning-mode-selector-container">
+                    <span class="selector-label">Modo de aprendizaje:</span>
+                    <div class="mode-slider-switch">
+                        <button class="mode-slider-btn active" id="btn-mode-guide" data-mode="guide">📖 Guía Paso a Paso</button>
+                        <button class="mode-slider-btn" id="btn-mode-simulation" data-mode="simulation">🎮 Simulación Interactiva</button>
+                    </div>
+                </div>
+
                 <div class="reader-toolbar" id="reader-rc-cats">
                     <button class="reader-btn btn-play" title="Reproducir">▶️</button>
                     <button class="reader-btn btn-stop" title="Detener">⏹️</button>
@@ -543,7 +550,7 @@
                     <!-- Tutorial steps injected here via JS -->
                     <div class="rc-official-mockup">
                          <div class="rc-official-header">
-                             <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Logotipo_Clave_%C3%9Anica.svg" alt="Logo CU" class="rc-official-logo">
+                             <div class="rc-official-logo-text" style="font-weight: 800; font-size: 16px; color: #004a99;">🔑 Simulación ClaveÚnica</div>
                              <div class="rc-guide-overlay" title="Aquí debe poner su RUT">?</div>
                          </div>
                          <div id="rc-step-visual">
@@ -1153,34 +1160,7 @@
         </div>
     </div>
 
-    <!-- Modal: Elección de Modo de Aprendizaje -->
-    <div id="modal-rc-learn-choice" class="modal">
-        <div class="modal-content" style="max-width: 650px; padding: 30px;">
-            <span class="close-modal" id="btn-close-choice" style="cursor: pointer;">&times;</span>
-            <h2 id="choice-modal-title" style="color: var(--primary); margin-bottom: 10px; font-size: 26px;">¿Cómo desea realizar este trámite?</h2>
-            <p id="choice-modal-desc" style="color: var(--text-light); margin-bottom: 25px; font-size: 18px;">Seleccione una opción para aprender paso a paso o simular de forma interactiva.</p>
-            
-            <div class="choice-cards-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div class="choice-card-item" id="btn-choice-tutorial" style="border: 2px solid var(--border); border-radius: 16px; padding: 20px; cursor: pointer; transition: all 0.2s; text-align: center; display: flex; flex-direction: column; justify-content: space-between; min-height: 250px;">
-                    <div>
-                        <div style="font-size: 40px; margin-bottom: 10px;">📖</div>
-                        <h3 style="font-size: 20px; color: var(--primary); margin-bottom: 8px;">Ver Guía Paso a Paso</h3>
-                        <p style="font-size: 15px; color: var(--text-light); line-height: 1.4; margin: 0;">Le mostraremos imágenes reales indicándole con una flecha azul lo que debe hacer paso a paso.</p>
-                    </div>
-                    <button class="btn outline" style="margin-top: 15px; padding: 10px 15px; font-size: 16px; pointer-events: none; width: 100%;">Ver Guía</button>
-                </div>
-                
-                <div class="choice-card-item" id="btn-choice-simulate" style="border: 2px solid var(--border); border-radius: 16px; padding: 20px; cursor: pointer; transition: all 0.2s; text-align: center; display: flex; flex-direction: column; justify-content: space-between; min-height: 250px; background-color: #fcfcfc;">
-                    <div>
-                        <div style="font-size: 40px; margin-bottom: 10px;">🎮</div>
-                        <h3 style="font-size: 20px; color: var(--secondary); margin-bottom: 8px;">Simulación Interactiva</h3>
-                        <p style="font-size: 15px; color: var(--text-light); line-height: 1.4; margin: 0;">Ingrese a una versión interactiva de práctica donde podrá rellenar el RUT y simular la obtención real.</p>
-                    </div>
-                    <button class="btn primary" style="margin-top: 15px; padding: 10px 15px; font-size: 16px; pointer-events: none; background-color: var(--secondary); width: 100%;">Simular Trámite</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <!-- Overlay: Primer uso — bienvenida al asistente -->
     <div id="overlay-first-use" class="first-use-overlay" role="dialog" aria-modal="true" aria-label="Guía de bienvenida">

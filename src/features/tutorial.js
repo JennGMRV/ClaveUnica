@@ -64,49 +64,20 @@ export function initTutorial() {
 
     document.getElementById('btn-back-ca')?.addEventListener('click', goBack);
 
-    // --- Lógica del Modal de Elección de Modo de Aprendizaje ---
-    const choiceModal = document.getElementById('modal-rc-learn-choice');
-    const btnCloseChoice = document.getElementById('btn-close-choice');
-    const btnChoiceTutorial = document.getElementById('btn-choice-tutorial');
-    const btnChoiceSimulate = document.getElementById('btn-choice-simulate');
-
-    if (btnCloseChoice && choiceModal) {
-        btnCloseChoice.onclick = () => {
-            choiceModal.style.display = 'none';
+    // --- Lógica del Slider de Modo de Aprendizaje ---
+    const btnModeGuide = document.getElementById('btn-mode-guide');
+    const btnModeSimulation = document.getElementById('btn-mode-simulation');
+    
+    if (btnModeGuide && btnModeSimulation) {
+        btnModeGuide.onclick = () => {
+            state.rcLearnMode = 'guide';
+            btnModeGuide.classList.add('active');
+            btnModeSimulation.classList.remove('active');
         };
-        window.addEventListener('click', (event) => {
-            if (event.target == choiceModal) {
-                choiceModal.style.display = 'none';
-            }
-        });
-    }
-
-    if (btnChoiceTutorial && choiceModal) {
-        btnChoiceTutorial.onclick = () => {
-            choiceModal.style.display = 'none';
-            if (state.choiceCertCu) {
-                state.postLoginTarget = 'rcTutorial';
-                state.currentTutorialOrigin = 'rcCategories';
-                state.currentTutorialSteps = rcData.steps[state.choiceCertId] || [];
-                state.currentStepIndex = 0;
-                showScreen('login');
-            } else {
-                startTutorial(state.choiceCertId, state.choiceCertName);
-            }
-        };
-    }
-
-    if (btnChoiceSimulate && choiceModal) {
-        btnChoiceSimulate.onclick = () => {
-            choiceModal.style.display = 'none';
-            if (state.choiceCertCu) {
-                state.postLoginTarget = 'rcInteractiveSimulation';
-                state.currentTutorialOrigin = 'rcCategories';
-                state.currentStepIndex = 0;
-                showScreen('login');
-            } else {
-                startInteractiveSimulation(state.choiceCertId, state.choiceCertName);
-            }
+        btnModeSimulation.onclick = () => {
+            state.rcLearnMode = 'simulation';
+            btnModeSimulation.classList.add('active');
+            btnModeGuide.classList.remove('active');
         };
     }
 }
@@ -146,12 +117,7 @@ export function selectRCCategory(catId) {
             state.choiceCertName = cert.name;
             state.choiceCertCu = cert.cu;
             
-            const choiceModal = document.getElementById('modal-rc-learn-choice');
-            if (choiceModal) {
-                choiceModal.style.display = 'flex';
-                const modalTitle = document.getElementById('choice-modal-title');
-                if (modalTitle) modalTitle.innerText = `¿Cómo desea realizar: ${cert.name}?`;
-            } else {
+            if (state.rcLearnMode === 'guide') {
                 if (cert.cu) {
                     state.postLoginTarget       = 'rcTutorial';
                     state.currentTutorialOrigin = 'rcCategories';
@@ -160,6 +126,15 @@ export function selectRCCategory(catId) {
                     showScreen('login');
                 } else {
                     startTutorial(cert.id, cert.name);
+                }
+            } else { // 'simulation'
+                if (cert.cu) {
+                    state.postLoginTarget       = 'rcInteractiveSimulation';
+                    state.currentTutorialOrigin = 'rcCategories';
+                    state.currentStepIndex      = 0;
+                    showScreen('login');
+                } else {
+                    startInteractiveSimulation(cert.id, cert.name);
                 }
             }
         };
@@ -220,7 +195,7 @@ export function updateStepUI() {
         <div id="reader-target-text" class="step-text">${wrappedText}</div>
         <div class="rc-official-mockup">
             <div class="rc-official-header">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Logotipo_Clave_%C3%9Anica.svg" alt="Logo CU" class="rc-official-logo">
+                <div class="rc-official-logo-text" style="font-weight: 800; font-size: 16px; color: #004a99; display: flex; align-items: center; gap: 4px;">🔑 Simulación ClaveÚnica</div>
                 <div class="rc-guide-overlay" title="Ayuda" onclick="showNotification('${step.text.replace(/'/g, "\\'")}', 'info')">?</div>
             </div>
             ${visualHtml}
