@@ -2057,6 +2057,56 @@ body.high-contrast #rc-step-visual {
     100% { transform: translateY(0); opacity: 1; }
 }
 
+/* Banner de Simulación Segura para el Login */
+.simulation-disclaimer-banner {
+    background-color: #e3f2fd;
+    border: 3px solid var(--primary);
+    border-radius: 16px;
+    padding: 20px;
+    margin: 0 auto 20px;
+    max-width: 1000px;
+    text-align: left;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    animation: fadeIn 0.4s ease-out;
+}
+
+.simulation-disclaimer-banner h3 {
+    color: var(--primary);
+    margin-top: 0;
+    margin-bottom: 6px;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.simulation-disclaimer-banner p {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+    line-height: 1.5;
+}
+
+body.dark-mode .simulation-disclaimer-banner {
+    background-color: #1a2a4a;
+    border-color: var(--primary);
+}
+
+body.dark-mode .simulation-disclaimer-banner h3 {
+    color: var(--primary);
+}
+
+body.dark-mode .simulation-disclaimer-banner p {
+    color: #e0e0e0;
+}
+
+body.high-contrast .simulation-disclaimer-banner {
+    background-color: black;
+    border: 3px solid yellow;
+}
+
+body.high-contrast .simulation-disclaimer-banner h3,
+body.high-contrast .simulation-disclaimer-banner p {
+    color: yellow;
+}
 </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2101,6 +2151,16 @@ body.high-contrast #rc-step-visual {
 
         <!-- Screen 1: Login -->
         <section id="screen-login" class="screen">
+            <!-- Banner de Simulación Segura para Abuelos -->
+            <div class="simulation-disclaimer-banner">
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <span style="font-size: 40px; line-height: 1;">🛡️</span>
+                    <div>
+                        <h3>Sitio de Práctica 100% Seguro</h3>
+                        <p>Esta es una <strong>página de simulación de aprendizaje</strong>. No es el sitio oficial del gobierno y <strong>nunca se guardará ni enviará su información real</strong>. Puede practicar con total tranquilidad y usar datos ficticios.</p>
+                    </div>
+                </div>
+            </div>
             <div class="cu-login-card">
                 <div class="cu-card-header">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Gobierno_de_Chile_logo.svg/512px-Gobierno_de_Chile_logo.svg.png" 
@@ -3335,7 +3395,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         utterance.lang = 'es-CL'; // Fallback lang
-        utterance.rate = 0.9;     // Slower for seniors as requested
+        utterance.rate = 1.15;     // Slower for seniors as requested but slightly faster now
         utterance.pitch = 1.05;   // Slightly higher for a clearer female tone
 
         utterance.onstart = () => {
@@ -3462,7 +3522,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const v = getFemaleLatamVoice();
             if (v) utt.voice = v;
             utt.lang = 'es-CL';
-            utt.rate = 0.7;
+            utt.rate = 0.95;
             utt.pitch = 1.05;
             synth.speak(utt);
             return;
@@ -3472,7 +3532,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const voice = getFemaleLatamVoice();
         if (voice) readerUtterance.voice = voice;
         readerUtterance.lang = 'es-CL';
-        readerUtterance.rate = 0.7;
+        readerUtterance.rate = 0.95;
         readerUtterance.pitch = 1.05;
         
         const status = toolbar.querySelector('.reader-status');
@@ -3768,7 +3828,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             utterance.lang = 'es-CL';
-            utterance.rate = 0.9; // Slower for seniors
+            utterance.rate = 1.15; // Slower for seniors but slightly faster now
             utterance.pitch = 1.05;
 
             utterance.onstart = () => {
