@@ -63,7 +63,8 @@ function initTutorialSummaryModal() {
     document.getElementById('btn-summary-ok')?.addEventListener('click', () => {
         const modal = document.getElementById('modal-tutorial-summary');
         if (modal) modal.style.display = 'none';
-        resetHistoryTo(state.currentTutorialOrigin || 'menu');
+        const origin = state.currentTutorialOrigin;
+        resetHistoryTo(origin === 'login' ? 'menu' : (origin || 'menu'));
     });
 
     document.getElementById('btn-summary-simulate')?.addEventListener('click', () => {

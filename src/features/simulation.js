@@ -185,6 +185,14 @@ export function initSimulation() {
         };
     }
 
+    // Botón "Volver al Menú" dentro del panel sticky de la guía
+    const btnSimExitMenu = document.getElementById('btn-sim-exit-menu');
+    if (btnSimExitMenu) {
+        btnSimExitMenu.onclick = () => {
+            resetHistoryTo('menu');
+        };
+    }
+
     // 1. Clic en categorías de la simulación
     document.querySelectorAll('.sim-cat-card .sim-cat-header').forEach(hdr => {
         hdr.onclick = () => {
