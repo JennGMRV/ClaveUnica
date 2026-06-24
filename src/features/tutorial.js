@@ -167,7 +167,7 @@ export function updateStepUI() {
     ).join('');
 
     let visualHtml = '';
-    if (step.visual.endsWith('.png') || step.visual.endsWith('.jpg')) {
+    if (step.visual.endsWith('.png') || step.visual.endsWith('.jpg') || step.visual.endsWith('.jpeg')) {
         visualHtml = `
             <div class="rc-visual-wrapper">
                 <img src="${step.visual}" class="rc-step-img" alt="Guía visual" title="Toque para ampliar">
