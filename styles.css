@@ -721,6 +721,45 @@ input:focus {
     position: relative;
 }
 
+.assistant-close-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: #888;
+    line-height: 1;
+    padding: 4px;
+    z-index: 10;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.assistant-close-btn:hover {
+    color: #c00;
+    transform: scale(1.15);
+}
+
+body.dark-mode .assistant-close-btn {
+    color: #ccc;
+}
+body.dark-mode .assistant-close-btn:hover {
+    color: #ff5555;
+}
+
+body.high-contrast .assistant-close-btn {
+    color: #000;
+    border: 1px solid #000;
+    border-radius: 4px;
+    padding: 2px 6px;
+}
+body.high-contrast.dark-mode .assistant-close-btn {
+    color: #fff;
+    border-color: #fff;
+}
+
 .assistant-chat-bubble::after {
     content: '';
     position: absolute;
