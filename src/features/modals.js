@@ -53,6 +53,8 @@ export function showTutorialSummary() {
             `<li><span class="summary-check">✅</span> ${s.title}</li>`
         ).join('') + '</ul>';
     }
+    const simBtn = document.getElementById('btn-summary-simulate');
+    if (simBtn) simBtn.style.display = state.currentTutorialOrigin === 'caCategories' ? 'none' : '';
     modal.style.display = 'flex';
 }
 
