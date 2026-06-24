@@ -54,7 +54,7 @@ export function showTutorialSummary() {
         ).join('') + '</ul>';
     }
     const simBtn = document.getElementById('btn-summary-simulate');
-    const noSim = ['caCategories', 'login'];
+    const noSim = ['caCategories', 'login', 'landing'];
     if (simBtn) simBtn.style.display = noSim.includes(state.currentTutorialOrigin) ? 'none' : '';
     modal.style.display = 'flex';
 }
@@ -63,8 +63,7 @@ function initTutorialSummaryModal() {
     document.getElementById('btn-summary-ok')?.addEventListener('click', () => {
         const modal = document.getElementById('modal-tutorial-summary');
         if (modal) modal.style.display = 'none';
-        const origin = state.currentTutorialOrigin;
-        resetHistoryTo(origin === 'login' ? 'menu' : (origin || 'menu'));
+        resetHistoryTo(state.currentTutorialOrigin || 'menu');
     });
 
     document.getElementById('btn-summary-simulate')?.addEventListener('click', () => {

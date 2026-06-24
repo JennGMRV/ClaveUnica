@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Guía para recuperar contraseña ClaveÚnica
     document.getElementById('btn-recover-guide')?.addEventListener('click', () => {
-        state.currentTutorialOrigin = 'login';
+        state.currentTutorialOrigin = 'landing';
         state.currentTutorialSteps  = cuData['recuperar-pass'].steps;
         state.currentStepIndex      = 0;
         updateStepUI();
