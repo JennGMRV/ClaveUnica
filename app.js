@@ -1203,6 +1203,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
+            document.getElementById('btn-assistant-close')?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (this.bubble) this.bubble.style.display = 'none';
+                window.speechSynthesis.cancel();
+                if (this.icon) this.icon.classList.remove('speaking');
+            });
+
             if (this.chatInput) {
                 this.chatInput.addEventListener('keypress', (e) => {
                     if (e.key === 'Enter') {
