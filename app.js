@@ -612,6 +612,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cat.certs.forEach(cert => {
                 const item = document.createElement('div');
                 item.className = 'rc-cert-item';
+                item.setAttribute('data-cert-id', cert.id);
                 item.innerHTML = `
                     <div class="rc-cert-info">
                         <span class="rc-cert-name">${cert.name}</span>
@@ -1136,7 +1137,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 name: 'Certificado de Antecedentes',
                 desc: 'muestra si usted tiene registros penales. Requiere Clave Única.',
                 keywords: ['antecedentes', 'penales', 'papel de antecedentes', 'policía', 'carcel', 'limpio']
-            }
+            },
+            { id: 'nac-matricula', type: 'rc', name: 'Certificado Nacimiento Para Matrícula', desc: 'para procesos de matrícula escolar', keywords: ['nacimiento','nacer','matrícula','matricula','colegio','escuela','escolar'] },
+            { id: 'nac-asignacion', type: 'rc', name: 'Certificado Nacimiento Asignación Familiar', desc: 'para asignación familiar y beneficios laborales', keywords: ['nacimiento','nacer','asignación','asignacion','familiar','laboral','trabajo'] },
+            { id: 'nac-todo', type: 'rc', name: 'Certificado Nacimiento Todo Trámite', desc: 'para cualquier tipo de trámite general', keywords: ['nacimiento','nacer','todo trámite','todo tramite','general','cualquier trámite'] },
+            { id: 'mat-todo', type: 'rc', name: 'Certificado Matrimonio Todo Trámite', desc: 'para certificar su estado civil para cualquier trámite', keywords: ['matrimonio','todo trámite','todo tramite','general','cualquier trámite','casado','casada'] },
+            { id: 'mat-asignacion', type: 'rc', name: 'Certificado Matrimonio Asignación Familiar', desc: 'para cargas y asignaciones familiares de cónyuges', keywords: ['matrimonio','asignación','asignacion','cónyuge','esposo','esposa'] },
+            { id: 'def-todo', type: 'rc', name: 'Certificado Defunción Todo Trámite', desc: 'para certificar un fallecimiento en cualquier trámite', keywords: ['defunción','defuncion','todo trámite','todo tramite','general','fallecimiento','muerte'] },
+            { id: 'def-asignacion', type: 'rc', name: 'Certificado Defunción Asignación Familiar', desc: 'para trámites de herencia y previsión social de fallecidos', keywords: ['defunción','defuncion','asignación','asignacion','herencia','fallecido','muerte'] },
+            { id: 'ant-fines-particulares', type: 'rc', name: 'Antecedentes Fines Particulares', desc: 'para trabajo u otros fines particulares', keywords: ['antecedentes','particulares','fines particulares','trabajo'] },
+            { id: 'ant-fines-especiales', type: 'rc', name: 'Antecedentes Fines Especiales', desc: 'para trámites legales y fines especiales', keywords: ['antecedentes','especiales','fines especiales','legal'] }
         ],
 
         formatNumbersForSeniors(str) {
@@ -1422,6 +1432,79 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
+            // Modos de aprendizaje (Simulación y Guía)
+            if (cmd.includes('simulación') || cmd.includes('simulacion') || cmd.includes('simular')) {
+                const btn = document.getElementById('btn-mode-simulation');
+                if (btn) {
+                    btn.click();
+                    this.say('Excelente, he activado el modo de simulación interactiva. Ahora, cuando elija un certificado, practicaremos los pasos en pantalla.');
+                    return;
+                }
+            }
+            if (cmd.includes('guía') || cmd.includes('guia') || cmd.includes('paso a paso')) {
+                const btn = document.getElementById('btn-mode-guide');
+                if (btn) {
+                    btn.click();
+                    this.say('Entendido, he activado el modo de guía paso a paso. Ahora, al seleccionar un certificado, le iré mostrando los pasos a seguir.');
+                    return;
+                }
+            }
+
+            // Categorías del Registro Civil por voz
+            if (currentScreenKey === 'rcCategories') {
+                let catToClick = null;
+                if (cmd.includes('nacimiento') || cmd.includes('nacer') || cmd.includes('bebé') || cmd.includes('hijo') || cmd.includes('hija')) {
+                    catToClick = 'nacimiento';
+                } else if (cmd.includes('matrimonio') || cmd.includes('casado') || cmd.includes('casada') || cmd.includes('boda') || cmd.includes('casamiento')) {
+                    catToClick = 'matrimonio';
+                } else if (cmd.includes('defunción') || cmd.includes('defuncion') || cmd.includes('muerte') || cmd.includes('fallecido') || cmd.includes('fallecimiento')) {
+                    catToClick = 'defuncion';
+                } else if (cmd.includes('antecedentes') || cmd.includes('penales') || cmd.includes('policía')) {
+                    catToClick = 'antecedentes';
+                } else if (cmd.includes('vehículo') || cmd.includes('vehiculo') || cmd.includes('auto') || cmd.includes('carro') || cmd.includes('patente')) {
+                    catToClick = 'vehiculos';
+                } else if (cmd.includes('identidad') || cmd.includes('carnet') || cmd.includes('cédula') || cmd.includes('cedula')) {
+                    catToClick = 'identidad';
+                }
+
+                if (catToClick) {
+                    const card = document.querySelector(`.rc-category-card[data-cat="${catToClick}"]`);
+                    if (card) {
+                        this.say(`Abriendo categoría de ${catToClick === 'defuncion' ? 'defunciones' : catToClick === 'vehiculos' ? 'vehículos' : catToClick}.`);
+                        card.click();
+                        return;
+                    }
+                }
+
+                // Selección de certificados específicos visibles en el sublistado
+                const sublist = document.getElementById('rc-certs-sublist');
+                if (sublist && sublist.style.display !== 'none') {
+                    const certItems = sublist.querySelectorAll('.rc-cert-item');
+                    let bestItem = null;
+                    let maxScore = 0;
+                    certItems.forEach(item => {
+                        const name = item.querySelector('.rc-cert-name')?.innerText.toLowerCase() || '';
+                        let score = 0;
+                        const words = name.split(/\s+/);
+                        words.forEach(word => {
+                            if (word.length > 3 && cmd.includes(word)) {
+                                score += 5;
+                            }
+                        });
+                        if (score > maxScore) {
+                            maxScore = score;
+                            bestItem = item;
+                        }
+                    });
+                    if (bestItem && maxScore >= 5) {
+                        const name = bestItem.querySelector('.rc-cert-name').innerText;
+                        this.say(`Entendido. Seleccionando ${name}.`);
+                        bestItem.click();
+                        return;
+                    }
+                }
+            }
+
             // Standard Commands - ONLY trigger greeting if it's the main intent
             const commonGreetings = ['hola', 'buenos días', 'buenas tardes', 'buenas noches', 'asistente'];
             const isGreetingOnly = commonGreetings.includes(cmd) || (cmd.startsWith('hola') && cmd.length < 10);
@@ -1618,7 +1701,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     setTimeout(() => {
                         if (bestMatch.type === 'rc') {
-                            selectRCCategory(bestMatch.id);
+                            const certCategoryMap = {
+                                'nac-matricula': 'nacimiento',
+                                'nac-asignacion': 'nacimiento',
+                                'nac-todo': 'nacimiento',
+                                'mat-todo': 'matrimonio',
+                                'mat-asignacion': 'matrimonio',
+                                'def-todo': 'defuncion',
+                                'def-asignacion': 'defuncion',
+                                'ant-fines-particulares': 'antecedentes',
+                                'ant-fines-especiales': 'antecedentes'
+                            };
+                            const catId = certCategoryMap[bestMatch.id] || bestMatch.id;
+                            selectRCCategory(catId);
+                            
+                            if (certCategoryMap[bestMatch.id]) {
+                                setTimeout(() => {
+                                    const certItem = document.querySelector(`.rc-cert-item[data-cert-id="${bestMatch.id}"]`);
+                                    if (certItem) certItem.click();
+                                }, 250);
+                            }
                         } else {
                             // Fonasa flow
                             const rad = document.querySelector(`input[value="${bestMatch.id}"]`);

@@ -3335,6 +3335,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cat.certs.forEach(cert => {
                 const item = document.createElement('div');
                 item.className = 'rc-cert-item';
+                item.setAttribute('data-cert-id', cert.id);
                 item.innerHTML = `
                     <div class="rc-cert-info">
                         <span class="rc-cert-name">${cert.name}</span>
@@ -4070,6 +4071,61 @@ document.addEventListener('DOMContentLoaded', () => {
                     this.state = null;
                     this.pendingData = null;
                     return;
+                }
+            }
+
+            // Categorías del Registro Civil por voz
+            if (currentScreenKey === 'rcCategories') {
+                let catToClick = null;
+                if (cmd.includes('nacimiento') || cmd.includes('nacer') || cmd.includes('bebé') || cmd.includes('hijo') || cmd.includes('hija')) {
+                    catToClick = 'nacimiento';
+                } else if (cmd.includes('matrimonio') || cmd.includes('casado') || cmd.includes('casada') || cmd.includes('boda') || cmd.includes('casamiento')) {
+                    catToClick = 'matrimonio';
+                } else if (cmd.includes('defunción') || cmd.includes('defuncion') || cmd.includes('muerte') || cmd.includes('fallecido') || cmd.includes('fallecimiento')) {
+                    catToClick = 'defuncion';
+                } else if (cmd.includes('antecedentes') || cmd.includes('penales') || cmd.includes('policía')) {
+                    catToClick = 'antecedentes';
+                } else if (cmd.includes('vehículo') || cmd.includes('vehiculo') || cmd.includes('auto') || cmd.includes('carro') || cmd.includes('patente')) {
+                    catToClick = 'vehiculos';
+                } else if (cmd.includes('identidad') || cmd.includes('carnet') || cmd.includes('cédula') || cmd.includes('cedula')) {
+                    catToClick = 'identidad';
+                }
+
+                if (catToClick) {
+                    const card = document.querySelector(`.rc-category-card[data-cat="${catToClick}"]`);
+                    if (card) {
+                        this.say(`Abriendo categoría de ${catToClick === 'defuncion' ? 'defunciones' : catToClick === 'vehiculos' ? 'vehículos' : catToClick}.`);
+                        card.click();
+                        return;
+                    }
+                }
+
+                // Selección de certificados específicos visibles en el sublistado
+                const sublist = document.getElementById('rc-certs-sublist');
+                if (sublist && sublist.style.display !== 'none') {
+                    const certItems = sublist.querySelectorAll('.rc-cert-item');
+                    let bestItem = null;
+                    let maxScore = 0;
+                    certItems.forEach(item => {
+                        const name = item.querySelector('.rc-cert-name')?.innerText.toLowerCase() || '';
+                        let score = 0;
+                        const words = name.split(/\s+/);
+                        words.forEach(word => {
+                            if (word.length > 3 && cmd.includes(word)) {
+                                score += 5;
+                            }
+                        });
+                        if (score > maxScore) {
+                            maxScore = score;
+                            bestItem = item;
+                        }
+                    });
+                    if (bestItem && maxScore >= 5) {
+                        const name = bestItem.querySelector('.rc-cert-name').innerText;
+                        this.say(`Entendido. Seleccionando ${name}.`);
+                        bestItem.click();
+                        return;
+                    }
                 }
             }
 

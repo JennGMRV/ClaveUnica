@@ -105,6 +105,7 @@ export function selectRCCategory(catId) {
     cat.certs.forEach(cert => {
         const item = document.createElement('div');
         item.className = 'rc-cert-item';
+        item.setAttribute('data-cert-id', cert.id);
         item.innerHTML = `
             <div class="rc-cert-info">
                 <span class="rc-cert-name">${cert.name}</span>
