@@ -54,7 +54,8 @@ export function showTutorialSummary() {
         ).join('') + '</ul>';
     }
     const simBtn = document.getElementById('btn-summary-simulate');
-    if (simBtn) simBtn.style.display = state.currentTutorialOrigin === 'caCategories' ? 'none' : '';
+    const noSim = ['caCategories', 'login'];
+    if (simBtn) simBtn.style.display = noSim.includes(state.currentTutorialOrigin) ? 'none' : '';
     modal.style.display = 'flex';
 }
 
