@@ -741,6 +741,7 @@ input:focus {
     transition: background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
     padding: 0;
     flex-shrink: 0;
+    z-index: 10;
 }
 
 .assistant-close-btn:hover {
@@ -748,6 +749,26 @@ input:focus {
     border-color: #ff2b2b;
     color: white;
     box-shadow: 0 0 10px rgba(255, 43, 43, 0.6);
+}
+
+body.dark-mode .assistant-close-btn {
+    border-color: #aaa;
+    color: #ccc;
+}
+body.dark-mode .assistant-close-btn:hover {
+    background: #ff2b2b;
+    border-color: #ff2b2b;
+    color: white;
+    box-shadow: 0 0 10px rgba(255, 43, 43, 0.5);
+}
+
+body.high-contrast .assistant-close-btn {
+    border: 2px solid #000;
+    color: #000;
+}
+body.high-contrast.dark-mode .assistant-close-btn {
+    border-color: #fff;
+    color: #fff;
 }
 
 .assistant-chat-bubble::after {
