@@ -721,6 +721,35 @@ input:focus {
     position: relative;
 }
 
+.assistant-close-btn {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    width: 26px;
+    height: 26px;
+    background: transparent;
+    border: 2px solid var(--primary);
+    border-radius: 50%;
+    color: var(--primary);
+    font-size: 0.85rem;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.assistant-close-btn:hover {
+    background: #ff2b2b;
+    border-color: #ff2b2b;
+    color: white;
+    box-shadow: 0 0 10px rgba(255, 43, 43, 0.6);
+}
+
 .assistant-chat-bubble::after {
     content: '';
     position: absolute;

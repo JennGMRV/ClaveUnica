@@ -78,6 +78,10 @@ export const assistant = {
         this.chatInput  = document.getElementById('assistant-chat-input');
         this.chatSendBtn= document.getElementById('btn-assistant-send');
 
+        document.getElementById('btn-close-assistant')?.addEventListener('click', () => {
+            this.bubble.style.display = 'none';
+        });
+
         this.chatSendBtn?.addEventListener('click', () => {
             const text = this.chatInput.value.trim();
             if (text) { this.handleCommand(text, false); this.chatInput.value = ''; }
