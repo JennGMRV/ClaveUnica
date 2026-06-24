@@ -1,6 +1,6 @@
 import { state }                from '../core/state.js';
 import { showScreen, goBack, getScreen } from '../core/navigation.js';
-import { getFemaleLatamVoice } from '../core/speech.js';
+import { getFemaleLatamVoice, preprocessTextForTTS } from '../core/speech.js';
 import { selectRCCategory }    from './tutorial.js';
 import { showNotification }    from '../utils/notifications.js';
 
@@ -47,14 +47,23 @@ export const assistant = {
     bubbleTimeout: null,
 
     certificateKnowledge: [
-        { id: 'afiliacion',   type: 'fonasa', name: 'Certificado de Afiliación',     desc: 'acredita que usted está en FONASA actualmente',                              keywords: ['afiliación','afiliado','pertenezco','salud','fonasa','papel azul','inscrito','isapre no','pertenecer'] },
-        { id: 'cotizaciones', type: 'fonasa', name: 'Certificado de Cotizaciones',   desc: 'muestra sus pagos de salud de los últimos meses',                            keywords: ['pagos','platas','plata','dinero','cotización','cotizaciones','descuentos','sueldo','cuánto tengo','ahorros','pagado'] },
-        { id: 'nacimiento',   type: 'rc',     name: 'Certificado de Nacimiento',     desc: 'documento que acredita su nacimiento y datos de sus padres',                 keywords: ['nacimiento','nacer','naci','parto','bebé','bebe','hijo','hija','nació'] },
-        { id: 'matrimonio',   type: 'rc',     name: 'Certificado de Matrimonio',     desc: 'documento que acredita su estado civil de casado o casada',                  keywords: ['matrimonio','casado','casada','boda','casamiento','pareja','estado civil'] },
-        { id: 'defuncion',    type: 'rc',     name: 'Certificado de Defunción',      desc: 'documento que acredita el fallecimiento de una persona',                    keywords: ['defunción','defuncion','defunci','muerte','fallecido','fallecimiento','falleci','muerto','velorio','difunto','finado','óbito'] },
-        { id: 'antecedentes', type: 'rc',     name: 'Certificado de Antecedentes',   desc: 'muestra si usted tiene registros penales. Requiere Clave Única.',           keywords: ['antecedentes','antecedente','penales','penal','policía','carcel','limpio','conducta','registro policial'] },
-        { id: 'vehiculos',    type: 'rc',     name: 'Certificados de Vehículos',     desc: 'muestra multas, anotaciones y datos del dueño del vehículo',                keywords: ['vehículo','vehiculo','auto','carro','patente','multa','tránsito','transito','anotaciones','camión','camion','moto','automovil','vehículo','permiso circulación'] },
-        { id: 'identidad',    type: 'rc',     name: 'Certificados de Identidad',     desc: 'documentos relacionados con su cédula de identidad y pasaporte',            keywords: ['identidad','cédula','cedula','carnet','pasaporte','renovar carnet','documento de identidad','cédula de identidad','ci'] }
+        { id: 'afiliacion',           type: 'fonasa', name: 'Certificado de Afiliación',                    desc: 'acredita que usted está en FONASA actualmente',                                           keywords: ['afiliación','afiliado','pertenezco','salud','fonasa','papel azul','inscrito','isapre no','pertenecer'] },
+        { id: 'cotizaciones',         type: 'fonasa', name: 'Certificado de Cotizaciones',                  desc: 'muestra sus pagos de salud de los últimos meses',                                         keywords: ['pagos','platas','plata','dinero','cotización','cotizaciones','descuentos','sueldo','cuánto tengo','ahorros','pagado'] },
+        { id: 'nacimiento',           type: 'rc',     name: 'Certificado de Nacimiento',                    desc: 'documento que acredita su nacimiento y datos de sus padres',                              keywords: ['nacimiento','nacer','naci','parto','bebé','bebe','hijo','hija','nació'] },
+        { id: 'matrimonio',           type: 'rc',     name: 'Certificado de Matrimonio',                    desc: 'documento que acredita su estado civil de casado o casada',                               keywords: ['matrimonio','casado','casada','boda','casamiento','pareja','estado civil'] },
+        { id: 'defuncion',            type: 'rc',     name: 'Certificado de Defunción',                     desc: 'documento que acredita el fallecimiento de una persona',                                  keywords: ['defunción','defuncion','defunci','muerte','fallecido','fallecimiento','falleci','muerto','velorio','difunto','finado','óbito'] },
+        { id: 'antecedentes',         type: 'rc',     name: 'Certificado de Antecedentes',                  desc: 'muestra si usted tiene registros penales. Requiere Clave Única.',                          keywords: ['antecedentes','antecedente','penales','penal','policía','carcel','limpio','conducta','registro policial'] },
+        { id: 'vehiculos',            type: 'rc',     name: 'Certificados de Vehículos',                    desc: 'muestra multas, anotaciones y datos del dueño del vehículo',                              keywords: ['vehículo','vehiculo','auto','carro','patente','multa','tránsito','transito','anotaciones','camión','camion','moto','automovil','permiso circulación'] },
+        { id: 'identidad',            type: 'rc',     name: 'Certificados de Identidad',                    desc: 'documentos relacionados con su cédula de identidad y pasaporte',                          keywords: ['identidad','cédula','cedula','carnet','pasaporte','renovar carnet','documento de identidad','cédula de identidad','ci'] },
+        { id: 'nac-matricula',        type: 'rc',     name: 'Certificado Nacimiento Para Matrícula',         desc: 'para procesos de matrícula escolar',                                                      keywords: ['nacimiento','nacer','matrícula','matricula','colegio','escuela','escolar'] },
+        { id: 'nac-asignacion',       type: 'rc',     name: 'Certificado Nacimiento Asignación Familiar',   desc: 'para asignación familiar y beneficios laborales',                                         keywords: ['nacimiento','nacer','asignación','asignacion','familiar','laboral','trabajo'] },
+        { id: 'nac-todo',             type: 'rc',     name: 'Certificado Nacimiento Todo Trámite',           desc: 'para cualquier tipo de trámite general',                                                  keywords: ['nacimiento','nacer','todo trámite','todo tramite','general','cualquier trámite'] },
+        { id: 'mat-todo',             type: 'rc',     name: 'Certificado Matrimonio Todo Trámite',           desc: 'para certificar su estado civil para cualquier trámite',                                  keywords: ['matrimonio','todo trámite','todo tramite','general','cualquier trámite','casado','casada'] },
+        { id: 'mat-asignacion',       type: 'rc',     name: 'Certificado Matrimonio Asignación Familiar',   desc: 'para cargas y asignaciones familiares de cónyuges',                                      keywords: ['matrimonio','asignación','asignacion','cónyuge','esposo','esposa'] },
+        { id: 'def-todo',             type: 'rc',     name: 'Certificado Defunción Todo Trámite',            desc: 'para certificar un fallecimiento en cualquier trámite',                                   keywords: ['defunción','defuncion','todo trámite','todo tramite','general','fallecimiento','muerte'] },
+        { id: 'def-asignacion',       type: 'rc',     name: 'Certificado Defunción Asignación Familiar',    desc: 'para trámites de herencia y previsión social de fallecidos',                              keywords: ['defunción','defuncion','asignación','asignacion','herencia','fallecido','muerte'] },
+        { id: 'ant-fines-particulares', type: 'rc',   name: 'Antecedentes Fines Particulares',              desc: 'para trabajo u otros fines particulares',                                                  keywords: ['antecedentes','particulares','fines particulares','trabajo'] },
+        { id: 'ant-fines-especiales',   type: 'rc',   name: 'Antecedentes Fines Especiales',                desc: 'para trámites legales y fines especiales',                                                keywords: ['antecedentes','especiales','fines especiales','legal'] }
     ],
 
     formatNumbersForSeniors(str) {
@@ -157,9 +166,11 @@ export const assistant = {
         this.showBubble(text, false);
         window.speechSynthesis.cancel();
 
-        const utter = new SpeechSynthesisUtterance(text);
+        const cleanedText = preprocessTextForTTS(text);
+        const utter = new SpeechSynthesisUtterance(cleanedText);
         utter.lang  = 'es-CL';
         utter.rate  = state.speechRate;
+        utter.pitch = 1.05;
         const voice = getFemaleLatamVoice();
         if (voice) utter.voice = voice;
 
@@ -176,7 +187,7 @@ export const assistant = {
         if (this.synth.speaking) return;
         const screenTexts = {
             landing:      'Bienvenido al portal de trámites. Puede elegir obtener un certificado del Registro Civil, o explorar los servicios de ChileAtiende.',
-            login:        'Pantalla de inicio de sesión. Por favor ingrese su RUN en el primer campo, y su Clave Única en el segundo. Luego presione el botón Autenticar.',
+            login:        'Pantalla de inicio de sesión. Por favor ingrese su RUT en el primer campo, y su Clave Única en el segundo. Luego presione el botón Autenticar.',
             menu:         'Menú principal. Tiene tres opciones: Obtener Certificado, Guía del Registro Civil, o Guía de ChileAtiende.',
             form:         'Selección de certificado. Elija entre el Certificado de Afiliación, que acredita que está en FONASA, o el de Cotizaciones, que muestra sus pagos de salud. Luego presione Siguiente paso.',
             confirm:      'Pantalla de confirmación. Revise bien su información. Si todo está correcto, presione el botón que dice: Sí, Confirmar Trámite.',
@@ -250,6 +261,79 @@ export const assistant = {
                 this.say('Entendido. ¿Qué certificado necesita entonces? Puedo buscar el de Afiliación o el de Cotizaciones.');
                 this.state = null; this.pendingData = null;
                 return;
+            }
+        }
+
+        // Modos de aprendizaje (Simulación y Guía)
+        if (cmd.includes('simulación') || cmd.includes('simulacion') || cmd.includes('simular')) {
+            const btn = document.getElementById('btn-mode-simulation');
+            if (btn) {
+                btn.click();
+                this.say('Excelente, he activado el modo de simulación interactiva. Ahora, cuando elija un certificado, practicaremos los pasos en pantalla.');
+                return;
+            }
+        }
+        if (cmd.includes('guía') || cmd.includes('guia') || cmd.includes('paso a paso')) {
+            const btn = document.getElementById('btn-mode-guide');
+            if (btn) {
+                btn.click();
+                this.say('Entendido, he activado el modo de guía paso a paso. Ahora, al seleccionar un certificado, le iré mostrando los pasos a seguir.');
+                return;
+            }
+        }
+
+        // Categorías del Registro Civil por voz
+        if (state.currentScreenKey === 'rcCategories') {
+            let catToClick = null;
+            if (cmd.includes('nacimiento') || cmd.includes('nacer') || cmd.includes('bebé') || cmd.includes('hijo') || cmd.includes('hija')) {
+                catToClick = 'nacimiento';
+            } else if (cmd.includes('matrimonio') || cmd.includes('casado') || cmd.includes('casada') || cmd.includes('boda') || cmd.includes('casamiento')) {
+                catToClick = 'matrimonio';
+            } else if (cmd.includes('defunción') || cmd.includes('defuncion') || cmd.includes('muerte') || cmd.includes('fallecido') || cmd.includes('fallecimiento')) {
+                catToClick = 'defuncion';
+            } else if (cmd.includes('antecedentes') || cmd.includes('penales') || cmd.includes('policía')) {
+                catToClick = 'antecedentes';
+            } else if (cmd.includes('vehículo') || cmd.includes('vehiculo') || cmd.includes('auto') || cmd.includes('carro') || cmd.includes('patente')) {
+                catToClick = 'vehiculos';
+            } else if (cmd.includes('identidad') || cmd.includes('carnet') || cmd.includes('cédula') || cmd.includes('cedula')) {
+                catToClick = 'identidad';
+            }
+
+            if (catToClick) {
+                const card = document.querySelector(`.rc-category-card[data-cat="${catToClick}"]`);
+                if (card) {
+                    this.say(`Abriendo categoría de ${catToClick === 'defuncion' ? 'defunciones' : catToClick === 'vehiculos' ? 'vehículos' : catToClick}.`);
+                    card.click();
+                    return;
+                }
+            }
+
+            // Selección de certificados específicos visibles en el sublistado
+            const sublist = document.getElementById('rc-certs-sublist');
+            if (sublist && sublist.style.display !== 'none') {
+                const certItems = sublist.querySelectorAll('.rc-cert-item');
+                let bestItem = null;
+                let maxScore = 0;
+                certItems.forEach(item => {
+                    const name = item.querySelector('.rc-cert-name')?.innerText.toLowerCase() || '';
+                    let score = 0;
+                    const words = name.split(/\s+/);
+                    words.forEach(word => {
+                        if (word.length > 3 && cmd.includes(word)) {
+                            score += 5;
+                        }
+                    });
+                    if (score > maxScore) {
+                        maxScore = score;
+                        bestItem = item;
+                    }
+                });
+                if (bestItem && maxScore >= 5) {
+                    const name = bestItem.querySelector('.rc-cert-name').innerText;
+                    this.say(`Entendido. Seleccionando ${name}.`);
+                    bestItem.click();
+                    return;
+                }
             }
         }
 
@@ -382,7 +466,26 @@ export const assistant = {
                 this.say(`Perfecto. Preparando de inmediato su ${bestMatch.name}.`);
                 setTimeout(() => {
                     if (bestMatch.type === 'rc') {
-                        selectRCCategory(bestMatch.id);
+                        const certCategoryMap = {
+                            'nac-matricula': 'nacimiento',
+                            'nac-asignacion': 'nacimiento',
+                            'nac-todo': 'nacimiento',
+                            'mat-todo': 'matrimonio',
+                            'mat-asignacion': 'matrimonio',
+                            'def-todo': 'defuncion',
+                            'def-asignacion': 'defuncion',
+                            'ant-fines-particulares': 'antecedentes',
+                            'ant-fines-especiales': 'antecedentes'
+                        };
+                        const catId = certCategoryMap[bestMatch.id] || bestMatch.id;
+                        selectRCCategory(catId);
+                        
+                        if (certCategoryMap[bestMatch.id]) {
+                            setTimeout(() => {
+                                const certItem = document.querySelector(`.rc-cert-item[data-cert-id="${bestMatch.id}"]`);
+                                if (certItem) certItem.click();
+                            }, 250);
+                        }
                     } else {
                         const rad = document.querySelector(`input[value="${bestMatch.id}"]`);
                         if (rad) rad.checked = true;

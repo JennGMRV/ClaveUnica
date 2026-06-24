@@ -1,5 +1,6 @@
 import { state }      from '../core/state.js';
-import { goBack, showScreen } from '../core/navigation.js';
+import { goBack, showScreen, resetHistoryTo } from '../core/navigation.js';
+import { startInteractiveSimulation } from './simulation.js';
 
 // Callback para decir el mensaje de felicitaciones (inyectado desde main.js)
 let _sayCb = null;
@@ -59,7 +60,14 @@ function initTutorialSummaryModal() {
     document.getElementById('btn-summary-ok')?.addEventListener('click', () => {
         const modal = document.getElementById('modal-tutorial-summary');
         if (modal) modal.style.display = 'none';
-        showScreen(state.currentTutorialOrigin || 'menu');
+        resetHistoryTo(state.currentTutorialOrigin || 'menu');
+    });
+
+    document.getElementById('btn-summary-simulate')?.addEventListener('click', () => {
+        const modal = document.getElementById('modal-tutorial-summary');
+        if (modal) modal.style.display = 'none';
+        resetHistoryTo('rcCategories');
+        startInteractiveSimulation(state.choiceCertId || 'nac-matricula', state.choiceCertName || 'Certificado de Nacimiento');
     });
 }
 

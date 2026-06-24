@@ -468,7 +468,7 @@ document.addEventListener('DOMContentLoaded', () => {
             name: 'Mi Registro Social de Hogares',
             steps: [
                 { title: "Paso 1: Entrar a la página de ChileAtiende", text: "Abra el navegador y vaya a la página www.chileatiende.gob.cl. Verá el logo de ChileAtiende arriba y un recuadro blanco a la derecha que dice 'Para acceder, ingresa con tu ClaveÚnica'. Apriete el botón azul que dice 'Iniciar sesión'.", visual: "🌐 Página principal de Mi ChileAtiende con el botón azul 'Iniciar sesión'." },
-                { title: "Paso 2: Ingresar su RUN y Clave Única", text: "Aparecerá un formulario con el título 'miChileAtiende'. Escriba su RUN en el primer recuadro y su Clave Única en el segundo. Luego apriete el botón azul grande que dice 'INGRESA'.", visual: "🔑 Formulario con campos de RUN y ClaveÚnica, y botón INGRESA." },
+                { title: "Paso 2: Ingresar su RUT y Clave Única", text: "Aparecerá un formulario con el título 'miChileAtiende'. Escriba su RUT en el primer recuadro y su Clave Única en el segundo. Luego apriete el botón azul grande que dice 'INGRESA'.", visual: "🔑 Formulario con campos de RUT y ClaveÚnica, y botón INGRESA." },
                 { title: "Paso 3: Elegir el servicio desde el menú lateral", text: "Una vez adentro verá su nombre arriba y un menú a la izquierda llamado 'Mis accesos'. Busque y apriete donde dice 'Mi Registro Social de Hogares'. También puede apretarlo desde las tarjetas del centro de la pantalla.", visual: "📋 Menú lateral 'Mis accesos' con la opción Mi Registro Social de Hogares." },
                 { title: "Paso 4: Ver su Calificación Socioeconómica", text: "Verá la sección 'Calificación socioeconómica' con una barra de colores. Ahí aparece en qué porcentaje está su hogar entre todos los hogares de Chile, y si está más cerca de mayor o menor vulnerabilidad.", visual: "📊 Barra de calificación socioeconómica con el porcentaje del hogar." },
                 { title: "Paso 5: Obtener la Cartola del Hogar e Integrantes", text: "Más abajo verá el recuadro 'Cartola Hogar'. Apriete el botón azul 'Obtener cartola' para descargar el documento. Al final de la página está la sección 'Integrantes de mi hogar' con las personas registradas en su hogar.", visual: "📄 Recuadro Cartola Hogar y tarjetas de integrantes del hogar." }
@@ -478,7 +478,7 @@ document.addEventListener('DOMContentLoaded', () => {
             name: 'Mis Pagos de Beneficios Sociales',
             steps: [
                 { title: "Paso 1: Entrar a la página de ChileAtiende", text: "Abra el navegador y vaya a la página www.chileatiende.gob.cl. Verá un recuadro blanco a la derecha que dice 'Para acceder, ingresa con tu ClaveÚnica'. Apriete el botón azul 'Iniciar sesión'.", visual: "🌐 Página principal de Mi ChileAtiende con el botón azul 'Iniciar sesión'." },
-                { title: "Paso 2: Ingresar su RUN y Clave Única", text: "Aparecerá un formulario con el título 'miChileAtiende'. Escriba su RUN en el primer recuadro y su Clave Única en el segundo. Luego apriete el botón azul grande que dice 'INGRESA'.", visual: "🔑 Formulario con campos de RUN y ClaveÚnica, y botón INGRESA." },
+                { title: "Paso 2: Ingresar su RUT y Clave Única", text: "Aparecerá un formulario con el título 'miChileAtiende'. Escriba su RUT en el primer recuadro y su Clave Única en el segundo. Luego apriete el botón azul grande que dice 'INGRESA'.", visual: "🔑 Formulario con campos de RUT y ClaveÚnica, y botón INGRESA." },
                 { title: "Paso 3: Elegir el servicio desde el menú lateral", text: "Una vez adentro verá el menú 'Mis accesos' a la izquierda. Apriete donde dice 'Mis pagos de beneficios sociales'. También puede apretarlo desde las tarjetas del centro de la pantalla. Este servicio lo entrega el Instituto de Previsión Social.", visual: "📋 Menú lateral con la opción Mis pagos de beneficios sociales." },
                 { title: "Paso 4: Revisar sus pagos", text: "La página le mostrará sus pagos de pensión o beneficios a cargo del IPS. Si el Estado le ha pagado algún bono o subsidio, aparecerá aquí con la fecha y el monto recibido.", visual: "💰 Lista de pagos de pensión y beneficios del IPS con fechas y montos." },
                 { title: "Paso 5: Si no aparece ningún pago", text: "Si sale el mensaje 'No encontramos pagos de beneficios sociales a tu nombre', no se preocupe, no es un error. Significa que por ahora el IPS no registra pagos a su nombre. El sistema le avisará cuando haya novedades.", visual: "ℹ️ Mensaje informativo cuando no hay pagos registrados por el IPS." }
@@ -488,7 +488,7 @@ document.addEventListener('DOMContentLoaded', () => {
             name: 'Mis Capacitaciones',
             steps: [
                 { title: "Paso 1: Entrar a la página de ChileAtiende", text: "Abra el navegador y vaya a la página www.chileatiende.gob.cl. Verá un recuadro blanco a la derecha que dice 'Para acceder, ingresa con tu ClaveÚnica'. Apriete el botón azul 'Iniciar sesión'.", visual: "🌐 Página principal de Mi ChileAtiende con el botón azul 'Iniciar sesión'." },
-                { title: "Paso 2: Ingresar su RUN y Clave Única", text: "Aparecerá un formulario con el título 'miChileAtiende'. Escriba su RUN en el primer recuadro y su Clave Única en el segundo. Luego apriete el botón azul grande que dice 'INGRESA'.", visual: "🔑 Formulario con campos de RUN y ClaveÚnica, y botón INGRESA." },
+                { title: "Paso 2: Ingresar su RUT y Clave Única", text: "Aparecerá un formulario con el título 'miChileAtiende'. Escriba su RUT en el primer recuadro y su Clave Única en el segundo. Luego apriete el botón azul grande que dice 'INGRESA'.", visual: "🔑 Formulario con campos de RUT y ClaveÚnica, y botón INGRESA." },
                 { title: "Paso 3: Elegir el servicio desde el menú lateral", text: "Una vez adentro verá el menú 'Mis accesos' a la izquierda. Apriete donde dice 'Mis capacitaciones'. También puede apretarlo desde las tarjetas del centro. Este servicio lo entrega el SENCE, el Servicio Nacional de Capacitación y Empleo.", visual: "📋 Menú lateral con la opción Mis capacitaciones." },
                 { title: "Paso 4: Ver sus cursos registrados", text: "La página mostrará todos los cursos, talleres o diplomados que ha realizado a través del SENCE. Aparecerá el nombre del curso, la institución donde lo hizo y la fecha en que lo realizó.", visual: "📚 Lista de cursos, talleres y diplomados realizados a través de SENCE." },
                 { title: "Paso 5: Si no aparece ningún curso", text: "Si sale el mensaje 'Aún no tienes cursos registrados en SENCE', no tiene cursos en el sistema. Puede apretar el botón 'Ir al sitio web de SENCE' para ver cursos y capacitaciones gratuitas disponibles para usted.", visual: "ℹ️ Mensaje cuando no hay cursos, con botón para ir al sitio de SENCE." }
@@ -498,7 +498,7 @@ document.addEventListener('DOMContentLoaded', () => {
             name: 'Mi Información Previsional',
             steps: [
                 { title: "Paso 1: Entrar a la página de ChileAtiende", text: "Abra el navegador y vaya a la página www.chileatiende.gob.cl. Verá un recuadro blanco a la derecha que dice 'Para acceder, ingresa con tu ClaveÚnica'. Apriete el botón azul 'Iniciar sesión'.", visual: "🌐 Página principal de Mi ChileAtiende con el botón azul 'Iniciar sesión'." },
-                { title: "Paso 2: Ingresar su RUN y Clave Única", text: "Aparecerá un formulario con el título 'miChileAtiende'. Escriba su RUN en el primer recuadro y su Clave Única en el segundo. Luego apriete el botón azul grande que dice 'INGRESA'.", visual: "🔑 Formulario con campos de RUN y ClaveÚnica, y botón INGRESA." },
+                { title: "Paso 2: Ingresar su RUT y Clave Única", text: "Aparecerá un formulario con el título 'miChileAtiende'. Escriba su RUT en el primer recuadro y su Clave Única en el segundo. Luego apriete el botón azul grande que dice 'INGRESA'.", visual: "🔑 Formulario con campos de RUT y ClaveÚnica, y botón INGRESA." },
                 { title: "Paso 3: Elegir el servicio desde el menú lateral", text: "Una vez adentro verá el menú 'Mis accesos' a la izquierda. Apriete donde dice 'Mi información previsional'. También puede apretarlo desde las tarjetas del centro. Este servicio lo entrega el Ministerio del Trabajo y Previsión Social.", visual: "📋 Menú lateral con la opción Mi información previsional." },
                 { title: "Paso 4: Ver la sección AFP", text: "Verá la sección 'AFP' que muestra su fecha de afiliación, cuál es su AFP actual y los datos de su Cuenta de Capitalización Individual. Ojo: estos datos pueden tener hasta 30 días de desfase. Más abajo verá la sección 'Seguridad laboral'.", visual: "📊 Sección AFP con fecha de afiliación y datos de la cuenta individual." },
                 { title: "Paso 5: Si no aparece información de AFP", text: "Si sale un aviso que dice 'No existen registros de afiliación a una AFP', no es un error. Puede ser porque usted pertenece a otro sistema como Capredena, Dipreca o las ex Cajas de Previsión Social. Si alguna sección no carga, inténtelo más tarde.", visual: "ℹ️ Aviso cuando el sistema previsional es distinto a una AFP privada." }
@@ -508,7 +508,7 @@ document.addEventListener('DOMContentLoaded', () => {
             name: 'Mi Seguro Social',
             steps: [
                 { title: "Paso 1: Entrar a la página de ChileAtiende", text: "Abra el navegador y vaya a la página www.chileatiende.gob.cl. Verá un recuadro blanco a la derecha que dice 'Para acceder, ingresa con tu ClaveÚnica'. Apriete el botón azul 'Iniciar sesión'.", visual: "🌐 Página principal de Mi ChileAtiende con el botón azul 'Iniciar sesión'." },
-                { title: "Paso 2: Ingresar su RUN y Clave Única", text: "Aparecerá un formulario con el título 'miChileAtiende'. Escriba su RUN en el primer recuadro y su Clave Única en el segundo. Luego apriete el botón azul grande que dice 'INGRESA'.", visual: "🔑 Formulario con campos de RUN y ClaveÚnica, y botón INGRESA." },
+                { title: "Paso 2: Ingresar su RUT y Clave Única", text: "Aparecerá un formulario con el título 'miChileAtiende'. Escriba su RUT en el primer recuadro y su Clave Única en el segundo. Luego apriete el botón azul grande que dice 'INGRESA'.", visual: "🔑 Formulario con campos de RUT y ClaveÚnica, y botón INGRESA." },
                 { title: "Paso 3: Elegir el servicio desde el menú lateral", text: "Una vez adentro verá el menú 'Mis accesos' a la izquierda. Apriete donde dice 'Mi Seguro Social'. También puede apretarlo desde las tarjetas del centro. Este servicio lo entrega el Instituto de Previsión Social.", visual: "📋 Menú lateral con la opción Mi Seguro Social." },
                 { title: "Paso 4: Ver sus cotizaciones al Seguro Social", text: "Verá la sección 'Cotizaciones al Seguro Social'. Este seguro no es lo mismo que su AFP: este dinero lo paga su empleador y sirve para mejorar las pensiones actuales y futuras. Si trabaja independiente, puede pagarlo voluntariamente.", visual: "🛡️ Sección de cotizaciones al Seguro Social con explicación del beneficio." },
                 { title: "Paso 5: Si no aparecen cotizaciones", text: "Si sale el mensaje 'Todavía no registras cotizaciones en este Seguro', puede ser que aún no se haya actualizado el pago más reciente. Puede apretar el botón 'Revisar información' para aprender más sobre qué es el Seguro Social y cómo funciona.", visual: "ℹ️ Mensaje cuando no hay cotizaciones, con botón 'Revisar información'." }
@@ -521,12 +521,12 @@ document.addEventListener('DOMContentLoaded', () => {
             name: 'Recuperar Contraseña de ClaveÚnica',
             steps: [
                 { title: "Paso 1: Entrar a la página", text: "Abra el navegador y vaya a la página claveunica.gob.cl/recuperar. Verá un recuadro blanco que dice 'Recuperar ClaveÚnica'.", visual: "🌐 Presione aquí para ir a: <br><a href='https://claveunica.gob.cl/recuperar' target='_blank' style='display: inline-block; margin-top: 10px; color: white; background: var(--primary); padding: 10px 20px; border-radius: 8px; text-decoration: none; font-size: 20px;'>claveunica.gob.cl/recuperar</a>" },
-                { title: "Paso 2: Ingresar su RUN", text: "Escriba su RUN en el recuadro blanco. Luego apriete el botón azul que dice 'Continuar'.", visual: "<div style='text-align: left; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); color: #333; font-family: sans-serif; font-weight: normal; line-height: 1.4;'><h2 style='margin: 0; color: #222; font-size: 26px; font-weight: 800;'>RECUPERA</h2><div style='font-size: 18px; margin-bottom: 5px; color: #444;'>Tu ClaveÚnica</div><hr style='border: 0; border-top: 2px solid #555; width: 140px; margin: 0 0 15px 0;'><p style='font-size: 14px; color: #333; margin-bottom: 30px;'>Necesitas tu cédula de identidad y acceso a tu correo registrado en ClaveÚnica. (Si ya tienes un código del Registro Civil, <span style=\"color: #0066cc; text-decoration: underline;\">ve a la sección Activa</span>).</p><label style='display: block; font-size: 14px; margin-bottom: 8px; color: #444;'>RUN</label><div style='position: relative; margin-bottom: 5px; max-width: 400px; box-shadow: 0 0 0 4px #FF9800, 0 0 15px rgba(255,152,0,0.5); border-radius: 6px; padding: 2px;'><div style='position: absolute; left: -40px; top: 8px; font-size: 25px;'>👉</div><input type='text' value='11.111.111-1' readonly style='width: 100%; padding: 12px; border: 1px solid #1abc9c; border-radius: 4px; font-size: 16px; color: #555; outline: none; box-sizing: border-box; background: white;'><span style='position: absolute; right: 15px; top: 14px; color: #1abc9c; font-size: 18px; font-weight: bold;'>✓</span></div><div style='color: #1abc9c; font-size: 13px; margin-bottom: 30px;'>RUN con formato correcto</div><button style='background: #0056b3; color: white; border: none; padding: 12px 30px; font-size: 16px; font-weight: bold; border-radius: 4px; text-decoration: underline;'>Continuar</button></div>" },
+                { title: "Paso 2: Ingresar su RUT", text: "Escriba su RUT en el recuadro blanco. Luego apriete el botón azul que dice 'Continuar'.", visual: "<div style='text-align: left; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); color: #333; font-family: sans-serif; font-weight: normal; line-height: 1.4;'><h2 style='margin: 0; color: #222; font-size: 26px; font-weight: 800;'>RECUPERA</h2><div style='font-size: 18px; margin-bottom: 5px; color: #444;'>Tu ClaveÚnica</div><hr style='border: 0; border-top: 2px solid #555; width: 140px; margin: 0 0 15px 0;'><p style='font-size: 14px; color: #333; margin-bottom: 30px;'>Necesitas tu cédula de identidad y acceso a tu correo registrado en ClaveÚnica. (Si ya tienes un código del Registro Civil, <span style=\"color: #0066cc; text-decoration: underline;\">ve a la sección Activa</span>).</p><label style='display: block; font-size: 14px; margin-bottom: 8px; color: #444;'>RUT</label><div style='position: relative; margin-bottom: 5px; max-width: 400px; box-shadow: 0 0 0 4px #FF9800, 0 0 15px rgba(255,152,0,0.5); border-radius: 6px; padding: 2px;'><div style='position: absolute; left: -40px; top: 8px; font-size: 25px;'>👉</div><input type='text' value='11.111.111-1' readonly style='width: 100%; padding: 12px; border: 1px solid #1abc9c; border-radius: 4px; font-size: 16px; color: #555; outline: none; box-sizing: border-box; background: white;'><span style='position: absolute; right: 15px; top: 14px; color: #1abc9c; font-size: 18px; font-weight: bold;'>✓</span></div><div style='color: #1abc9c; font-size: 13px; margin-bottom: 30px;'>RUT con formato correcto</div><button style='background: #0056b3; color: white; border: none; padding: 12px 30px; font-size: 16px; font-weight: bold; border-radius: 4px; text-decoration: underline;'>Continuar</button></div>" },
                 { title: "Paso 3: Elegir cómo recuperar", text: "El sistema le preguntará cómo quiere recuperar su contraseña. Asegúrese de elegir la opción 'Por correo electrónico' y luego presione el botón azul 'Continuar'.", visual: "<div style='text-align: left; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); color: #333; font-family: sans-serif; font-weight: normal; line-height: 1.4;'><h2 style='margin: 0; color: #222; font-size: 26px; font-weight: 800;'>RECUPERA</h2><div style='font-size: 18px; margin-bottom: 5px; color: #444;'>Tu ClaveÚnica</div><hr style='border: 0; border-top: 2px solid #555; width: 140px; margin: 0 0 25px 0;'><p style='font-size: 15px; color: #333; margin-bottom: 20px;'>Selecciona cómo quieres restablecer tu contraseña</p><div style='position: relative; display: flex; align-items: center; margin-bottom: 30px; padding: 15px; border: 4px solid #FF9800; border-radius: 8px; background-color: rgba(255,152,0,0.1); box-shadow: 0 0 15px rgba(255,152,0,0.4); max-width: 400px;'><div style='position: absolute; left: -40px; font-size: 25px;'>👉</div><input type='radio' checked style='margin-right: 15px; transform: scale(1.8); accent-color: #0056b3;'><label style='font-size: 16px; color: #333; font-weight: 600;'>Por correo electrónico</label></div><button style='background: #0056b3; color: white; border: none; padding: 12px 30px; font-size: 16px; font-weight: bold; border-radius: 4px; text-decoration: underline;'>Continuar</button></div>" },
                 { title: "Paso 4: Revisar su correo electrónico", text: "La página le confirmará que ha enviado un mensaje y le mostrará su correo con asteriscos (***) por seguridad, solo para recordarle a cuál se envió. Ahora debe abrir ese correo electrónico y buscar un mensaje del Registro Civil con el enlace para crear su nueva contraseña.", visual: "<div style='text-align: left; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); color: #333; font-family: sans-serif; font-weight: normal; line-height: 1.4;'><h2 style='margin: 0; color: #222; font-size: 26px; font-weight: 800;'>RECUPERA</h2><div style='font-size: 18px; margin-bottom: 5px; color: #444;'>Tu ClaveÚnica</div><hr style='border: 0; border-top: 2px solid #555; width: 140px; margin: 0 0 25px 0;'><div style='position: relative; padding: 15px; border: 4px solid #FF9800; border-radius: 8px; background-color: rgba(255,152,0,0.1); box-shadow: 0 0 15px rgba(255,152,0,0.4); margin-bottom: 25px;'><div style='position: absolute; left: -40px; top: 10px; font-size: 25px;'>👉</div><p style='font-size: 15px; color: #333; margin: 0;'>Hemos enviado un mensaje a <strong>mail*********@gmai*****</strong> con instrucciones para restablecer tu contraseña.</p></div><p style='font-size: 14px; color: #555; margin-bottom: 5px;'>¿No llega el correo?</p><p style='font-size: 14px; color: #555; margin-top: 0; margin-bottom: 30px;'>Revisa la carpeta de spam o verifica si tu servicio de correo lo está bloqueando. Si el problema persiste llámanos al 600 360 3303 para ayudarte.</p><span style='color: #4b0082; text-decoration: underline; font-size: 14px;'>Vuelve al inicio</span></div>" },
                 { title: "Paso 5: Buscar el correo en su bandeja", text: "Vaya a su bandeja de entrada (por ejemplo, Gmail o Outlook) y busque un correo nuevo que diga 'no-reply' con el asunto 'ClaveÚnica - Recuperación'. Presione sobre ese mensaje para abrirlo.", visual: "<div style='position: relative; display: inline-block;'><img src='rc-cu-inbox.png' style='width: 100%; max-width: 600px; border-radius: 8px; border: 2px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1);'><div style='position: absolute; left: 30%; top: 55%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👆</div></div>" },
                 { title: "Paso 6: Leer el código en el correo", text: "Al abrir el correo, verá un saludo y un número llamado 'Código de Recuperación'. Anote ese código en un papel (letras mayúsculas y números) y luego presione el enlace azul que dice 'claveunica.gob.cl/restaurar'.", visual: "<div style='position: relative; display: inline-block;'><img src='rc-cu-email.png' style='width: 100%; max-width: 500px; border-radius: 8px; border: 2px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1);'><div style='position: absolute; left: 18%; top: 45%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div><div style='position: absolute; left: 15%; top: 68%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div></div>" },
-                { title: "Paso 7: Ingresar el código en la página", text: "En la nueva página, escriba su RUN arriba y en el recuadro de abajo escriba el código que le mandaron a su correo (por ejemplo, DNE8KI). Luego, presione el cuadrito en blanco que está al lado de 'Acepto los Términos y condiciones'.", visual: "<div style='position: relative; display: inline-block;'><img src='rc-cu-restaurar.png' style='width: 100%; max-width: 600px; border-radius: 8px; border: 2px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1);'><div style='position: absolute; left: 8%; top: 65%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div><div style='position: absolute; left: 15%; top: 80%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div></div>" },
+                { title: "Paso 7: Ingresar el código en la página", text: "En la nueva página, escriba su RUT arriba y en el recuadro de abajo escriba el código que le mandaron a su correo (por ejemplo, DNE8KI). Luego, presione el cuadrito en blanco que está al lado de 'Acepto los Términos y condiciones'.", visual: "<div style='position: relative; display: inline-block;'><img src='rc-cu-restaurar.png' style='width: 100%; max-width: 600px; border-radius: 8px; border: 2px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1);'><div style='position: absolute; left: 8%; top: 65%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div><div style='position: absolute; left: 15%; top: 80%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div></div>" },
                 { title: "Paso 8: Aceptar los Términos", text: "Se abrirá una ventana con un texto largo. Estos 'Términos y condiciones' son simplemente las reglas de seguridad del Estado para proteger sus datos personales. Mueva la ruedita del ratón (o deslice el dedo hacia arriba en su celular) hasta llegar al final del texto. Allí presione el botón azul 'Aceptar términos y condiciones', y luego ya podrá apretar 'Continuar'.", visual: "<div style='position: relative; display: inline-block;'><img src='rc-cu-terms-bottom.png' style='width: 100%; max-width: 600px; border-radius: 8px; border: 2px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1);'><div style='position: absolute; right: 10%; top: 80%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👆</div></div>" },
                 { title: "Paso 9: Crear nueva contraseña", text: "¡Último paso! Ahora podrá crear su nueva Clave Única. Escríbala en el primer recuadro y vuelva a escribirla exactamente igual en el recuadro de abajo. Recuerde que para que sea segura debe tener al menos 8 letras, números y algún símbolo (como un punto o un guión).", visual: "<div style='position: relative; display: inline-block;'><img src='rc-cu-password.png' style='width: 100%; max-width: 600px; border-radius: 8px; border: 2px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1);'><div style='position: absolute; left: 2%; top: 32%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div><div style='position: absolute; left: 2%; top: 85%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div></div>" },
                 { title: "Paso 10: Guardar y finalizar", text: "Una vez que haya escrito su contraseña en ambos recuadros y cumpla los requisitos (se marcarán con un visto verde ✔️), presione el botón azul 'Continuar' que está abajo a la derecha. ¡Felicidades, ha recuperado su Clave Única con éxito!", visual: "<div style='position: relative; display: inline-block;'><img src='rc-cu-password-done.png' style='width: 100%; max-width: 600px; border-radius: 8px; border: 2px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1);'><div style='position: absolute; left: 70%; top: 80%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div></div>" },
@@ -538,6 +538,23 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentTutorialSteps = [];
     let currentStepIndex = 0;
     let currentTutorialOrigin = 'rcCategories';
+    let rcLearnMode = 'guide'; // 'guide' o 'simulation'
+
+    const btnModeGuide = document.getElementById('btn-mode-guide');
+    const btnModeSimulation = document.getElementById('btn-mode-simulation');
+    
+    if (btnModeGuide && btnModeSimulation) {
+        btnModeGuide.onclick = () => {
+            rcLearnMode = 'guide';
+            btnModeGuide.classList.add('active');
+            btnModeSimulation.classList.remove('active');
+        };
+        btnModeSimulation.onclick = () => {
+            rcLearnMode = 'simulation';
+            btnModeSimulation.classList.add('active');
+            btnModeGuide.classList.remove('active');
+        };
+    }
 
     // Menu -> RC Categories
     document.getElementById('btn-rc-guide').addEventListener('click', () => {
@@ -595,6 +612,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cat.certs.forEach(cert => {
                 const item = document.createElement('div');
                 item.className = 'rc-cert-item';
+                item.setAttribute('data-cert-id', cert.id);
                 item.innerHTML = `
                     <div class="rc-cert-info">
                         <span class="rc-cert-name">${cert.name}</span>
@@ -607,13 +625,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     choiceCertName = cert.name;
                     choiceCertCu = cert.cu;
                     
-                    const choiceModal = document.getElementById('modal-rc-learn-choice');
-                    if (choiceModal) {
-                        choiceModal.style.display = 'flex';
-                        // Highlight appropriate cards
-                        document.getElementById('choice-modal-title').innerText = `¿Cómo desea realizar: ${cert.name}?`;
-                    } else {
-                        // Fallback
+                    if (rcLearnMode === 'guide') {
                         if (cert.cu) {
                             postLoginTarget = 'rcTutorial';
                             currentTutorialOrigin = 'rcCategories';
@@ -622,6 +634,15 @@ document.addEventListener('DOMContentLoaded', () => {
                             showScreen('login');
                         } else {
                             startTutorial(cert.id, cert.name);
+                        }
+                    } else { // 'simulation'
+                        if (cert.cu) {
+                            postLoginTarget = 'rcInteractiveSimulation';
+                            currentTutorialOrigin = 'rcCategories';
+                            currentStepIndex = 0;
+                            showScreen('login');
+                        } else {
+                            startInteractiveSimulation(cert.id, cert.name);
                         }
                     }
                 };
@@ -759,25 +780,52 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getFemaleLatamVoice() {
         const voices = synth.getVoices();
-        // Priority tags: es-CL, es-MX, es-AR, es-CO, es-US, es-ES
-        const preferredLangs = ['es-CL', 'es-MX', 'es-AR', 'es-CO', 'es-US', 'es-ES'];
         
+        // 1. Intentar buscar voz femenina en dialectos latinoamericanos / neutros preferidos (incluido es-419)
+        const preferredLangs = ['es-CL', 'es-MX', 'es-419', 'es-AR', 'es-CO', 'es-US'];
         for (const lang of preferredLangs) {
-            const voice = voices.find(v => 
-                v.lang.replace('_', '-').startsWith(lang) && 
-                (v.name.toLowerCase().includes('female') || 
-                 v.name.toLowerCase().includes('mujer') || 
-                 v.name.toLowerCase().includes('sabina') || 
-                 v.name.toLowerCase().includes('helena') || 
-                 v.name.toLowerCase().includes('zira') ||
-                 v.name.toLowerCase().includes('paul'))
-            );
+            const voice = voices.find(v => {
+                const normalizedLang = v.lang.replace('_', '-').toLowerCase();
+                const normalizedName = v.name.toLowerCase();
+                return normalizedLang.startsWith(lang.toLowerCase()) && (
+                    normalizedName.includes('female') ||
+                    normalizedName.includes('mujer') ||
+                    normalizedName.includes('sabina') ||
+                    normalizedName.includes('helena') ||
+                    normalizedName.includes('dalia') ||
+                    normalizedName.includes('zira') ||
+                    normalizedName.includes('paul') ||
+                    normalizedName.includes('google')
+                );
+            });
             if (voice) return voice;
         }
-        
-        // Fallback to any Spanish voice
-        return voices.find(v => v.lang.startsWith('es'));
+
+        // 2. Intentar buscar cualquier voz en dialectos latinoamericanos / neutros (no es-ES)
+        const latamVoice = voices.find(v => {
+            const normalizedLang = v.lang.replace('_', '-').toLowerCase();
+            return normalizedLang.startsWith('es') && !normalizedLang.startsWith('es-es');
+        });
+        if (latamVoice) return latamVoice;
+
+        // 3. Fallback: buscar voz femenina en español de España (es-ES)
+        const esFemaleVoice = voices.find(v => {
+            const normalizedLang = v.lang.replace('_', '-').toLowerCase();
+            const normalizedName = v.name.toLowerCase();
+            return normalizedLang.startsWith('es-es') && (
+                normalizedName.includes('female') ||
+                normalizedName.includes('mujer') ||
+                normalizedName.includes('sabina') ||
+                normalizedName.includes('helena') ||
+                normalizedName.includes('zira')
+            );
+        });
+        if (esFemaleVoice) return esFemaleVoice;
+
+        // 4. Último recurso: cualquier voz que empiece por 'es'
+        return voices.find(v => v.lang.toLowerCase().startsWith('es')) || null;
     }
+
 
     function speakText(text, button) {
         // If clicking the same button while playing, just stop
@@ -798,7 +846,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         utterance.lang = 'es-CL'; // Fallback lang
-        utterance.rate = 0.75;    // Much slower for seniors as requested
+        utterance.rate = 0.9;     // Slower for seniors as requested
         utterance.pitch = 1.05;   // Slightly higher for a clearer female tone
 
         utterance.onstart = () => {
@@ -909,7 +957,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const utt = new SpeechSynthesisUtterance(fullText);
             const v = getFemaleLatamVoice();
             if (v) utt.voice = v;
-            utt.rate = 0.7;
+            utt.lang = 'es-CL';
+            utt.rate = 0.85;
+            utt.pitch = 1.05;
             synth.speak(utt);
             return;
         }
@@ -918,7 +968,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const voice = getFemaleLatamVoice();
         if (voice) readerUtterance.voice = voice;
         readerUtterance.lang = 'es-CL';
-        readerUtterance.rate = 0.7;
+        readerUtterance.rate = 0.85;
+        readerUtterance.pitch = 1.05;
         
         const status = toolbar.querySelector('.reader-status');
         const playBtn = toolbar.querySelector('.btn-play');
@@ -1086,7 +1137,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 name: 'Certificado de Antecedentes',
                 desc: 'muestra si usted tiene registros penales. Requiere Clave Única.',
                 keywords: ['antecedentes', 'penales', 'papel de antecedentes', 'policía', 'carcel', 'limpio']
-            }
+            },
+            { id: 'nac-matricula', type: 'rc', name: 'Certificado Nacimiento Para Matrícula', desc: 'para procesos de matrícula escolar', keywords: ['nacimiento','nacer','matrícula','matricula','colegio','escuela','escolar'] },
+            { id: 'nac-asignacion', type: 'rc', name: 'Certificado Nacimiento Asignación Familiar', desc: 'para asignación familiar y beneficios laborales', keywords: ['nacimiento','nacer','asignación','asignacion','familiar','laboral','trabajo'] },
+            { id: 'nac-todo', type: 'rc', name: 'Certificado Nacimiento Todo Trámite', desc: 'para cualquier tipo de trámite general', keywords: ['nacimiento','nacer','todo trámite','todo tramite','general','cualquier trámite'] },
+            { id: 'mat-todo', type: 'rc', name: 'Certificado Matrimonio Todo Trámite', desc: 'para certificar su estado civil para cualquier trámite', keywords: ['matrimonio','todo trámite','todo tramite','general','cualquier trámite','casado','casada'] },
+            { id: 'mat-asignacion', type: 'rc', name: 'Certificado Matrimonio Asignación Familiar', desc: 'para cargas y asignaciones familiares de cónyuges', keywords: ['matrimonio','asignación','asignacion','cónyuge','esposo','esposa'] },
+            { id: 'def-todo', type: 'rc', name: 'Certificado Defunción Todo Trámite', desc: 'para certificar un fallecimiento en cualquier trámite', keywords: ['defunción','defuncion','todo trámite','todo tramite','general','fallecimiento','muerte'] },
+            { id: 'def-asignacion', type: 'rc', name: 'Certificado Defunción Asignación Familiar', desc: 'para trámites de herencia y previsión social de fallecidos', keywords: ['defunción','defuncion','asignación','asignacion','herencia','fallecido','muerte'] },
+            { id: 'ant-fines-particulares', type: 'rc', name: 'Antecedentes Fines Particulares', desc: 'para trabajo u otros fines particulares', keywords: ['antecedentes','particulares','fines particulares','trabajo'] },
+            { id: 'ant-fines-especiales', type: 'rc', name: 'Antecedentes Fines Especiales', desc: 'para trámites legales y fines especiales', keywords: ['antecedentes','especiales','fines especiales','legal'] }
         ],
 
         formatNumbersForSeniors(str) {
@@ -1372,6 +1432,79 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
+            // Modos de aprendizaje (Simulación y Guía)
+            if (cmd.includes('simulación') || cmd.includes('simulacion') || cmd.includes('simular')) {
+                const btn = document.getElementById('btn-mode-simulation');
+                if (btn) {
+                    btn.click();
+                    this.say('Excelente, he activado el modo de simulación interactiva. Ahora, cuando elija un certificado, practicaremos los pasos en pantalla.');
+                    return;
+                }
+            }
+            if (cmd.includes('guía') || cmd.includes('guia') || cmd.includes('paso a paso')) {
+                const btn = document.getElementById('btn-mode-guide');
+                if (btn) {
+                    btn.click();
+                    this.say('Entendido, he activado el modo de guía paso a paso. Ahora, al seleccionar un certificado, le iré mostrando los pasos a seguir.');
+                    return;
+                }
+            }
+
+            // Categorías del Registro Civil por voz
+            if (currentScreenKey === 'rcCategories') {
+                let catToClick = null;
+                if (cmd.includes('nacimiento') || cmd.includes('nacer') || cmd.includes('bebé') || cmd.includes('hijo') || cmd.includes('hija')) {
+                    catToClick = 'nacimiento';
+                } else if (cmd.includes('matrimonio') || cmd.includes('casado') || cmd.includes('casada') || cmd.includes('boda') || cmd.includes('casamiento')) {
+                    catToClick = 'matrimonio';
+                } else if (cmd.includes('defunción') || cmd.includes('defuncion') || cmd.includes('muerte') || cmd.includes('fallecido') || cmd.includes('fallecimiento')) {
+                    catToClick = 'defuncion';
+                } else if (cmd.includes('antecedentes') || cmd.includes('penales') || cmd.includes('policía')) {
+                    catToClick = 'antecedentes';
+                } else if (cmd.includes('vehículo') || cmd.includes('vehiculo') || cmd.includes('auto') || cmd.includes('carro') || cmd.includes('patente')) {
+                    catToClick = 'vehiculos';
+                } else if (cmd.includes('identidad') || cmd.includes('carnet') || cmd.includes('cédula') || cmd.includes('cedula')) {
+                    catToClick = 'identidad';
+                }
+
+                if (catToClick) {
+                    const card = document.querySelector(`.rc-category-card[data-cat="${catToClick}"]`);
+                    if (card) {
+                        this.say(`Abriendo categoría de ${catToClick === 'defuncion' ? 'defunciones' : catToClick === 'vehiculos' ? 'vehículos' : catToClick}.`);
+                        card.click();
+                        return;
+                    }
+                }
+
+                // Selección de certificados específicos visibles en el sublistado
+                const sublist = document.getElementById('rc-certs-sublist');
+                if (sublist && sublist.style.display !== 'none') {
+                    const certItems = sublist.querySelectorAll('.rc-cert-item');
+                    let bestItem = null;
+                    let maxScore = 0;
+                    certItems.forEach(item => {
+                        const name = item.querySelector('.rc-cert-name')?.innerText.toLowerCase() || '';
+                        let score = 0;
+                        const words = name.split(/\s+/);
+                        words.forEach(word => {
+                            if (word.length > 3 && cmd.includes(word)) {
+                                score += 5;
+                            }
+                        });
+                        if (score > maxScore) {
+                            maxScore = score;
+                            bestItem = item;
+                        }
+                    });
+                    if (bestItem && maxScore >= 5) {
+                        const name = bestItem.querySelector('.rc-cert-name').innerText;
+                        this.say(`Entendido. Seleccionando ${name}.`);
+                        bestItem.click();
+                        return;
+                    }
+                }
+            }
+
             // Standard Commands - ONLY trigger greeting if it's the main intent
             const commonGreetings = ['hola', 'buenos días', 'buenas tardes', 'buenas noches', 'asistente'];
             const isGreetingOnly = commonGreetings.includes(cmd) || (cmd.startsWith('hola') && cmd.length < 10);
@@ -1568,7 +1701,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     setTimeout(() => {
                         if (bestMatch.type === 'rc') {
-                            selectRCCategory(bestMatch.id);
+                            const certCategoryMap = {
+                                'nac-matricula': 'nacimiento',
+                                'nac-asignacion': 'nacimiento',
+                                'nac-todo': 'nacimiento',
+                                'mat-todo': 'matrimonio',
+                                'mat-asignacion': 'matrimonio',
+                                'def-todo': 'defuncion',
+                                'def-asignacion': 'defuncion',
+                                'ant-fines-particulares': 'antecedentes',
+                                'ant-fines-especiales': 'antecedentes'
+                            };
+                            const catId = certCategoryMap[bestMatch.id] || bestMatch.id;
+                            selectRCCategory(catId);
+                            
+                            if (certCategoryMap[bestMatch.id]) {
+                                setTimeout(() => {
+                                    const certItem = document.querySelector(`.rc-cert-item[data-cert-id="${bestMatch.id}"]`);
+                                    if (certItem) certItem.click();
+                                }, 250);
+                            }
                         } else {
                             // Fonasa flow
                             const rad = document.querySelector(`input[value="${bestMatch.id}"]`);
@@ -1614,7 +1766,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     text = 'Bienvenido al portal de trámites. Puede elegir obtener un certificado del Registro Civil, o explorar los servicios de ChileAtiende.';
                     break;
                 case 'login':
-                    text = 'Pantalla de inicio de sesión. Por favor ingrese su RUN en el primer campo, y su Clave Única en el segundo. Luego presione el botón Autenticar.';
+                    text = 'Pantalla de inicio de sesión. Por favor ingrese su RUT en el primer campo, y su Clave Única en el segundo. Luego presione el botón Autenticar.';
                     break;
                 case 'menu':
                     text = 'Menú principal. Tiene tres opciones: Obtener Certificado, Guía del Registro Civil, o Guía de ChileAtiende.';
@@ -1828,7 +1980,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Speed Control Panel ---
-    let speechRate = 0.75;
+    let speechRate = 1.05;
     const btnSpeedToggle = document.getElementById('btn-speed-toggle');
     const speedPanel = document.getElementById('speed-control-panel');
     if (btnSpeedToggle && speedPanel) {
@@ -1836,22 +1988,29 @@ document.addEventListener('DOMContentLoaded', () => {
             speedPanel.classList.toggle('visible');
         });
     }
+    document.getElementById('speed-fast')?.addEventListener('click', () => {
+        speechRate = 1.3;
+        document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('speed-fast')?.classList.add('active');
+        if (speedPanel) speedPanel.classList.remove('visible');
+        showNotification('Velocidad rápida activada', 'info');
+    });
     document.getElementById('speed-normal')?.addEventListener('click', () => {
-        speechRate = 0.75;
+        speechRate = 1.05;
         document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('speed-normal')?.classList.add('active');
         if (speedPanel) speedPanel.classList.remove('visible');
         showNotification('Velocidad normal activada', 'info');
     });
     document.getElementById('speed-slow')?.addEventListener('click', () => {
-        speechRate = 0.55;
+        speechRate = 0.8;
         document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('speed-slow')?.classList.add('active');
         if (speedPanel) speedPanel.classList.remove('visible');
         showNotification('Velocidad lenta activada', 'info');
     });
     document.getElementById('speed-very-slow')?.addEventListener('click', () => {
-        speechRate = 0.38;
+        speechRate = 0.55;
         document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('speed-very-slow')?.classList.add('active');
         if (speedPanel) speedPanel.classList.remove('visible');
@@ -1864,9 +2023,18 @@ document.addEventListener('DOMContentLoaded', () => {
         assistant.showBubble(text, false);
 
         window.speechSynthesis.cancel();
-        const utter = new SpeechSynthesisUtterance(text);
+        const cleanedText = text
+            .replace(/\$\s*([\d\.]+)/g, '$1 pesos chilenos')
+            .replace(/\$/g, ' pesos chilenos')
+            .replace(/\bRUN\b/g, 'RUT')
+            .replace(/\bPGU\b/g, 'P G U')
+            .replace(/\bIPS\b/g, 'I P S')
+            .replace(/\bAFP\b/g, 'A F P')
+            .replace(/\bFONASA\b/gi, 'Fonasa');
+        const utter = new SpeechSynthesisUtterance(cleanedText);
         utter.lang = 'es-CL';
         utter.rate = speechRate;
+        utter.pitch = 1.05;
         if (typeof getFemaleLatamVoice === 'function') {
             utter.voice = getFemaleLatamVoice();
         }
@@ -2071,10 +2239,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Modo Daltonismo (ciclo) ---
     const cbCycle = [
-        { cls: null,              label: 'Normal'      },
-        { cls: 'cb-protanopia',   label: 'Protanopia'  },
-        { cls: 'cb-deuteranopia', label: 'Deuteranopia'},
-        { cls: 'cb-tritanopia',   label: 'Tritanopia'  },
+        { cls: null,              label: 'Normal'   },
+        { cls: 'cb-protanopia',   label: 'Opción 1' },
+        { cls: 'cb-deuteranopia', label: 'Opción 2' },
+        { cls: 'cb-tritanopia',   label: 'Opción 3' },
     ];
     const cbModes = cbCycle.slice(1).map(m => m.cls);
     const btnColorblind = document.getElementById('btn-colorblind');
@@ -2112,7 +2280,7 @@ document.addEventListener('DOMContentLoaded', () => {
             clearTimeout(cbFlashTimer);
             cbFlashTimer = setTimeout(() => cbBadge.classList.remove('flash'), 2200);
         }
-        showNotification(`Daltonismo: ${mode.label}`, 'info');
+
     }
 
     if (btnColorblind) {
@@ -2301,7 +2469,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 targetSelector = `#sim-cat-${simActiveCatId}`;
                 break;
             case 1: // Rellenar RUT y agregar
-                instructionText = `Paso 2: Marque la casilla al lado de "${simActiveCertName}", escriba el RUN de la persona en el cuadro blanco y presione "Agregar al carro".`;
+                instructionText = `Paso 2: Marque la casilla al lado de "${simActiveCertName}", escriba el RUT de la persona en el cuadro blanco y presione "Agregar al carro".`;
                 targetSelector = `#sim-cert-${simActiveCertId}`;
                 break;
             case 2: // Resolver Captcha (inline)
@@ -2309,7 +2477,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 targetSelector = `#sim-captcha-container`;
                 break;
             case 3: // Rellenar datos del solicitante
-                instructionText = `Paso 4: ¡El certificado se agregó al carro! Ahora, complete los "Datos del Solicitante" a la derecha: ingrese su RUN, N° documento de carnet y su correo.`;
+                instructionText = `Paso 4: ¡El certificado se agregó al carro! Ahora, complete los "Datos del Solicitante" a la derecha: ingrese su RUT, N° documento de carnet y su correo.`;
                 targetSelector = `#sim-solicitante-box`;
                 break;
             case 4: // Presionar continuar del solicitante
@@ -2717,7 +2885,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Validaciones
             if (!validateRut(rVal)) {
-                showNotification("Por favor, ingrese un RUN de solicitante válido.", "error");
+                showNotification("Por favor, ingrese un RUT de solicitante válido.", "error");
                 simSolRut.classList.add('error-field');
                 return;
             }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAI-FONASA: Gestión de Trámites Senior</title>
+    <title>[Simulador Académico] Portal de Trámites Senior</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,14 +12,25 @@
 </head>
 
 <body>
+    <div class="academic-disclaimer-banner" role="alert">
+        <span>⚠️ <strong>SITIO DE PRÁCTICA ACADÉMICA:</strong> Esta es una simulación educativa. NO recopila datos y NO pertenece al Gobierno de Chile. <strong>Nunca ingrese datos reales</strong>.</span>
+    </div>
     <header class="access-header">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Logotipo_Clave_%C3%9Anica.svg"
-            alt="Logo Clave Única" class="logo-small">
+        <div class="academic-logo-badge">🔑 Simulación Académica</div>
         <div class="access-toolbar">
             <button class="btn-access" id="btn-dark-mode" title="Tema Oscuro">🌙</button>
-            <button class="btn-access" id="btn-speed-toggle" title="Velocidad de lectura">🔊</button>
+            <div class="speed-dropdown-wrapper">
+                <button class="btn-access" id="btn-speed-toggle" title="Velocidad de lectura">🔊</button>
+                <div id="speed-control-panel" class="speed-panel" role="group" aria-label="Velocidad de lectura">
+                    <span class="speed-label">Velocidad del lector:</span>
+                    <button class="speed-btn" data-rate="1.45" id="speed-fast">Rápido</button>
+                    <button class="speed-btn active" data-rate="1.2" id="speed-normal">Normal</button>
+                    <button class="speed-btn" data-rate="0.95" id="speed-slow">Lento</button>
+                    <button class="speed-btn" data-rate="0.7" id="speed-very-slow">Muy lento</button>
+                </div>
+            </div>
             <div class="cb-btn-wrapper">
-                <button class="btn-access" id="btn-colorblind" title="Modo daltonismo">👁</button>
+                <button class="btn-access" id="btn-colorblind" title="Si le cuesta ver algunos colores, pulse aquí para probar opciones de ajuste">👁</button>
                 <span class="cb-current-badge" id="cb-current-badge">Normal</span>
             </div>
             <button class="btn-access contrast-toggle" id="btn-toggle-contrast" title="Alto Contraste">◐</button>
@@ -75,9 +86,9 @@
                                     <span class="tl-icon">🔊</span>
                                     <span class="tl-name">Velocidad</span>
                                 </div>
-                                <div class="toolbar-legend-item" data-target="btn-colorblind" role="button" tabindex="0" aria-label="Activar Modo daltonismo" title="Modo daltonismo: Filtra los colores para personas con daltonismo">
+                                <div class="toolbar-legend-item" data-target="btn-colorblind" role="button" tabindex="0" aria-label="Ajuste de colores" title="Colores: Si le cuesta ver algunos colores, pruebe las opciones de ajuste">
                                     <span class="tl-icon">👁</span>
-                                    <span class="tl-name">Daltonismo</span>
+                                    <span class="tl-name">¿Dificultad con colores?</span>
                                 </div>
                                 <div class="toolbar-legend-item" data-target="btn-toggle-contrast" role="button" tabindex="0" aria-label="Activar Alto Contraste" title="Alto Contraste: Aumenta el contraste para ver mejor el texto">
                                     <span class="tl-icon">◐</span>
@@ -100,58 +111,65 @@
 
         <!-- Screen 1: Login -->
         <section id="screen-login" class="screen">
+            <!-- Banner de Simulación Segura para Abuelos -->
+            <div class="simulation-disclaimer-banner">
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <span style="font-size: 2.2rem; line-height: 1;">🛡️</span>
+                    <div>
+                        <h3>Sitio de Práctica 100% Seguro</h3>
+                        <p>Esta es una <strong>página de simulación de aprendizaje</strong>. No es el sitio oficial del gobierno y <strong>nunca se guardará ni enviará su información real</strong>. Puede practicar con total tranquilidad y usar datos ficticios.</p>
+                    </div>
+                </div>
+            </div>
             <div class="cu-login-card">
                 <div class="cu-card-header">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Gobierno_de_Chile_logo.svg/512px-Gobierno_de_Chile_logo.svg.png" 
-                         alt="Gobierno de Chile" class="gov-logo">
+                    <div class="gov-logo-text" style="font-weight: 800; font-size: 14px; color: #555;">🇨🇱 SIMULADOR ACADÉMICO</div>
                     <div class="cu-header-right">
                          <div class="cu-close-icon">➖</div>
-                         <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Logotipo_Clave_%C3%9Anica.svg" 
-                              alt="Clave Única" class="cu-logo-main">
+                         <div class="cu-logo-text-main" style="font-weight: 800; font-size: 16px; color: #004a99; display: flex; align-items: center; gap: 4px;">🔑 Simulación ClaveÚnica</div>
                     </div>
                 </div>
 
                 <div class="cu-banner">
-                    <h2>OficinaInternet</h2>
-                    <p>requiere autenticación</p>
+                    <h2>OficinaInternet (Sitio de Práctica)</h2>
+                    <p>requiere autenticación simulada</p>
                 </div>
 
                 <div class="cu-info-banner">
-                    <span class="info-icon">ℹ️</span>
-                    <p>La clave es su Clave Única, una contraseña secreta de 8 caracteres o más que le entregó el Registro Civil. Pueden ser <strong>letras, números o símbolos</strong>.</p>
+                    <span class="info-icon">⚠️</span>
+                    <p><strong>NUNCA ingrese su ClaveÚnica o contraseña real aquí.</strong> Este es un sitio de práctica. Use la clave de prueba de ejemplo.</p>
                 </div>
 
                 <div class="cu-form-body">
                     <div class="form-group">
-                        <label for="rut">RUN</label>
-                        <input type="text" id="rut" placeholder="Ej: 12345678-9" autocomplete="off">
+                        <label for="rut">RUT de ejemplo (Use datos ficticios)</label>
+                        <input type="text" id="rut" placeholder="Ej: 11.111.111-1" autocomplete="off">
                     </div>
 
                     <div class="form-group">
                         <div class="label-with-help">
-                            <label for="password">Tu ClaveÚnica</label>
+                            <label for="password">Clave de prueba (No use su clave real)</label>
                             <div class="help-container">
                                 <button class="btn-help-inline" id="btn-help-password">❓</button>
                                 <div class="cu-help-tooltip">
                                     <strong>Información de ClaveÚnica:</strong>
-                                    <p>Es una contraseña secreta de 8 caracteres o más que le entregó el Registro Civil.</p>
-                                    <p>Puede contener <strong>letras, números o símbolos</strong>.</p>
+                                    <p>En este simulador, puede usar cualquier texto como contraseña (ej: 12345678).</p>
                                 </div>
                             </div>
                         </div>
                         <div class="input-with-tools">
-                            <input type="password" id="password" placeholder="">
+                            <input type="text" id="password" placeholder="Ej: Clave123">
                             <div class="input-actions">
                                 <button class="btn-toggle-pass" id="btn-toggle-password" type="button" title="Ver contraseña">👁️</button>
                             </div>
                         </div>
-                        <a href="#" class="cu-link">¿Olvidaste tu ClaveÚnica?</a>
+                        <span class="cu-link" style="color: #666; font-size: 13px; text-decoration: none;">Recuperación de contraseña ficticia</span>
                     </div>
 
-                    <button id="btn-login" class="btn-cu-primary">Autenticar</button>
+                    <button id="btn-login" class="btn-cu-primary">Autenticar (Ingresar)</button>
 
                     <div class="cu-footer">
-                        <p>¿No tienes ClaveÚnica? <a href="#" class="cu-link">Consigue la tuya</a></p>
+                        <p>¿No tienes ClaveÚnica? <span class="cu-link" style="color: #666;">Obtener en sucursal real</span></p>
                     </div>
                 </div>
 
@@ -282,8 +300,14 @@
                 <p class="subtitle">Su certificado ha sido procesado correctamente.</p>
 
                 <div class="success-actions">
-                    <p>Se ha enviado una copia a su correo electrónico.</p>
-                    <button id="btn-finish" class="btn primary block">Volver al Inicio</button>
+                    <p id="success-desc">Se ha enviado una copia a su correo electrónico.</p>
+                    <div id="success-buttons-default">
+                        <button id="btn-finish" class="btn primary block" style="width: 100%;">Volver al Inicio</button>
+                    </div>
+                    <div id="success-buttons-simulation" style="display: none; flex-direction: column; gap: 12px; width: 100%; margin-top: 15px;">
+                        <button id="btn-success-to-menu" class="btn primary" style="width: 100%; font-size: 17px; padding: 14px; border-radius: 12px;">Volver al Menú Principal</button>
+                        <button id="btn-success-to-rc" class="btn outline" style="width: 100%; font-size: 17px; padding: 14px; border-radius: 12px; border: 3px solid var(--primary); color: var(--primary);">Volver a Categorías (Registro Civil)</button>
+                    </div>
                 </div>
 
                 <div class="reader-toolbar" id="reader-success" data-reader-target="success-card">
@@ -408,6 +432,14 @@
                 <h1>Servicios del Registro Civil</h1>
                 <p class="subtitle">Seleccione una categoría para ver los certificados disponibles.</p>
                 
+                <div class="learning-mode-selector-container">
+                    <span class="selector-label">Modo de aprendizaje:</span>
+                    <div class="mode-slider-switch">
+                        <button class="mode-slider-btn active" id="btn-mode-guide" data-mode="guide">📖 Guía Paso a Paso</button>
+                        <button class="mode-slider-btn" id="btn-mode-simulation" data-mode="simulation">🎮 Simulación Interactiva</button>
+                    </div>
+                </div>
+
                 <div class="reader-toolbar" id="reader-rc-cats">
                     <button class="reader-btn btn-play" title="Reproducir">▶️</button>
                     <button class="reader-btn btn-stop" title="Detener">⏹️</button>
@@ -440,6 +472,30 @@
                     <div class="rc-category-card" data-cat="identidad">
                         <div class="icon">🆔</div>
                         <strong>Identidad</strong>
+                    </div>
+                    <div class="rc-category-card" data-cat="prendas">
+                        <div class="icon">🔒</div>
+                        <strong>Prendas</strong>
+                    </div>
+                    <div class="rc-category-card" data-cat="profesionales">
+                        <div class="icon">🎓</div>
+                        <strong>Profesionales</strong>
+                    </div>
+                    <div class="rc-category-card" data-cat="acuerdo_civil">
+                        <div class="icon">🤝</div>
+                        <strong>Acuerdo Unión Civil</strong>
+                    </div>
+                    <div class="rc-category-card" data-cat="discapacidad">
+                        <div class="icon">♿</div>
+                        <strong>Discapacidad</strong>
+                    </div>
+                    <div class="rc-category-card" data-cat="persona_juridica">
+                        <div class="icon">🏛️</div>
+                        <strong>Persona Jurídica</strong>
+                    </div>
+                    <div class="rc-category-card" data-cat="posesion_efectiva">
+                        <div class="icon">📜</div>
+                        <strong>Posesión Efectiva</strong>
                     </div>
                 </div>
 
@@ -518,7 +574,7 @@
                     <!-- Tutorial steps injected here via JS -->
                     <div class="rc-official-mockup">
                          <div class="rc-official-header">
-                             <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Logotipo_Clave_%C3%9Anica.svg" alt="Logo CU" class="rc-official-logo">
+                             <div class="rc-official-logo-text" style="font-weight: 800; font-size: 16px; color: #004a99;">🔑 Simulación ClaveÚnica</div>
                              <div class="rc-guide-overlay" title="Aquí debe poner su RUT">?</div>
                          </div>
                          <div id="rc-step-visual">
@@ -539,6 +595,20 @@
             <button class="btn-back-manual" id="btn-back-rc-simulation">⬅ Cancelar y Volver</button>
             <div class="card" style="text-align: left; padding: 25px; max-width: 1300px; margin: 0 auto; border: 2px solid #ddd; background: #fff;">
                 <div class="training-banner" style="background-color: var(--secondary); margin-bottom: 15px;">Modo Simulación Interactiva</div>
+
+                <!-- Floating Assistant Guidance (Moved to Top) -->
+                <div class="simulation-assistant-guidance" id="sim-assistant-box">
+                    <div class="sim-assistant-header">
+                        <div class="sim-assistant-avatar-mini">👵</div>
+                        <div class="sim-assistant-title">Guía de Práctica Asistida</div>
+                    </div>
+                    <div class="sim-assistant-body">
+                        <p id="sim-assistant-text">Cargando instrucciones...</p>
+                    </div>
+                    <div class="sim-assistant-actions">
+                        <button class="sim-assistant-voice-btn" id="btn-sim-voice-play">🔊 Escuchar Instrucción</button>
+                    </div>
+                </div>
 
                 <div class="simulation-browser-frame">
                     <div class="browser-toolbar">
@@ -571,7 +641,7 @@
                                 <!-- Left Column: Warning and accordion categories -->
                                 <div class="sim-rc-categories-col">
                                     <div class="sim-rc-info-text" id="sim-info-text-block">
-                                        Estimado(a) usuario(a), con el fin de proteger sus datos personales, para la obtención de certificados de nacimiento, matrimonio y/o defunción, se requerirá el RUN y el Número de Documento del solicitante, de conformidad con la ley 19628, sobre protección de la vida privada.
+                                        Estimado(a) usuario(a), con el fin de proteger sus datos personales, para la obtención de certificados de nacimiento, matrimonio y/o defunción, se requerirá el RUT y el Número de Documento del solicitante, de conformidad con la ley 19628, sobre protección de la vida privada.
                                     </div>
                                     
                                     <div class="sim-rc-categories-list" id="sim-categories-list-block">
@@ -939,7 +1009,7 @@
                                         <p class="sim-box-subtitle">Complete esta información para continuar el proceso y recibir su certificado:</p>
                                         
                                         <div class="sim-form-group">
-                                            <label for="sim-sol-rut">RUN del Solicitante</label>
+                                            <label for="sim-sol-rut">RUT del Solicitante</label>
                                             <input type="text" id="sim-sol-rut" placeholder="Ej: 11.111.111-1" disabled>
                                         </div>
                                         
@@ -1001,20 +1071,6 @@
                         <!-- Footer -->
                         <div class="sim-rc-footer">
                             <p>© 2026 Servicio de Registro Civil e Identificación - Chile</p>
-                        </div>
-                    </div>
-
-                    <!-- Floating Assistant Guidance -->
-                    <div class="simulation-assistant-guidance" id="sim-assistant-box">
-                        <div class="sim-assistant-header">
-                            <div class="sim-assistant-avatar-mini">👵</div>
-                            <div class="sim-assistant-title">Guía de Práctica Asistida</div>
-                        </div>
-                        <div class="sim-assistant-body">
-                            <p id="sim-assistant-text">Cargando instrucciones...</p>
-                        </div>
-                        <div class="sim-assistant-actions">
-                            <button class="sim-assistant-voice-btn" id="btn-sim-voice-play">🔊 Escuchar Instrucción</button>
                         </div>
                     </div>
 
@@ -1128,34 +1184,7 @@
         </div>
     </div>
 
-    <!-- Modal: Elección de Modo de Aprendizaje -->
-    <div id="modal-rc-learn-choice" class="modal">
-        <div class="modal-content" style="max-width: 650px; padding: 30px;">
-            <span class="close-modal" id="btn-close-choice" style="cursor: pointer;">&times;</span>
-            <h2 id="choice-modal-title" style="color: var(--primary); margin-bottom: 10px; font-size: 26px;">¿Cómo desea realizar este trámite?</h2>
-            <p id="choice-modal-desc" style="color: var(--text-light); margin-bottom: 25px; font-size: 18px;">Seleccione una opción para aprender paso a paso o simular de forma interactiva.</p>
-            
-            <div class="choice-cards-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div class="choice-card-item" id="btn-choice-tutorial" style="border: 2px solid var(--border); border-radius: 16px; padding: 20px; cursor: pointer; transition: all 0.2s; text-align: center; display: flex; flex-direction: column; justify-content: space-between; min-height: 250px;">
-                    <div>
-                        <div style="font-size: 40px; margin-bottom: 10px;">📖</div>
-                        <h3 style="font-size: 20px; color: var(--primary); margin-bottom: 8px;">Ver Guía Paso a Paso</h3>
-                        <p style="font-size: 15px; color: var(--text-light); line-height: 1.4; margin: 0;">Le mostraremos imágenes reales indicándole con una flecha azul lo que debe hacer paso a paso.</p>
-                    </div>
-                    <button class="btn outline" style="margin-top: 15px; padding: 10px 15px; font-size: 16px; pointer-events: none; width: 100%;">Ver Guía</button>
-                </div>
-                
-                <div class="choice-card-item" id="btn-choice-simulate" style="border: 2px solid var(--border); border-radius: 16px; padding: 20px; cursor: pointer; transition: all 0.2s; text-align: center; display: flex; flex-direction: column; justify-content: space-between; min-height: 250px; background-color: #fcfcfc;">
-                    <div>
-                        <div style="font-size: 40px; margin-bottom: 10px;">🎮</div>
-                        <h3 style="font-size: 20px; color: var(--secondary); margin-bottom: 8px;">Simulación Interactiva</h3>
-                        <p style="font-size: 15px; color: var(--text-light); line-height: 1.4; margin: 0;">Ingrese a una versión interactiva de práctica donde podrá rellenar el RUT y simular la obtención real.</p>
-                    </div>
-                    <button class="btn primary" style="margin-top: 15px; padding: 10px 15px; font-size: 16px; pointer-events: none; background-color: var(--secondary); width: 100%;">Simular Trámite</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
 
     <!-- Overlay: Primer uso — bienvenida al asistente -->
     <div id="overlay-first-use" class="first-use-overlay" role="dialog" aria-modal="true" aria-label="Guía de bienvenida">
@@ -1196,33 +1225,27 @@
     </div>
 
     <!-- Panel modo daltonismo (flotante, oculto por defecto) -->
-    <div id="colorblind-panel" class="colorblind-panel" role="group" aria-label="Modo para daltonismo">
-        <span class="cb-panel-label">Tipo de daltonismo</span>
+    <div id="colorblind-panel" class="colorblind-panel" role="group" aria-label="Ajuste de colores">
+        <span class="cb-panel-label">Si le cuesta ver algunos colores, pruebe estas opciones:</span>
         <button class="cb-btn active" id="cb-none">
-            <span class="cb-name">Normal</span>
-            <span class="cb-desc">Sin filtro de color</span>
+            <span class="cb-name">Colores normales</span>
+            <span class="cb-desc">Sin ajuste</span>
         </button>
         <button class="cb-btn" id="cb-protanopia">
-            <span class="cb-name">Protanopia</span>
-            <span class="cb-desc">No distingue el rojo</span>
+            <span class="cb-name">Opción 1</span>
+            <span class="cb-desc">Ajuste para el rojo</span>
         </button>
         <button class="cb-btn" id="cb-deuteranopia">
-            <span class="cb-name">Deuteranopia</span>
-            <span class="cb-desc">No distingue el verde</span>
+            <span class="cb-name">Opción 2</span>
+            <span class="cb-desc">Ajuste para el verde</span>
         </button>
         <button class="cb-btn" id="cb-tritanopia">
-            <span class="cb-name">Tritanopia</span>
-            <span class="cb-desc">No distingue el azul</span>
+            <span class="cb-name">Opción 3</span>
+            <span class="cb-desc">Ajuste para el azul</span>
         </button>
     </div>
 
-    <!-- Control de velocidad del lector (flotante, oculto por defecto) -->
-    <div id="speed-control-panel" class="speed-panel" role="group" aria-label="Velocidad de lectura">
-        <span class="speed-label">Velocidad del lector:</span>
-        <button class="speed-btn active" data-rate="0.75" id="speed-normal">Normal</button>
-        <button class="speed-btn" data-rate="0.55" id="speed-slow">Lento</button>
-        <button class="speed-btn" data-rate="0.38" id="speed-very-slow">Muy lento</button>
-    </div>
+
 
     <!-- Botón flotante de ayuda rápida -->
     <button id="btn-quick-help" class="btn-quick-help" title="Necesito ayuda" aria-label="Pedir ayuda">

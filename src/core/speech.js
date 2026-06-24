@@ -1,25 +1,76 @@
+import { state } from './state.js';
+
 const synth = window.speechSynthesis;
+
+export function preprocessTextForTTS(text) {
+    if (!text) return '';
+    let clean = text;
+    
+    // Convertir "$" a "pesos chilenos"
+    clean = clean.replace(/\$\s*([\d\.]+)/g, '$1 pesos chilenos');
+    clean = clean.replace(/\$/g, ' pesos chilenos');
+    
+    // Reemplazar RUN por RUT
+    clean = clean.replace(/\bRUN\b/g, 'RUT');
+    
+    // Siglas y abreviaciones comunes chilenas
+    clean = clean.replace(/\bPGU\b/g, 'P G U');
+    clean = clean.replace(/\bIPS\b/g, 'I P S');
+    clean = clean.replace(/\bAFP\b/g, 'A F P');
+    clean = clean.replace(/\bFONASA\b/gi, 'Fonasa');
+    
+    return clean;
+}
 
 // Variables de módulo para el lector avanzado
 let readerUtterance = null;
 
 export function getFemaleLatamVoice() {
     const voices = synth.getVoices();
-    const preferredLangs = ['es-CL', 'es-MX', 'es-AR', 'es-CO', 'es-US', 'es-ES'];
-
+    
+    // 1. Intentar buscar voz femenina en dialectos latinoamericanos / neutros preferidos (incluido es-419)
+    const preferredLangs = ['es-CL', 'es-MX', 'es-419', 'es-AR', 'es-CO', 'es-US'];
     for (const lang of preferredLangs) {
-        const voice = voices.find(v =>
-            v.lang.replace('_', '-').startsWith(lang) &&
-            (v.name.toLowerCase().includes('female') ||
-             v.name.toLowerCase().includes('mujer')  ||
-             v.name.toLowerCase().includes('sabina') ||
-             v.name.toLowerCase().includes('helena') ||
-             v.name.toLowerCase().includes('zira')   ||
-             v.name.toLowerCase().includes('paul'))
-        );
+        const voice = voices.find(v => {
+            const normalizedLang = v.lang.replace('_', '-').toLowerCase();
+            const normalizedName = v.name.toLowerCase();
+            return normalizedLang.startsWith(lang.toLowerCase()) && (
+                normalizedName.includes('female') ||
+                normalizedName.includes('mujer') ||
+                normalizedName.includes('sabina') ||
+                normalizedName.includes('helena') ||
+                normalizedName.includes('dalia') ||
+                normalizedName.includes('zira') ||
+                normalizedName.includes('paul') ||
+                normalizedName.includes('google')
+            );
+        });
         if (voice) return voice;
     }
-    return voices.find(v => v.lang.startsWith('es')) || null;
+
+    // 2. Intentar buscar cualquier voz en dialectos latinoamericanos / neutros (no es-ES)
+    const latamVoice = voices.find(v => {
+        const normalizedLang = v.lang.replace('_', '-').toLowerCase();
+        return normalizedLang.startsWith('es') && !normalizedLang.startsWith('es-es');
+    });
+    if (latamVoice) return latamVoice;
+
+    // 3. Fallback: buscar voz femenina en español de España (es-ES)
+    const esFemaleVoice = voices.find(v => {
+        const normalizedLang = v.lang.replace('_', '-').toLowerCase();
+        const normalizedName = v.name.toLowerCase();
+        return normalizedLang.startsWith('es-es') && (
+            normalizedName.includes('female') ||
+            normalizedName.includes('mujer') ||
+            normalizedName.includes('sabina') ||
+            normalizedName.includes('helena') ||
+            normalizedName.includes('zira')
+        );
+    });
+    if (esFemaleVoice) return esFemaleVoice;
+
+    // 4. Último recurso: cualquier voz que empiece por 'es'
+    return voices.find(v => v.lang.toLowerCase().startsWith('es')) || null;
 }
 
 export function stopSpeaking() {
@@ -34,11 +85,12 @@ export function speakText(text, button) {
     }
     stopSpeaking();
 
-    const utterance = new SpeechSynthesisUtterance(text);
+    const cleanedText = preprocessTextForTTS(text);
+    const utterance = new SpeechSynthesisUtterance(cleanedText);
     const voice = getFemaleLatamVoice();
     if (voice) utterance.voice = voice;
     utterance.lang  = 'es-CL';
-    utterance.rate  = 0.75;
+    utterance.rate  = state.speechRate;
     utterance.pitch = 1.05;
 
     utterance.onstart = () => button.classList.add('playing');
@@ -65,10 +117,13 @@ export function startAdvancedReader(textElement, toolbar) {
     const fullText  = textElement.innerText;
 
     if (wordSpans.length === 0) {
-        const utt = new SpeechSynthesisUtterance(fullText);
+        const cleanedText = preprocessTextForTTS(fullText);
+        const utt = new SpeechSynthesisUtterance(cleanedText);
         const v = getFemaleLatamVoice();
         if (v) utt.voice = v;
-        utt.rate = 0.7;
+        utt.lang = 'es-CL';
+        utt.rate = state.speechRate;
+        utt.pitch = 1.05;
         synth.speak(utt);
         return;
     }
@@ -77,7 +132,8 @@ export function startAdvancedReader(textElement, toolbar) {
     const voice = getFemaleLatamVoice();
     if (voice) readerUtterance.voice = voice;
     readerUtterance.lang = 'es-CL';
-    readerUtterance.rate = 0.7;
+    readerUtterance.rate = state.speechRate;
+    readerUtterance.pitch = 1.05;
 
     const status  = toolbar.querySelector('.reader-status');
     const playBtn = toolbar.querySelector('.btn-play');

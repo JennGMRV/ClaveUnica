@@ -60,10 +60,10 @@ export function initContrastToggle() {
 // --- Modo daltonismo (ciclo) ---
 
 const cbCycle = [
-    { cls: null,               label: 'Normal'       },
-    { cls: 'cb-protanopia',    label: 'Protanopia'   },
-    { cls: 'cb-deuteranopia',  label: 'Deuteranopia' },
-    { cls: 'cb-tritanopia',    label: 'Tritanopia'   },
+    { cls: null,               label: 'Normal'    },
+    { cls: 'cb-protanopia',    label: 'Opción 1'  },
+    { cls: 'cb-deuteranopia',  label: 'Opción 2'  },
+    { cls: 'cb-tritanopia',    label: 'Opción 3'  },
 ];
 const cbModes = cbCycle.slice(1).map(m => m.cls);
 
@@ -105,7 +105,7 @@ export function initColorblindMode() {
             clearTimeout(cbFlashTimer);
             cbFlashTimer = setTimeout(() => badge.classList.remove('flash'), 2200);
         }
-        showNotification(`Daltonismo: ${mode.label}`, 'info');
+
     }
 
     btn.addEventListener('click', () => {
@@ -124,9 +124,10 @@ export function initSpeedPanel() {
     btnToggle.addEventListener('click', () => panel.classList.toggle('visible'));
 
     const speeds = [
-        { id: 'speed-normal',     rate: 0.75, label: 'Velocidad normal activada' },
-        { id: 'speed-slow',       rate: 0.55, label: 'Velocidad lenta activada'  },
-        { id: 'speed-very-slow',  rate: 0.38, label: 'Velocidad muy lenta activada' },
+        { id: 'speed-fast',       rate: 1.45, label: 'Velocidad rápida activada' },
+        { id: 'speed-normal',     rate: 1.2,  label: 'Velocidad normal activada' },
+        { id: 'speed-slow',       rate: 0.95, label: 'Velocidad lenta activada'  },
+        { id: 'speed-very-slow',  rate: 0.7,  label: 'Velocidad muy lenta activada' },
     ];
 
     speeds.forEach(({ id, rate, label }) => {

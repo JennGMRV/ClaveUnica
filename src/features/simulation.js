@@ -1,5 +1,5 @@
 import { state } from '../core/state.js';
-import { showScreen, goBack } from '../core/navigation.js';
+import { showScreen, goBack, resetHistoryTo } from '../core/navigation.js';
 import { formatRut, validateRut } from '../utils/rut.js';
 import { showNotification } from '../utils/notifications.js';
 import { assistant } from './assistant.js';
@@ -114,7 +114,7 @@ export function updateSimulationStepUI() {
             targetSelector = `#sim-cat-${state.simActiveCatId}`;
             break;
         case 1: // Rellenar RUT y agregar
-            instructionText = `Paso 2: Marque la casilla al lado de "${state.simActiveCertName}", escriba el RUN de la persona en el cuadro blanco y presione "Agregar al carro".`;
+            instructionText = `Paso 2: Marque la casilla al lado de "${state.simActiveCertName}", escriba el RUT de la persona en el cuadro blanco y presione "Agregar al carro".`;
             targetSelector = `#sim-cert-${state.simActiveCertId}`;
             break;
         case 2: // Resolver Captcha (inline)
@@ -122,7 +122,7 @@ export function updateSimulationStepUI() {
             targetSelector = `#sim-captcha-container`;
             break;
         case 3: // Rellenar datos del solicitante
-            instructionText = `Paso 4: ¡El certificado se agregó al carro! Ahora, complete los "Datos del Solicitante" a la derecha: ingrese su RUN, N° documento de carnet y su correo.`;
+            instructionText = `Paso 4: ¡El certificado se agregó al carro! Ahora, complete los "Datos del Solicitante" a la derecha: ingrese su RUT, N° documento de carnet y su correo.`;
             targetSelector = `#sim-solicitante-box`;
             break;
         case 4: // Presionar continuar del solicitante
@@ -513,7 +513,7 @@ export function initSimulation() {
             const ecVal = simSolEmailConfirm ? simSolEmailConfirm.value : '';
 
             if (!validateRut(rVal)) {
-                showNotification("Por favor, ingrese un RUN de solicitante válido.", "error");
+                showNotification("Por favor, ingrese un RUT de solicitante válido.", "error");
                 if (simSolRut) simSolRut.classList.add('error-field');
                 return;
             }
@@ -576,38 +576,74 @@ export function initSimulation() {
         };
     }
 
+    // Botones de la pantalla de éxito de simulación
+    const btnSuccessToMenu = document.getElementById('btn-success-to-menu');
+    if (btnSuccessToMenu) {
+        btnSuccessToMenu.onclick = (e) => {
+            e.preventDefault();
+            restoreDefaultSuccessScreen();
+            resetHistoryTo('landing');
+        };
+    }
+
+    const btnSuccessToRc = document.getElementById('btn-success-to-rc');
+    if (btnSuccessToRc) {
+        btnSuccessToRc.onclick = (e) => {
+            e.preventDefault();
+            restoreDefaultSuccessScreen();
+            resetHistoryTo('rcCategories');
+        };
+    }
+
     // Checkout Submit button: Obtener Certificado (Final)
     const btnSimCheckoutSubmit = document.getElementById('btn-sim-checkout-submit');
     if (btnSimCheckoutSubmit) {
         btnSimCheckoutSubmit.onclick = () => {
             const successTitle = document.querySelector('#screen-success h1');
             const successSubtitle = document.querySelector('#screen-success .subtitle');
-            const successDesc = document.querySelector('#screen-success .success-actions p');
-            const btnFinish = document.getElementById('btn-finish');
+            const successDesc = document.getElementById('success-desc');
+            const defaultButtons = document.getElementById('success-buttons-default');
+            const simButtons = document.getElementById('success-buttons-simulation');
 
             if (successTitle) successTitle.innerHTML = '¡Simulación Completada con Éxito! 🎉';
             if (successSubtitle) successSubtitle.innerText = `¡Felicitaciones! Ha aprendido a obtener su ${state.simActiveCertName}.`;
             
-            const solEmail = document.getElementById('sim-sol-email');
-            const emailVal = solEmail ? solEmail.value : 'su correo';
-            if (successDesc) successDesc.innerHTML = `Usted simuló correctamente todos los pasos de la página del Registro Civil. Su certificado (simulado) ha sido enviado al correo <strong>${emailVal}</strong>.`;
-            
-            if (btnFinish) {
-                btnFinish.innerText = 'Volver al Registro Civil';
-                const oldFinishClick = btnFinish.onclick;
-                btnFinish.onclick = (e) => {
-                    e.preventDefault();
-                    if (successTitle) successTitle.innerHTML = '¡Trámite Exitoso!';
-                    if (successSubtitle) successSubtitle.innerText = 'Su certificado ha sido procesado correctamente.';
-                    if (successDesc) successDesc.innerHTML = 'Se ha enviado una copia a su correo electrónico.';
-                    btnFinish.innerText = 'Volver al Inicio';
-                    btnFinish.onclick = oldFinishClick;
-                    
-                    showScreen('rcCategories');
-                };
+            if (successDesc) {
+                successDesc.innerHTML = `
+                    <div class="simulation-final-info" style="margin-top: 15px; margin-bottom: 25px; text-align: left; background: #eef4ff; border-left: 6px solid var(--secondary); padding: 18px 22px; border-radius: 12px; font-size: 17px; line-height: 1.6; border: 2px solid #b3d7ff;">
+                        <p style="margin-bottom: 10px; font-weight: bold; color: #212529; font-size: 19px; display: flex; align-items: center; gap: 8px;">💡 Esto ha sido una simulación de práctica.</p>
+                        <p style="margin-bottom: 15px; color: #444;">No se ha realizado ninguna solicitud real ante el Registro Civil, ni se ha cobrado dinero, ni se ha enviado un correo electrónico con el certificado real.</p>
+                        <p style="margin-bottom: 10px; font-weight: bold; color: #212529; font-size: 18px;">¿Quiere obtener el certificado real ahora?</p>
+                        <p style="margin-bottom: 15px; color: #555;">Si está listo para realizar el trámite real, ingrese al sitio oficial del Registro Civil de Chile presionando el siguiente botón:</p>
+                        <div style="text-align: center; margin-bottom: 5px;">
+                            <a href="https://www.registrocivil.cl/principal/servicios-en-linea" target="_blank" class="btn primary" style="background-color: var(--secondary); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-size: 18px; padding: 14px 28px; border-radius: 12px; font-weight: bold; border: none; box-shadow: 0 4px 12px rgba(243, 112, 33, 0.4); transition: transform 0.2s;">
+                                🏛️ Ir al Registro Civil Real ↗
+                            </a>
+                        </div>
+                    </div>
+                `;
             }
+
+            if (defaultButtons) defaultButtons.style.display = 'none';
+            if (simButtons) simButtons.style.display = 'flex';
 
             showScreen('success');
         };
     }
 }
+
+function restoreDefaultSuccessScreen() {
+    const successTitle = document.querySelector('#screen-success h1');
+    const successSubtitle = document.querySelector('#screen-success .subtitle');
+    const successDesc = document.getElementById('success-desc');
+    const defaultButtons = document.getElementById('success-buttons-default');
+    const simButtons = document.getElementById('success-buttons-simulation');
+
+    if (successTitle) successTitle.innerHTML = '¡Trámite Exitoso!';
+    if (successSubtitle) successSubtitle.innerText = 'Su certificado ha sido procesado correctamente.';
+    if (successDesc) successDesc.innerHTML = 'Se ha enviado una copia a su correo electrónico.';
+
+    if (defaultButtons) defaultButtons.style.display = 'block';
+    if (simButtons) simButtons.style.display = 'none';
+}
+

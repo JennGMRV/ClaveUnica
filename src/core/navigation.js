@@ -91,3 +91,18 @@ export function updateBreadcrumb(key) {
             : `<span class="bc-item bc-current">${label}</span>`
     ).join('');
 }
+
+export function resetHistoryTo(key) {
+    if (key === 'landing') {
+        state.history = ['landing'];
+    } else if (key === 'menu') {
+        state.history = ['landing', 'menu'];
+    } else if (key === 'rcCategories') {
+        state.history = ['landing', 'rcCategories'];
+    } else if (key === 'caCategories') {
+        state.history = ['landing', 'caCategories'];
+    } else {
+        state.history = ['landing', key];
+    }
+    showScreen(key, false);
+}
