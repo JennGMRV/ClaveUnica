@@ -6,7 +6,7 @@ import { stopSpeaking, prepareTextForHighlighting, startAdvancedReader, stopAdva
 import { state }            from './core/state.js';
 
 import { showNotification } from './utils/notifications.js';
-import { formatRut, validateRut } from './utils/rut.js';
+import { formatRut, validateRut, attachRutBlurFeedback } from './utils/rut.js';
 
 import { initFontControls, initDarkMode, initContrastToggle, initColorblindMode, initSpeedPanel, initLegendItems } from './features/accessibility.js';
 import { initTutorial, setStepChangeCallback, setOnTutorialComplete, updateStepUI } from './features/tutorial.js';
@@ -108,6 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
         this.value = formatRut(this.value);
         this.classList.remove('error-field');
     });
+    if (rutInput) attachRutBlurFeedback(rutInput);
 
     passInput?.addEventListener('input', function () {
         this.classList.remove('error-field');
