@@ -2187,6 +2187,7 @@ body.high-contrast #rc-step-visual {
 
 
 .error-field { border-color: #D32F2F !important; background-color: #FFEBEE !important; box-shadow: 0 0 0 4px rgba(211, 47, 47, 0.2) !important; transition: all 0.3s; }
+.rut-valid   { border-color: #2E7D32 !important; background-color: #F1F8E9 !important; box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.2)  !important; transition: all 0.3s; }
 
 
 /* --- Simulation & Landing Styles --- */

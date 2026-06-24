@@ -11,6 +11,23 @@ export function formatRut(rut) {
     return value;
 }
 
+export function attachRutBlurFeedback(input) {
+    input.addEventListener('blur', function () {
+        const val = this.value.trim();
+        if (!val) { this.classList.remove('rut-valid', 'error-field'); return; }
+        if (validateRut(val)) {
+            this.classList.add('rut-valid');
+            this.classList.remove('error-field');
+        } else {
+            this.classList.add('error-field');
+            this.classList.remove('rut-valid');
+        }
+    });
+    input.addEventListener('input', function () {
+        this.classList.remove('rut-valid', 'error-field');
+    });
+}
+
 export function validateRut(rut) {
     const value = rut.replace(/[^0-9kK]/g, '').toUpperCase();
     if (value.length < 2) return false;

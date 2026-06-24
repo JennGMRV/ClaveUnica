@@ -1,6 +1,6 @@
 import { state } from '../core/state.js';
 import { showScreen, goBack, resetHistoryTo } from '../core/navigation.js';
-import { formatRut, validateRut } from '../utils/rut.js';
+import { formatRut, validateRut, attachRutBlurFeedback } from '../utils/rut.js';
 import { showNotification } from '../utils/notifications.js';
 import { assistant } from './assistant.js';
 
@@ -240,6 +240,7 @@ export function initSimulation() {
             this.value = formatRut(this.value);
             this.classList.remove('error-field');
         });
+        attachRutBlurFeedback(input);
     });
 
     // Clic en "Agregar al Carro" en la simulación
