@@ -13,6 +13,7 @@ import { initTutorial, setStepChangeCallback, setOnTutorialComplete, updateStepU
 import { assistant, initAssistant } from './features/assistant.js';
 import { initModals, showTutorialSummary, setSayCallback } from './features/modals.js';
 import { initSimulation, startInteractiveSimulation } from './features/simulation.js';
+import { cuData } from './data/cu-data.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -158,6 +159,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Ayuda de contraseña: muestra notificación
     document.getElementById('btn-help-password')?.addEventListener('click', () => {
         showNotification('La clave es su Clave Única, una contraseña secreta de 8 caracteres o más que le entregó el Registro Civil.', 'info');
+    });
+
+    // Guía para recuperar contraseña ClaveÚnica
+    document.getElementById('btn-recover-guide')?.addEventListener('click', () => {
+        state.currentTutorialOrigin = 'login';
+        state.currentTutorialSteps  = cuData['recuperar-pass'].steps;
+        state.currentStepIndex      = 0;
+        updateStepUI();
+        showScreen('rcTutorial');
     });
 
     // ----------------------------------------------------------
