@@ -62,8 +62,21 @@ export const assistant = {
         { id: 'mat-asignacion',       type: 'rc',     name: 'Certificado Matrimonio Asignación Familiar',   desc: 'para cargas y asignaciones familiares de cónyuges',                                      keywords: ['matrimonio','asignación','asignacion','cónyuge','esposo','esposa'] },
         { id: 'def-todo',             type: 'rc',     name: 'Certificado Defunción Todo Trámite',            desc: 'para certificar un fallecimiento en cualquier trámite',                                   keywords: ['defunción','defuncion','todo trámite','todo tramite','general','fallecimiento','muerte'] },
         { id: 'def-asignacion',       type: 'rc',     name: 'Certificado Defunción Asignación Familiar',    desc: 'para trámites de herencia y previsión social de fallecidos',                              keywords: ['defunción','defuncion','asignación','asignacion','herencia','fallecido','muerte'] },
-        { id: 'ant-fines-particulares', type: 'rc',   name: 'Antecedentes Fines Particulares',              desc: 'para trabajo u otros fines particulares',                                                  keywords: ['antecedentes','particulares','fines particulares','trabajo'] },
-        { id: 'ant-fines-especiales',   type: 'rc',   name: 'Antecedentes Fines Especiales',                desc: 'para trámites legales y fines especiales',                                                keywords: ['antecedentes','especiales','fines especiales','legal'] }
+        { id: 'ant-fines-particulares',  type: 'rc',  name: 'Antecedentes Fines Particulares',              desc: 'para trabajo u otros fines particulares',                          keywords: ['antecedentes','particulares','fines particulares','trabajo'] },
+        { id: 'ant-fines-especiales',    type: 'rc',  name: 'Antecedentes Fines Especiales',                desc: 'para trámites legales y fines especiales',                         keywords: ['antecedentes','especiales','fines especiales','legal'] },
+        { id: 'prendas-natural',         type: 'rc',  name: 'Cert. Histórico Prendas Persona Natural',      desc: 'registro histórico de prendas a su nombre',                        keywords: ['prenda','prendas','hipoteca','gravamen','deuda','bien','propiedad','histórico prendas'] },
+        { id: 'prof-certif',             type: 'rc',  name: 'Certificado Profesionales',                    desc: 'acredita títulos profesionales registrados',                       keywords: ['profesional','profesionales','título','titulo','carrera','universitario','grado'] },
+        { id: 'auc-todo',                type: 'rc',  name: 'Certificado Acuerdo Unión Civil Todo Trámite', desc: 'acredita el Acuerdo de Unión Civil',                               keywords: ['unión civil','union civil','auc','convivencia','conviviente','acuerdo civil','pareja civil'] },
+        { id: 'disc-credencial',         type: 'rc',  name: 'Credencial de Discapacidad',                   desc: 'acredita la condición de discapacidad. Requiere Clave Única.',     keywords: ['discapacidad','discapacitado','credencial','registro discapacidad','senadis','capacidades diferentes'] },
+        { id: 'disc-certif',             type: 'rc',  name: 'Certificado de Discapacidad',                  desc: 'certificado de discapacidad. Requiere Clave Única.',               keywords: ['discapacidad','certificado discapacidad','registro discapacidad','senadis'] },
+        { id: 'pj-directorio',           type: 'rc',  name: 'Cert. Directorio Persona Jurídica',            desc: 'para corporaciones y fundaciones sin fines de lucro',              keywords: ['persona jurídica','persona juridica','corporación','corporacion','fundación','fundacion','directorio','organización','organizacion','sin fines de lucro'] },
+        { id: 'pe-certif',               type: 'rc',  name: 'Certificado de Posesión Efectiva',             desc: 'para tramitar herencias y sucesiones',                             keywords: ['posesión efectiva','posesion efectiva','herencia','sucesión','sucesion','heritar','heredar','fallecido','causante','bienes'] },
+        { id: 'pe-testamento',           type: 'rc',  name: 'Informes de Inscripción de Testamentos',       desc: 'verifica testamentos inscritos',                                   keywords: ['testamento','testamentos','inscripción testamento','sucesión','herencia'] },
+        { id: 'registro-social',         type: 'ca',  name: 'Mi Registro Social de Hogares',                desc: 'muestra su calificación socioeconómica y los integrantes del hogar registrados',          keywords: ['registro social','rsh','ficha social','calificación socioeconómica','clasificacion','clasificación','hogar','integrantes hogar','ministerio desarrollo social','percentil'] },
+        { id: 'pagos-beneficios',        type: 'ca',  name: 'Mis Pagos de Beneficios Sociales',             desc: 'muestra los pagos de pensión o bonos que el Estado le ha enviado',                         keywords: ['pagos beneficios','pago beneficio','bono','bonos','subsidio','pensión garantizada','ips','pagos del estado','plata del estado','me pagaron','cuándo me pagan'] },
+        { id: 'capacitaciones',          type: 'ca',  name: 'Mis Capacitaciones',                           desc: 'muestra sus cursos y capacitaciones registradas en SENCE',                               keywords: ['capacitación','capacitaciones','curso','cursos','sence','aprender','estudiar','capacitarme','formación laboral'] },
+        { id: 'informacion-previsional', type: 'ca',  name: 'Mi Información Previsional',                   desc: 'muestra su AFP, fondos y situación previsional',                                         keywords: ['previsional','afp','fondo previsional','pensión','jubilación','cotizaciones afp','ahorros jubilación','afiliación afp','capredena','dipreca'] },
+        { id: 'seguro-social',           type: 'ca',  name: 'Mi Seguro Social',                             desc: 'muestra cotizaciones al Seguro Social Mixto administrado por el IPS',                    keywords: ['seguro social','seguro mixto','cotizaciones seguro','ips seguro','pensiones futuras','cotización empleador'] }
     ],
 
     formatNumbersForSeniors(str) {
@@ -413,11 +426,7 @@ export const assistant = {
         }
 
         // Navegación global a secciones principales
-        const goToCA = cmd.includes('chileatiende') || cmd.includes('chile atiende') || cmd.includes('atiende') ||
-                       cmd.includes('beneficio') || cmd.includes('bono') || cmd.includes('subsidio') ||
-                       cmd.includes('registro social') || cmd.includes('capacitacion') ||
-                       cmd.includes('previsional') || cmd.includes('seguro social') ||
-                       cmd.includes('sence') || cmd.includes('pagos del estado');
+        const goToCA = cmd.includes('chileatiende') || cmd.includes('chile atiende') || cmd.includes('atiende');
 
         const goToRC = cmd.includes('registro civil') || cmd.includes('registrocivil') ||
                        cmd.includes('certif') || cmd.includes('certificado') ||
@@ -457,8 +466,13 @@ export const assistant = {
             }
         }
 
-        // Búsqueda difusa de certificados
-        const certKeywords = ['certificado','papel','comprobante','necesito','quiero','dame','obtener','sacar','el de','la de','los de','nacimiento','matrimonio','antecedentes','antecedente','defunci','vehiculo','vehículo','identidad','cedula','cédula','fonasa'];
+        // Búsqueda difusa de certificados y servicios
+        const certKeywords = [
+            'certificado','papel','comprobante','necesito','quiero','dame','obtener','sacar','el de','la de','los de',
+            'nacimiento','matrimonio','antecedentes','antecedente','defunci','vehiculo','vehículo','identidad','cedula','cédula','fonasa',
+            'discapacidad','prenda','profesional','unión civil','union civil','persona jurídica','persona juridica','posesión','posesion','testamento',
+            'registro social','rsh','previsional','afp','seguro social','capacitación','capacitacion','sence','curso','bono','subsidio','ips','pensión','pension','beneficio'
+        ];
         if (certKeywords.some(kw => cmd.includes(kw))) {
             let bestMatch = null;
             let maxScore  = 0;
@@ -469,34 +483,47 @@ export const assistant = {
                 if (score > maxScore) { maxScore = score; bestMatch = cert; }
             });
 
-            // RC certs tienen nombres únicos: 1 keyword match ya es alta confianza.
-            // FONASA certs son más ambiguos: requieren mayor puntaje.
-            const directThreshold = bestMatch?.type === 'rc' ? 5 : 10;
+            // RC y CA tienen keywords específicos: 1 match ya es confianza alta.
+            // FONASA es más ambiguo: requiere mayor puntaje.
+            const directThreshold = bestMatch?.type === 'fonasa' ? 10 : 5;
 
             if (bestMatch && maxScore >= directThreshold) {
-                this.say(`Perfecto. Preparando de inmediato su ${bestMatch.name}.`);
+                this.say(`Perfecto. Preparando de inmediato ${bestMatch.name}.`);
                 setTimeout(() => {
                     if (bestMatch.type === 'rc') {
                         const certCategoryMap = {
-                            'nac-matricula': 'nacimiento',
-                            'nac-asignacion': 'nacimiento',
-                            'nac-todo': 'nacimiento',
-                            'mat-todo': 'matrimonio',
-                            'mat-asignacion': 'matrimonio',
-                            'def-todo': 'defuncion',
-                            'def-asignacion': 'defuncion',
+                            'nac-matricula':        'nacimiento',
+                            'nac-asignacion':       'nacimiento',
+                            'nac-todo':             'nacimiento',
+                            'mat-todo':             'matrimonio',
+                            'mat-asignacion':       'matrimonio',
+                            'def-todo':             'defuncion',
+                            'def-asignacion':       'defuncion',
                             'ant-fines-particulares': 'antecedentes',
-                            'ant-fines-especiales': 'antecedentes'
+                            'ant-fines-especiales': 'antecedentes',
+                            'prendas-natural':      'prendas',
+                            'prof-certif':          'profesionales',
+                            'auc-todo':             'acuerdo_civil',
+                            'disc-credencial':      'discapacidad',
+                            'disc-certif':          'discapacidad',
+                            'pj-directorio':        'persona_juridica',
+                            'pe-certif':            'posesion_efectiva',
+                            'pe-testamento':        'posesion_efectiva'
                         };
                         const catId = certCategoryMap[bestMatch.id] || bestMatch.id;
                         selectRCCategory(catId);
-                        
                         if (certCategoryMap[bestMatch.id]) {
                             setTimeout(() => {
                                 const certItem = document.querySelector(`.rc-cert-item[data-cert-id="${bestMatch.id}"]`);
                                 if (certItem) certItem.click();
                             }, 250);
                         }
+                    } else if (bestMatch.type === 'ca') {
+                        showScreen('caCategories');
+                        setTimeout(() => {
+                            const serviceItem = document.querySelector(`.ca-service-item[data-service="${bestMatch.id}"]`);
+                            if (serviceItem) serviceItem.click();
+                        }, 350);
                     } else {
                         const rad = document.querySelector(`input[value="${bestMatch.id}"]`);
                         if (rad) rad.checked = true;
@@ -509,13 +536,13 @@ export const assistant = {
             if (bestMatch && maxScore >= 5) {
                 this.pendingData = bestMatch;
                 this.state = 'confirming_cert';
-                this.say(`Entendido. No encontré uno con ese nombre exacto, pero tengo el ${bestMatch.name}, que ${bestMatch.desc}. ¿Es ese el que necesita?`, () => {
+                this.say(`Entendido. No encontré uno con ese nombre exacto, pero tengo ${bestMatch.name}, que ${bestMatch.desc}. ¿Es ese el que necesita?`, () => {
                     if (isVoice && !this.isListening) this.recognition.start();
                 });
                 return;
             }
-            if (cmd.includes('certificado') || cmd.includes('papel') || cmd.includes('trámite')) {
-                this.say('No estoy seguro de qué certificado busca. Tengo de Nacimiento, Matrimonio, Antecedentes, o los de Fonasa. ¿Cuál necesita?');
+            if (cmd.includes('certificado') || cmd.includes('papel') || cmd.includes('trámite') || cmd.includes('servicio')) {
+                this.say('No estoy seguro de qué busca. Tengo certificados del Registro Civil como Nacimiento, Matrimonio o Antecedentes; certificados de FONASA; y servicios de ChileAtiende como Registro Social, Previsional o Capacitaciones. ¿Cuál necesita?');
                 return;
             }
         }
