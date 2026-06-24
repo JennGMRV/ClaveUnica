@@ -4765,6 +4765,24 @@ body.dark-mode .toolbar-legend-item {
     transform: scale(1.03);
 }
 
+.sim-assistant-exit-btn {
+    background: #fff3e0;
+    color: #b71c1c;
+    border: 2px solid #ef9a9a;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.sim-assistant-exit-btn:hover {
+    background: #ffcdd2;
+    border-color: #b71c1c;
+    transform: scale(1.03);
+}
+
 /* 9. Modal de Captcha Simulado */
 .sim-captcha-modal {
     display: none;

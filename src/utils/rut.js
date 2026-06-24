@@ -35,6 +35,8 @@ export function validateRut(rut) {
     const body = value.slice(0, -1);
     const dv   = value.slice(-1);
 
+    if (parseInt(body, 10) <= 0) return false;
+
     let sum = 0;
     let multiple = 2;
     for (let i = 1; i <= body.length; i++) {
