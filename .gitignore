@@ -1,0 +1,40 @@
+# Graphify generated files
+graphify-out/
+
+# Environment variables
+.env.local
+.env
+
+# IDE and editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Node/npm
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build output
+dist/
+build/
+
+# Dependencies
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+.nyc_output/
+
+# Misc
+.agents/
+.claude/
+skills-lock.json
+
+# Supabase
+supabase/.temp/

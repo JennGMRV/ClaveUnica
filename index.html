@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAI-FONASA: Gestión de Trámites Senior</title>
+    <title>[Simulador Académico] Portal de Trámites Senior</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,36 +12,98 @@
 </head>
 
 <body>
+    <div class="academic-disclaimer-banner" role="alert">
+        <span>⚠️ <strong>SITIO DE PRÁCTICA ACADÉMICA:</strong> Esta es una simulación educativa. NO recopila datos y NO pertenece al Gobierno de Chile. <strong>Nunca ingrese datos reales</strong>.</span>
+    </div>
     <header class="access-header">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Logotipo_Clave_%C3%9Anica.svg"
-            alt="Logo Clave Única" class="logo-small">
+        <div class="academic-logo-badge">🔑 Simulación Académica</div>
         <div class="access-toolbar">
+            <button class="btn-access" id="btn-dark-mode" title="Tema Oscuro">🌙</button>
+            <div class="speed-dropdown-wrapper">
+                <button class="btn-access" id="btn-speed-toggle" title="Velocidad de lectura">🔊</button>
+                <div id="speed-control-panel" class="speed-panel" role="group" aria-label="Velocidad de lectura">
+                    <span class="speed-label">Velocidad del lector:</span>
+                    <button class="speed-btn" data-rate="1.45" id="speed-fast">Rápido</button>
+                    <button class="speed-btn active" data-rate="1.2" id="speed-normal">Normal</button>
+                    <button class="speed-btn" data-rate="0.95" id="speed-slow">Lento</button>
+                    <button class="speed-btn" data-rate="0.7" id="speed-very-slow">Muy lento</button>
+                </div>
+            </div>
+            <div class="cb-btn-wrapper">
+                <button class="btn-access" id="btn-colorblind" title="Si le cuesta ver algunos colores, pulse aquí para probar opciones de ajuste">👁</button>
+                <span class="cb-current-badge" id="cb-current-badge">Normal</span>
+            </div>
             <button class="btn-access contrast-toggle" id="btn-toggle-contrast" title="Alto Contraste">◐</button>
             <button class="btn-access" id="btn-font-minus" title="Disminuir letra">A-</button>
             <button class="btn-access" id="btn-font-plus" title="Aumentar letra">A+</button>
         </div>
     </header>
 
+    <!-- Breadcrumb de navegación -->
+    <nav id="breadcrumb" class="breadcrumb-bar" aria-label="Ubicación actual"></nav>
+
     <main id="app">
         <!-- Screen 0: Landing (ChileAtiende Style) -->
         <section id="screen-landing" class="screen active">
             <div class="landing-container">
-                <div class="card" style="text-align: left; padding: 30px;">
-                    <h2>¡Bienvenido al Portal de Trámites!</h2>
-                    <p class="subtitle">Seleccione lo que desea hacer hoy para guiarle paso a paso.</p>
-                    
-                    <button class="btn-premium-simulation" id="btn-start-simulation">
-                        <div class="premium-icon icon-doc"></div>
-                        <span class="btn-text">Obtener Certificado (Registro Civil)</span>
-                    </button>
+                <div class="landing-grid">
+                    <!-- Columna Izquierda: Acciones Principales -->
+                    <div class="card landing-main-card" style="text-align: left; padding: 30px;">
+                        <h2>¡Bienvenido al Portal de Trámites!</h2>
+                        <p class="subtitle">Seleccione lo que desea hacer hoy para guiarle paso a paso.</p>
+                        
+                        <button class="btn-premium-simulation" id="btn-start-simulation">
+                            <div class="premium-icon icon-doc"></div>
+                            <span class="btn-text">Obtener Certificado (Registro Civil)</span>
+                        </button>
 
-                    <button class="btn-premium-simulation" id="btn-start-ca-simulation" style="margin-top: 15px;">
-                        <div class="premium-icon icon-handshake" style="background-color: #e3f2fd;"></div>
-                        <span class="btn-text">Servicios de ChileAtiende</span>
-                    </button>
+                        <button class="btn-premium-simulation" id="btn-start-ca-simulation" style="margin-top: 15px;">
+                            <div class="premium-icon icon-handshake" style="background-color: #e3f2fd;"></div>
+                            <span class="btn-text">Servicios de ChileAtiende</span>
+                        </button>
+                    </div>
 
-                    <div class="friction-alert" style="margin-top: 20px;">
-                        <p>💡 Tip: Para este trámite necesitará su ClaveÚnica. Si no la tiene, puede obtenerla desde aquí: <a href="https://claveunica.gob.cl/sucursales" target="_blank" style="color: inherit; font-weight: 700;">claveunica.gob.cl/sucursales</a></p>
+                    <!-- Columna Derecha: Ayudas y Tips -->
+                    <div class="landing-side-container">
+                        <div class="card friction-alert-card" style="text-align: left; padding: 25px;">
+                            <h3>🔑 ClaveÚnica y Contraseña</h3>
+                            <p class="alert-text">Para estos trámites necesitará su ClaveÚnica. Si no la tiene, puede obtenerla en: <a href="https://claveunica.gob.cl/sucursales" target="_blank" style="color: inherit; font-weight: 700;">claveunica.gob.cl/sucursales</a></p>
+                            <hr class="alert-divider" style="border: 0; border-top: 1px solid #f5b041; margin: 12px 0;">
+                            <p class="alert-text">¿Olvidó su contraseña? Presione el botón para ver la guía paso a paso para recuperarla:</p>
+                            <button id="btn-recover-guide" class="btn outline" style="margin-top: 10px; width: 100%; border-color: #E65100; color: #E65100; font-size: 16px; padding: 10px 15px;">Ver Guía para Recuperar Contraseña</button>
+                        </div>
+
+                        <!-- Leyenda de botones de accesibilidad -->
+                        <div class="card toolbar-legend-card" style="text-align: left; padding: 25px;">
+                            <h3 class="toolbar-legend-title" style="margin-top: 0;">🛠️ Botones de accesibilidad</h3>
+                            <p class="toolbar-legend-subtitle" style="margin-bottom: 12px;">Disponibles en la parte superior de la pantalla:</p>
+                            <div class="toolbar-legend-grid">
+                                <div class="toolbar-legend-item" data-target="btn-dark-mode" role="button" tabindex="0" aria-label="Activar Modo Oscuro" title="Tema Oscuro: Cambia los colores a tonos oscuros para descansar la vista">
+                                    <span class="tl-icon">🌙</span>
+                                    <span class="tl-name">Modo Oscuro</span>
+                                </div>
+                                <div class="toolbar-legend-item" data-target="btn-speed-toggle" role="button" tabindex="0" aria-label="Ajustar velocidad de voz" title="Velocidad de voz: Ajusta la rapidez con que el asistente habla">
+                                    <span class="tl-icon">🔊</span>
+                                    <span class="tl-name">Velocidad</span>
+                                </div>
+                                <div class="toolbar-legend-item" data-target="btn-colorblind" role="button" tabindex="0" aria-label="Ajuste de colores" title="Colores: Si le cuesta ver algunos colores, pruebe las opciones de ajuste">
+                                    <span class="tl-icon">👁</span>
+                                    <span class="tl-name">¿Dificultad con colores?</span>
+                                </div>
+                                <div class="toolbar-legend-item" data-target="btn-toggle-contrast" role="button" tabindex="0" aria-label="Activar Alto Contraste" title="Alto Contraste: Aumenta el contraste para ver mejor el texto">
+                                    <span class="tl-icon">◐</span>
+                                    <span class="tl-name">Contraste</span>
+                                </div>
+                                <div class="toolbar-legend-item" data-target="btn-font-minus" role="button" tabindex="0" aria-label="Letra más pequeña" title="Letra más pequeña: Reduce el tamaño del texto en toda la página">
+                                    <span class="tl-icon tl-icon-text">A−</span>
+                                    <span class="tl-name">Letra −</span>
+                                </div>
+                                <div class="toolbar-legend-item" data-target="btn-font-plus" role="button" tabindex="0" aria-label="Letra más grande" title="Letra más grande: Aumenta el tamaño del texto en toda la página">
+                                    <span class="tl-icon tl-icon-text">A+</span>
+                                    <span class="tl-name">Letra +</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -49,65 +111,71 @@
 
         <!-- Screen 1: Login -->
         <section id="screen-login" class="screen">
+            <!-- Banner de Simulación Segura para Abuelos -->
+            <div class="simulation-disclaimer-banner">
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <span style="font-size: 2.2rem; line-height: 1;">🛡️</span>
+                    <div>
+                        <h3>Sitio de Práctica 100% Seguro</h3>
+                        <p>Esta es una <strong>página de simulación de aprendizaje</strong>. No es el sitio oficial del gobierno y <strong>nunca se guardará ni enviará su información real</strong>. Puede practicar con total tranquilidad y usar datos ficticios.</p>
+                    </div>
+                </div>
+            </div>
             <div class="cu-login-card">
                 <div class="cu-card-header">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Gobierno_de_Chile_logo.svg/512px-Gobierno_de_Chile_logo.svg.png" 
-                         alt="Gobierno de Chile" class="gov-logo">
+                    <div class="gov-logo-text" style="font-weight: 800; font-size: 14px; color: #555;">🇨🇱 SIMULADOR ACADÉMICO</div>
                     <div class="cu-header-right">
                          <div class="cu-close-icon">➖</div>
-                         <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Logotipo_Clave_%C3%9Anica.svg" 
-                              alt="Clave Única" class="cu-logo-main">
+                         <div class="cu-logo-text-main" style="font-weight: 800; font-size: 16px; color: #004a99; display: flex; align-items: center; gap: 4px;">🔑 Simulación ClaveÚnica</div>
                     </div>
                 </div>
 
                 <div class="cu-banner">
-                    <h2>OficinaInternet</h2>
-                    <p>requiere autenticación</p>
+                    <h2>OficinaInternet (Sitio de Práctica)</h2>
+                    <p>requiere autenticación simulada</p>
                 </div>
 
                 <div class="cu-info-banner">
-                    <span class="info-icon">ℹ️</span>
-                    <p>La clave es su Clave Única, una contraseña secreta de 8 caracteres o más que le entregó el Registro Civil. Pueden ser <strong>letras, números o símbolos</strong>.</p>
+                    <span class="info-icon">⚠️</span>
+                    <p><strong>NUNCA ingrese su ClaveÚnica o contraseña real aquí.</strong> Este es un sitio de práctica. Use la clave de prueba de ejemplo.</p>
                 </div>
 
                 <div class="cu-form-body">
                     <div class="form-group">
-                        <label for="rut">RUN</label>
-                        <input type="text" id="rut" placeholder="Ej: 12345678-9" autocomplete="off">
+                        <label for="rut">RUT de ejemplo (Use datos ficticios)</label>
+                        <input type="text" id="rut" placeholder="Ej: 11.111.111-1" autocomplete="off">
                     </div>
 
                     <div class="form-group">
                         <div class="label-with-help">
-                            <label for="password">Tu ClaveÚnica</label>
+                            <label for="password">Clave de prueba (No use su clave real)</label>
                             <div class="help-container">
                                 <button class="btn-help-inline" id="btn-help-password">❓</button>
                                 <div class="cu-help-tooltip">
                                     <strong>Información de ClaveÚnica:</strong>
-                                    <p>Es una contraseña secreta de 8 caracteres o más que le entregó el Registro Civil.</p>
-                                    <p>Puede contener <strong>letras, números o símbolos</strong>.</p>
+                                    <p>En este simulador, puede usar cualquier texto como contraseña (ej: 12345678).</p>
                                 </div>
                             </div>
                         </div>
                         <div class="input-with-tools">
-                            <input type="password" id="password" placeholder="">
+                            <input type="text" id="password" placeholder="Ej: Clave123">
                             <div class="input-actions">
                                 <button class="btn-toggle-pass" id="btn-toggle-password" type="button" title="Ver contraseña">👁️</button>
                             </div>
                         </div>
-                        <a href="#" class="cu-link">¿Olvidaste tu ClaveÚnica?</a>
+                        <span class="cu-link" style="color: #666; font-size: 13px; text-decoration: none;">Recuperación de contraseña ficticia</span>
                     </div>
 
-                    <button id="btn-login" class="btn-cu-primary">Autenticar</button>
+                    <button id="btn-login" class="btn-cu-primary">Autenticar (Ingresar)</button>
 
                     <div class="cu-footer">
-                        <p>¿No tienes ClaveÚnica? <a href="#" class="cu-link">Consigue la tuya</a></p>
+                        <p>¿No tienes ClaveÚnica? <span class="cu-link" style="color: #666;">Obtener en sucursal real</span></p>
                     </div>
                 </div>
 
                 <!-- Accessibility Toolbar (Floating/Integrated) -->
                 <div class="reader-toolbar-cu" id="reader-login" data-reader-target="screen-login">
                     <button class="reader-btn btn-play" title="Escuchar instrucciones">▶️</button>
-                    <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
                     <button class="reader-btn btn-stop" title="Detener">⏹️</button>
                     <div class="reader-divider"></div>
                     <div class="reader-status">Asistente de voz disponible</div>
@@ -142,7 +210,6 @@
 
                 <div class="reader-toolbar" id="reader-menu" data-reader-target="menu-card">
                     <button class="reader-btn btn-play" title="Reproducir">▶️</button>
-                    <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
                     <button class="reader-btn btn-stop" title="Detener">⏹️</button>
                     <div class="reader-divider"></div>
                     <div class="reader-status">Escuchar opciones</div>
@@ -183,7 +250,6 @@
 
                 <div class="reader-toolbar" id="reader-form" data-reader-target="form-card">
                     <button class="reader-btn btn-play" title="Reproducir">▶️</button>
-                    <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
                     <button class="reader-btn btn-stop" title="Detener">⏹️</button>
                     <div class="reader-divider"></div>
                     <div class="reader-status">Escuchar pasos</div>
@@ -219,7 +285,6 @@
 
                 <div class="reader-toolbar" id="reader-confirm" data-reader-target="confirm-card">
                     <button class="reader-btn btn-play" title="Reproducir">▶️</button>
-                    <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
                     <button class="reader-btn btn-stop" title="Detener">⏹️</button>
                     <div class="reader-divider"></div>
                     <div class="reader-status">Escuchar confirmación</div>
@@ -235,13 +300,18 @@
                 <p class="subtitle">Su certificado ha sido procesado correctamente.</p>
 
                 <div class="success-actions">
-                    <p>Se ha enviado una copia a su correo electrónico.</p>
-                    <button id="btn-finish" class="btn primary block">Volver al Inicio</button>
+                    <p id="success-desc">Se ha enviado una copia a su correo electrónico.</p>
+                    <div id="success-buttons-default">
+                        <button id="btn-finish" class="btn primary block" style="width: 100%;">Volver al Inicio</button>
+                    </div>
+                    <div id="success-buttons-simulation" style="display: none; flex-direction: column; gap: 12px; width: 100%; margin-top: 15px;">
+                        <button id="btn-success-to-menu" class="btn primary" style="width: 100%; font-size: 17px; padding: 14px; border-radius: 12px;">Volver al Menú Principal</button>
+                        <button id="btn-success-to-rc" class="btn outline" style="width: 100%; font-size: 17px; padding: 14px; border-radius: 12px; border: 3px solid var(--primary); color: var(--primary);">Volver a Categorías (Registro Civil)</button>
+                    </div>
                 </div>
 
                 <div class="reader-toolbar" id="reader-success" data-reader-target="success-card">
                     <button class="reader-btn btn-play" title="Reproducir">▶️</button>
-                    <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
                     <button class="reader-btn btn-stop" title="Detener">⏹️</button>
                     <div class="reader-divider"></div>
                     <div class="reader-status">Escuchar éxito</div>
@@ -254,83 +324,85 @@
                 <p>Centro de Ayuda y Aprendizaje</p>
             </div>
 
-            <div class="card info-card">
-                <h2>1. ¿Qué es Clave Única?</h2>
-                <p class="subtitle">Es su llave maestra para entrar a los servicios del Estado.</p>
-                <div class="diagram-container diagram-flow">
-                    <div class="flow-item user">👤 Usted</div>
-                    <div class="flow-arrow">➡</div>
-                    <div class="flow-item cu">🔑 Clave Única</div>
-                    <div class="flow-arrow">➡</div>
-                    <div class="flow-item portal">🖥️ ChileAtiende</div>
-                    <div class="flow-arrow">➡</div>
-                    <div class="flow-services">
-                        <div class="flow-service">🏢 Registro Civil</div>
-                        <div class="flow-service fonasa">🏥 Fonasa</div>
-                        <div class="flow-service">👵 PGU</div>
+            <div class="tutorial-grid">
+                <div class="card info-card">
+                    <h2>1. ¿Qué es Clave Única?</h2>
+                    <p class="subtitle">Es su llave maestra para entrar a los servicios del Estado.</p>
+                    <div class="diagram-container diagram-flow">
+                        <div class="flow-item user">👤 Usted</div>
+                        <div class="flow-arrow">➡</div>
+                        <div class="flow-item cu">🔑 Clave Única</div>
+                        <div class="flow-arrow">➡</div>
+                        <div class="flow-item portal">🖥️ ChileAtiende</div>
+                        <div class="flow-arrow">➡</div>
+                        <div class="flow-services">
+                            <div class="flow-service">🏢 Registro Civil</div>
+                            <div class="flow-service fonasa">🏥 Fonasa</div>
+                            <div class="flow-service">👵 PGU</div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="card info-card">
-                <h2>2. Uso del Teclado</h2>
-                <p class="subtitle">Conozca las teclas principales para navegar.</p>
-                <div class="keyboard-grid">
-                    <div class="key-item">
-                        <div class="key-ui btn-enter">Enter</div>
-                        <p>Avanzar y confirmar.</p>
+                <div class="card info-card">
+                    <h2>2. Uso del Teclado</h2>
+                    <p class="subtitle">Conozca las teclas principales para navegar.</p>
+                    <div class="keyboard-grid">
+                        <div class="key-item">
+                            <div class="key-ui btn-enter">Enter</div>
+                            <p>Avanzar y confirmar.</p>
+                        </div>
+                        <div class="key-item">
+                            <div class="key-ui btn-space">Espacio</div>
+                            <p>Bajar en la página.</p>
+                        </div>
+                        <div class="key-item highlight-key">
+                            <div class="key-ui btn-backspace">⌫ Borrar</div>
+                            <p>Corregir errores y volver atrás.</p>
+                        </div>
                     </div>
-                    <div class="key-item">
-                        <div class="key-ui btn-space">Espacio</div>
-                        <p>Bajar en la página.</p>
-                    </div>
-                    <div class="key-item highlight-key">
-                        <div class="key-ui btn-backspace">⌫ Borrar</div>
-                        <p>Corregir errores y volver atrás.</p>
+                    <div class="insight-box">
+                        <strong>💡 Recuerde:</strong> Siempre puede presionar "Borrar" (Backspace) si se equivoca, no va a
+                        romper nada.
                     </div>
                 </div>
-                <div class="insight-box">
-                    <strong>💡 Recuerde:</strong> Siempre puede presionar "Borrar" (Backspace) si se equivoca, no va a
-                    romper nada.
-                </div>
-            </div>
 
-            <div class="card info-card">
-                <h2>3. Autocuidado Digital</h2>
-                <p class="subtitle">Su seguridad es lo más importante.</p>
-                <div class="shield-diagram">
-                    <div class="shield-icon">🛡️</div>
-                    <div class="shield-points">
-                        <div class="shield-point">Proteja su huella digital</div>
-                        <div class="shield-point">Evite el robo de identidad</div>
-                        <div class="shield-point">Cuide su privacidad</div>
+                <div class="card info-card">
+                    <h2>3. Autocuidado Digital</h2>
+                    <p class="subtitle">Su seguridad es lo más importante.</p>
+                    <div class="shield-diagram">
+                        <div class="shield-icon">🛡️</div>
+                        <div class="shield-points">
+                            <div class="shield-point">Proteja su huella digital</div>
+                            <div class="shield-point">Evite el robo de identidad</div>
+                            <div class="shield-point">Cuide su privacidad</div>
+                        </div>
+                    </div>
+                    <div class="insight-box">
+                        <strong>💡 Consejo:</strong> Cuidarse en Internet es como cuidar sus documentos en la calle. No le
+                        dé su Clave Única a desconocidos.
                     </div>
                 </div>
-                <div class="insight-box">
-                    <strong>💡 Consejo:</strong> Cuidarse en Internet es como cuidar sus documentos en la calle. No le
-                    dé su Clave Única a desconocidos.
-                </div>
-            </div>
 
-            <div class="card info-card">
-                <h2>4. Nuestro Compromiso</h2>
-                <p class="subtitle">Esta plataforma está diseñada para usted (WCAG).</p>
-                <div class="wcag-grid">
-                    <div class="wcag-card">
-                        <strong>👁️ Perceptible</strong>
-                        <p>Letras grandes y colores claros.</p>
-                    </div>
-                    <div class="wcag-card">
-                        <strong>👆 Operable</strong>
-                        <p>Botones grandes, sin prisa.</p>
-                    </div>
-                    <div class="wcag-card">
-                        <strong>🧠 Comprensible</strong>
-                        <p>Palabras simples y pasos claros.</p>
-                    </div>
-                    <div class="wcag-card">
-                        <strong>🛡️ Robusto</strong>
-                        <p>Protección contra errores accidentales.</p>
+                <div class="card info-card">
+                    <h2>4. Nuestro Compromiso</h2>
+                    <p class="subtitle">Esta plataforma está diseñada para usted (WCAG).</p>
+                    <div class="wcag-grid">
+                        <div class="wcag-card">
+                            <strong>👁️ Perceptible</strong>
+                            <p>Letras grandes y colores claros.</p>
+                        </div>
+                        <div class="wcag-card">
+                            <strong>👆 Operable</strong>
+                            <p>Botones grandes, sin prisa.</p>
+                        </div>
+                        <div class="wcag-card">
+                            <strong>🧠 Comprensible</strong>
+                            <p>Palabras simples y pasos claros.</p>
+                        </div>
+                        <div class="wcag-card">
+                            <strong>🛡️ Robusto</strong>
+                            <p>Protección contra errores accidentales.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -341,7 +413,6 @@
 
             <div class="reader-toolbar" id="reader-tutorial" data-reader-target="tutorial-card" style="margin-top: 40px; width: 100%;">
                 <button class="reader-btn btn-play" title="Reproducir">▶️</button>
-                <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
                 <button class="reader-btn btn-stop" title="Detener">⏹️</button>
                 <div class="reader-divider"></div>
                 <div class="reader-status">Escuchar centro de ayuda</div>
@@ -361,9 +432,16 @@
                 <h1>Servicios del Registro Civil</h1>
                 <p class="subtitle">Seleccione una categoría para ver los certificados disponibles.</p>
                 
+                <div class="learning-mode-selector-container">
+                    <span class="selector-label">Modo de aprendizaje:</span>
+                    <div class="mode-slider-switch">
+                        <button class="mode-slider-btn active" id="btn-mode-guide" data-mode="guide">📖 Guía Paso a Paso</button>
+                        <button class="mode-slider-btn" id="btn-mode-simulation" data-mode="simulation">🎮 Simulación Interactiva</button>
+                    </div>
+                </div>
+
                 <div class="reader-toolbar" id="reader-rc-cats">
                     <button class="reader-btn btn-play" title="Reproducir">▶️</button>
-                    <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
                     <button class="reader-btn btn-stop" title="Detener">⏹️</button>
                     <div class="reader-divider"></div>
                     <div class="reader-status">Presione "Reproducir" para escuchar.</div>
@@ -395,6 +473,30 @@
                         <div class="icon">🆔</div>
                         <strong>Identidad</strong>
                     </div>
+                    <div class="rc-category-card" data-cat="prendas">
+                        <div class="icon">🔒</div>
+                        <strong>Prendas</strong>
+                    </div>
+                    <div class="rc-category-card" data-cat="profesionales">
+                        <div class="icon">🎓</div>
+                        <strong>Profesionales</strong>
+                    </div>
+                    <div class="rc-category-card" data-cat="acuerdo_civil">
+                        <div class="icon">🤝</div>
+                        <strong>Acuerdo Unión Civil</strong>
+                    </div>
+                    <div class="rc-category-card" data-cat="discapacidad">
+                        <div class="icon">♿</div>
+                        <strong>Discapacidad</strong>
+                    </div>
+                    <div class="rc-category-card" data-cat="persona_juridica">
+                        <div class="icon">🏛️</div>
+                        <strong>Persona Jurídica</strong>
+                    </div>
+                    <div class="rc-category-card" data-cat="posesion_efectiva">
+                        <div class="icon">📜</div>
+                        <strong>Posesión Efectiva</strong>
+                    </div>
                 </div>
 
                 <div id="rc-certs-sublist" class="rc-cert-list" style="display: none;">
@@ -415,7 +517,6 @@
 
                 <div class="reader-toolbar" id="reader-ca-cats">
                     <button class="reader-btn btn-play" title="Reproducir">▶️</button>
-                    <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
                     <button class="reader-btn btn-stop" title="Detener">⏹️</button>
                     <div class="reader-divider"></div>
                     <div class="reader-status">Presione "Reproducir" para escuchar.</div>
@@ -464,7 +565,6 @@
                 
                 <div class="reader-toolbar" id="reader-rc-steps">
                     <button class="reader-btn btn-play" title="Reproducir">▶️</button>
-                    <button class="reader-btn btn-pause" title="Pausar" disabled>⏸️</button>
                     <button class="reader-btn btn-stop" title="Detener">⏹️</button>
                     <div class="reader-divider"></div>
                     <div class="reader-status">Escuchando guía...</div>
@@ -474,7 +574,7 @@
                     <!-- Tutorial steps injected here via JS -->
                     <div class="rc-official-mockup">
                          <div class="rc-official-header">
-                             <img src="https://upload.wikimedia.org/wikipedia/commons/0/0a/Logotipo_Clave_%C3%9Anica.svg" alt="Logo CU" class="rc-official-logo">
+                             <div class="rc-official-logo-text" style="font-weight: 800; font-size: 16px; color: #004a99;">🔑 Simulación ClaveÚnica</div>
                              <div class="rc-guide-overlay" title="Aquí debe poner su RUT">?</div>
                          </div>
                          <div id="rc-step-visual">
@@ -489,24 +589,524 @@
                 </div>
             </div>
         </section>
+
+        <!-- Screen 10: Registro Civil Interactive Simulation -->
+        <section id="screen-rc-interactive-simulation" class="screen">
+            <button class="btn-back-manual" id="btn-back-rc-simulation">⬅ Cancelar y Volver</button>
+            <div class="card" style="text-align: left; padding: 25px; max-width: 1300px; margin: 0 auto; border: 2px solid #ddd; background: #fff;">
+                <div class="training-banner" style="background-color: var(--secondary); margin-bottom: 15px;">Modo Simulación Interactiva</div>
+
+                <!-- Floating Assistant Guidance (Moved to Top) -->
+                <div class="simulation-assistant-guidance" id="sim-assistant-box">
+                    <div class="sim-assistant-header">
+                        <div class="sim-assistant-avatar-mini">👵</div>
+                        <div class="sim-assistant-title">Guía de Práctica Asistida</div>
+                    </div>
+                    <div class="sim-assistant-body">
+                        <p id="sim-assistant-text">Cargando instrucciones...</p>
+                    </div>
+                    <div class="sim-assistant-actions">
+                        <button class="sim-assistant-voice-btn" id="btn-sim-voice-play">🔊 Escuchar Instrucción</button>
+                    </div>
+                </div>
+
+                <div class="simulation-browser-frame">
+                    <div class="browser-toolbar">
+                        <div style="display: flex; gap: 6px; align-items: center;">
+                            <div class="browser-dot dot-red"></div>
+                            <div class="browser-dot dot-yellow"></div>
+                            <div class="browser-dot dot-green"></div>
+                        </div>
+                        <div class="browser-address-bar">
+                            <span class="browser-lock-icon">🔒</span>
+                            <span class="browser-url">https://www.registrocivil.cl/principal/servicios-en-linea</span>
+                        </div>
+                    </div>
+
+                    <div class="browser-content-area" style="background: #ffffff; color: #333; font-family: sans-serif;">
+                        <!-- Blue line top -->
+                        <div style="background: #004A99; height: 10px; width: 100%; margin-bottom: 20px;"></div>
+                        
+                        <!-- Header Replica with Icon and Title -->
+                        <div class="sim-rc-title-container">
+                            <div class="sim-rc-title-icon">
+                                📋
+                            </div>
+                            <h2 class="sim-rc-title-text">Certificados en línea</h2>
+                        </div>
+
+                        <!-- Content Area with accent frame -->
+                        <div class="sim-rc-page-frame">
+                            <div class="sim-rc-main-container" id="sim-main-grid">
+                                <!-- Left Column: Warning and accordion categories -->
+                                <div class="sim-rc-categories-col">
+                                    <div class="sim-rc-info-text" id="sim-info-text-block">
+                                        Estimado(a) usuario(a), con el fin de proteger sus datos personales, para la obtención de certificados de nacimiento, matrimonio y/o defunción, se requerirá el RUT y el Número de Documento del solicitante, de conformidad con la ley 19628, sobre protección de la vida privada.
+                                    </div>
+                                    
+                                    <div class="sim-rc-categories-list" id="sim-categories-list-block">
+                                        <!-- 1. Más solicitados -->
+                                        <div class="sim-cat-card" id="sim-cat-solicitados" data-sim-cat="solicitados">
+                                            <div class="sim-cat-header">
+                                                <span class="sim-cat-chevron">></span>
+                                                <span class="sim-cat-name">Más solicitados</span>
+                                            </div>
+                                            <div class="sim-cat-body" id="sim-cat-body-solicitados">
+                                                <div style="padding: 10px; color: #666; font-size: 13px;">No hay certificados adicionales en esta sección de práctica.</div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 2. Nacimiento -->
+                                        <div class="sim-cat-card" id="sim-cat-nacimiento" data-sim-cat="nacimiento">
+                                            <div class="sim-cat-header">
+                                                <span class="sim-cat-chevron">></span>
+                                                <span class="sim-cat-name">Nacimiento</span>
+                                            </div>
+                                            <div class="sim-cat-body" id="sim-cat-body-nacimiento">
+                                                <!-- Birth Cert 1 -->
+                                                <div class="sim-cert-row" id="sim-cert-nac-matricula" data-cert-id="nac-matricula">
+                                                    <label class="sim-cert-label">
+                                                        <input type="checkbox" class="sim-cert-checkbox" data-cert-id="nac-matricula">
+                                                        <span>Certificado Nacimiento Para Matricula</span>
+                                                    </label>
+                                                    <div class="sim-cert-action-box" id="sim-action-nac-matricula" style="display: none;">
+                                                        <label class="sim-label-rut">RUT del inscrito:</label>
+                                                        <div class="sim-input-btn-group">
+                                                            <input type="text" class="sim-input-rut" placeholder="Ej: 12.345.678-9" id="input-rut-nac-matricula">
+                                                            <button class="sim-btn-add-cart" data-cert-id="nac-matricula">Agregar al carro</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Birth Cert 2 -->
+                                                <div class="sim-cert-row" id="sim-cert-nac-asignacion" data-cert-id="nac-asignacion">
+                                                    <label class="sim-cert-label">
+                                                        <input type="checkbox" class="sim-cert-checkbox" data-cert-id="nac-asignacion">
+                                                        <span>Certificado Nacimiento Para Asignación Familiar</span>
+                                                    </label>
+                                                    <div class="sim-cert-action-box" id="sim-action-nac-asignacion" style="display: none;">
+                                                        <label class="sim-label-rut">RUT del inscrito:</label>
+                                                        <div class="sim-input-btn-group">
+                                                            <input type="text" class="sim-input-rut" placeholder="Ej: 12.345.678-9" id="input-rut-nac-asignacion">
+                                                            <button class="sim-btn-add-cart" data-cert-id="nac-asignacion">Agregar al carro</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Birth Cert 3 -->
+                                                <div class="sim-cert-row" id="sim-cert-nac-todo" data-cert-id="nac-todo">
+                                                    <label class="sim-cert-label">
+                                                        <input type="checkbox" class="sim-cert-checkbox" data-cert-id="nac-todo">
+                                                        <span>Certificado Nacimiento Para Todo Tramite</span>
+                                                    </label>
+                                                    <div class="sim-cert-action-box" id="sim-action-nac-todo" style="display: none;">
+                                                        <label class="sim-label-rut">RUT del inscrito:</label>
+                                                        <div class="sim-input-btn-group">
+                                                            <input type="text" class="sim-input-rut" placeholder="Ej: 12.345.678-9" id="input-rut-nac-todo">
+                                                            <button class="sim-btn-add-cart" data-cert-id="nac-todo">Agregar al carro</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 3. Matrimonio -->
+                                        <div class="sim-cat-card" id="sim-cat-matrimonio" data-sim-cat="matrimonio">
+                                            <div class="sim-cat-header">
+                                                <span class="sim-cat-chevron">></span>
+                                                <span class="sim-cat-name">Matrimonio</span>
+                                            </div>
+                                            <div class="sim-cat-body" id="sim-cat-body-matrimonio">
+                                                <!-- Marriage Cert 1 -->
+                                                <div class="sim-cert-row" id="sim-cert-mat-todo" data-cert-id="mat-todo">
+                                                    <label class="sim-cert-label">
+                                                        <input type="checkbox" class="sim-cert-checkbox" data-cert-id="mat-todo">
+                                                        <span>Certificado Matrimonio Todo Trámite</span>
+                                                    </label>
+                                                    <div class="sim-cert-action-box" id="sim-action-mat-todo" style="display: none;">
+                                                        <label class="sim-label-rut">RUT de uno de los cónyuges:</label>
+                                                        <div class="sim-input-btn-group">
+                                                            <input type="text" class="sim-input-rut" placeholder="Ej: 12.345.678-9" id="input-rut-mat-todo">
+                                                            <button class="sim-btn-add-cart" data-cert-id="mat-todo">Agregar al carro</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Marriage Cert 2 -->
+                                                <div class="sim-cert-row" id="sim-cert-mat-asignacion" data-cert-id="mat-asignacion">
+                                                    <label class="sim-cert-label">
+                                                        <input type="checkbox" class="sim-cert-checkbox" data-cert-id="mat-asignacion">
+                                                        <span>Certificado Matrimonio Asignación Familiar</span>
+                                                    </label>
+                                                    <div class="sim-cert-action-box" id="sim-action-mat-asignacion" style="display: none;">
+                                                        <label class="sim-label-rut">RUT de uno de los cónyuges:</label>
+                                                        <div class="sim-input-btn-group">
+                                                            <input type="text" class="sim-input-rut" placeholder="Ej: 12.345.678-9" id="input-rut-mat-asignacion">
+                                                            <button class="sim-btn-add-cart" data-cert-id="mat-asignacion">Agregar al carro</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 4. Defunciones -->
+                                        <div class="sim-cat-card" id="sim-cat-defuncion" data-sim-cat="defuncion">
+                                            <div class="sim-cat-header">
+                                                <span class="sim-cat-chevron">></span>
+                                                <span class="sim-cat-name">Defunciones</span>
+                                            </div>
+                                            <div class="sim-cat-body" id="sim-cat-body-defuncion">
+                                                <!-- Death Cert 1 -->
+                                                <div class="sim-cert-row" id="sim-cert-def-todo" data-cert-id="def-todo">
+                                                    <label class="sim-cert-label">
+                                                        <input type="checkbox" class="sim-cert-checkbox" data-cert-id="def-todo">
+                                                        <span>Certificado Defunción Para Todo Trámite</span>
+                                                    </label>
+                                                    <div class="sim-cert-action-box" id="sim-action-def-todo" style="display: none;">
+                                                        <label class="sim-label-rut">RUT del fallecido:</label>
+                                                        <div class="sim-input-btn-group">
+                                                            <input type="text" class="sim-input-rut" placeholder="Ej: 12.345.678-9" id="input-rut-def-todo">
+                                                            <button class="sim-btn-add-cart" data-cert-id="def-todo">Agregar al carro</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Death Cert 2 -->
+                                                <div class="sim-cert-row" id="sim-cert-def-asignacion" data-cert-id="def-asignacion">
+                                                    <label class="sim-cert-label">
+                                                        <input type="checkbox" class="sim-cert-checkbox" data-cert-id="def-asignacion">
+                                                        <span>Certificado Defunción Asignación Familiar</span>
+                                                    </label>
+                                                    <div class="sim-cert-action-box" id="sim-action-def-asignacion" style="display: none;">
+                                                        <label class="sim-label-rut">RUT del fallecido:</label>
+                                                        <div class="sim-input-btn-group">
+                                                            <input type="text" class="sim-input-rut" placeholder="Ej: 12.345.678-9" id="input-rut-def-asignacion">
+                                                            <button class="sim-btn-add-cart" data-cert-id="def-asignacion">Agregar al carro</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 5. Antecedentes -->
+                                        <div class="sim-cat-card" id="sim-cat-antecedentes" data-sim-cat="antecedentes">
+                                            <div class="sim-cat-header">
+                                                <span class="sim-cat-chevron">></span>
+                                                <span class="sim-cat-name">Antecedentes</span>
+                                            </div>
+                                            <div class="sim-cat-body" id="sim-cat-body-antecedentes">
+                                                <div style="padding: 10px; color: #666; font-size: 13px;">No hay certificados adicionales en esta sección de práctica.</div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 6. Vehículos -->
+                                        <div class="sim-cat-card" id="sim-cat-vehiculos" data-sim-cat="vehiculos">
+                                            <div class="sim-cat-header">
+                                                <span class="sim-cat-chevron">></span>
+                                                <span class="sim-cat-name">Vehículos</span>
+                                            </div>
+                                            <div class="sim-cat-body" id="sim-cat-body-vehiculos">
+                                                <div style="padding: 10px; color: #666; font-size: 13px;">No hay certificados adicionales en esta sección de práctica.</div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 7. Prendas -->
+                                        <div class="sim-cat-card" id="sim-cat-prendas" data-sim-cat="prendas">
+                                            <div class="sim-cat-header">
+                                                <span class="sim-cat-chevron">></span>
+                                                <span class="sim-cat-name">Prendas</span>
+                                            </div>
+                                            <div class="sim-cat-body" id="sim-cat-body-prendas">
+                                                <div style="padding: 10px; color: #666; font-size: 13px;">No hay certificados adicionales en esta sección de práctica.</div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 8. Profesionales -->
+                                        <div class="sim-cat-card" id="sim-cat-profesionales" data-sim-cat="profesionales">
+                                            <div class="sim-cat-header">
+                                                <span class="sim-cat-chevron">></span>
+                                                <span class="sim-cat-name">Profesionales</span>
+                                            </div>
+                                            <div class="sim-cat-body" id="sim-cat-body-profesionales">
+                                                <div style="padding: 10px; color: #666; font-size: 13px;">No hay certificados adicionales en esta sección de práctica.</div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 9. Discapacidad -->
+                                        <div class="sim-cat-card" id="sim-cat-discapacidad" data-sim-cat="discapacidad">
+                                            <div class="sim-cat-header">
+                                                <span class="sim-cat-chevron">></span>
+                                                <span class="sim-cat-name">Discapacidad</span>
+                                            </div>
+                                            <div class="sim-cat-body" id="sim-cat-body-discapacidad">
+                                                <div style="padding: 10px; color: #666; font-size: 13px;">No hay certificados adicionales en esta sección de práctica.</div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 10. Acuerdo Union Civil -->
+                                        <div class="sim-cat-card" id="sim-cat-unioncivil" data-sim-cat="unioncivil">
+                                            <div class="sim-cat-header">
+                                                <span class="sim-cat-chevron">></span>
+                                                <span class="sim-cat-name">Acuerdo Union Civil</span>
+                                            </div>
+                                            <div class="sim-cat-body" id="sim-cat-body-unioncivil">
+                                                <div style="padding: 10px; color: #666; font-size: 13px;">No hay certificados adicionales en esta sección de práctica.</div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 11. Persona Jurídica -->
+                                        <div class="sim-cat-card" id="sim-cat-personajuridica" data-sim-cat="personajuridica">
+                                            <div class="sim-cat-header">
+                                                <span class="sim-cat-chevron">></span>
+                                                <span class="sim-cat-name">Persona Jurídica</span>
+                                            </div>
+                                            <div class="sim-cat-body" id="sim-cat-body-personajuridica">
+                                                <div style="padding: 10px; color: #666; font-size: 13px;">No hay certificados adicionales en esta sección de práctica.</div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 12. Posesión Efectiva -->
+                                        <div class="sim-cat-card" id="sim-cat-posesionefectiva" data-sim-cat="posesionefectiva">
+                                            <div class="sim-cat-header">
+                                                <span class="sim-cat-chevron">></span>
+                                                <span class="sim-cat-name">Posesión Efectiva</span>
+                                            </div>
+                                            <div class="sim-cat-body" id="sim-cat-body-posesionefectiva">
+                                                <div style="padding: 10px; color: #666; font-size: 13px;">No hay certificados adicionales en esta sección de práctica.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Replica Captcha Container (shown in Step 3 instead of categories) -->
+                                    <div id="sim-captcha-container" style="display: none; padding: 20px; background: #f5f5f5; border: 1px solid #ddd; border-radius: 4px; text-align: left; font-family: Arial, sans-serif;">
+                                        <!-- Logo Badge Split -->
+                                        <div class="sim-captcha-logo-badge" style="display: flex; width: 220px; height: 130px; border: 1px solid #ccc; margin-bottom: 20px; flex-direction: column; overflow: hidden; background: #d92724; font-family: sans-serif;">
+                                            <div style="display: flex; flex: 1;">
+                                                <!-- Left Blue side -->
+                                                <div style="background: #004a99; width: 40%; display: flex; align-items: center; justify-content: center; position: relative; padding: 5px;">
+                                                    <svg viewBox="0 0 100 100" width="60" height="60" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+                                                        <!-- Shield -->
+                                                        <path d="M50 20 C35 20 30 25 30 45 C30 65 50 85 50 85 C50 85 70 65 70 45 C70 25 65 20 50 20 Z" fill="#004a99" stroke="white" stroke-width="3"/>
+                                                        <!-- Feathers top -->
+                                                        <path d="M50 20 C50 10 45 5 45 5 M50 20 C55 10 58 5 58 5 M50 20 C50 8 52 4 52 4" stroke="#ffeb3b" stroke-width="2"/>
+                                                        <!-- Condor (Left) -->
+                                                        <path d="M22 45 C20 35 15 35 15 45 C15 55 25 70 30 70 M15 45 C12 45 10 42 10 38 C10 34 13 32 15 35" stroke="white"/>
+                                                        <!-- Huemul (Right) -->
+                                                        <path d="M78 45 C80 35 85 35 85 45 C85 55 75 70 70 70 M85 45 C88 45 90 42 90 38 C90 34 87 32 85 35" stroke="white"/>
+                                                        <!-- Star in shield -->
+                                                        <polygon points="50,38 53,46 61,46 54,51 57,59 50,54 43,59 46,51 39,46 47,46" fill="white" stroke="none"/>
+                                                    </svg>
+                                                </div>
+                                                <!-- Right Red side -->
+                                                <div style="background: #d92724; width: 60%; padding: 8px; color: white; display: flex; flex-direction: column; justify-content: center; text-align: left; font-size: 9px; line-height: 1.2; font-weight: bold; border-left: 2px solid white;">
+                                                    <div>Servicio de</div>
+                                                    <div style="font-size: 11px;">Registro Civil e</div>
+                                                    <div style="font-size: 11px; margin-bottom: 4px;">Identificación</div>
+                                                    <div style="font-weight: normal; opacity: 0.9; font-size: 8px;">Ministerio de Justicia<br>y Derechos Humanos</div>
+                                                </div>
+                                            </div>
+                                            <!-- Bottom Gov Chile strip -->
+                                            <div style="background: #d92724; border-top: 1px solid white; height: 20px; display: flex; align-items: center; justify-content: center; color: white; font-size: 8px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                Gobierno de Chile
+                                            </div>
+                                        </div>
+
+                                        <h4 style="font-size: 14px; font-weight: bold; color: #333; margin: 10px 0 5px 0;">Servicio de Registro Civil e Identificación</h4>
+                                        <p style="font-size: 12px; color: #444; margin: 0 0 15px 0;">Por favor, resolver el desafío a continuación para poder acceder al sitio:</p>
+
+                                        <!-- Distorted Captcha Image and action icons -->
+                                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                                            <!-- CSS Generated Distorted Captcha Graphic -->
+                                            <div class="sim-captcha-distorted-box" id="sim-captcha-image-wrapper" style="background: #fff; border: 1px solid #ccc; height: 75px; width: 260px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                                                <div class="captcha-noise-line-1"></div>
+                                                <div class="captcha-noise-line-2"></div>
+                                                <div class="captcha-noise-line-3"></div>
+                                                <div id="sim-captcha-letters-container" class="captcha-letters-flex" style="display: flex; gap: 8px; font-family: monospace; font-size: 28px; font-weight: bold;">
+                                                    <!-- Dynamic letter spans -->
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Audio and Refresh Buttons side by side -->
+                                            <div style="display: flex; align-items: center; gap: 8px;">
+                                                <button id="btn-sim-captcha-audio" title="Escuchar código" style="background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px;">
+                                                    <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" style="color: #333; display: block;">
+                                                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                                                    </svg>
+                                                </button>
+                                                <button id="btn-sim-captcha-refresh" title="Cambiar código" style="background: transparent; border: none; padding: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px;">
+                                                    <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#27ae60" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+                                                        <path d="M23 4v6h-6"></path>
+                                                        <path d="M1 20v-6h6"></path>
+                                                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Challenge Form -->
+                                        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;">
+                                            <label for="sim-captcha-input" style="font-size: 13px; font-weight: bold; color: #212529;">¿Cuál es el código de la imagen?</label>
+                                            <div style="display: flex; gap: 10px; align-items: center;">
+                                                <input type="text" id="sim-captcha-input" placeholder="" autocomplete="off" style="width: 150px; padding: 6px 8px; border: 1px solid #aaa; font-family: monospace; font-size: 15px; border-radius: 2px;">
+                                            </div>
+                                            <div style="display: flex; align-items: center; gap: 15px; margin-top: 5px;">
+                                                <button id="btn-sim-captcha-submit" style="background: #f0f0f0; border: 1px solid #767676; padding: 2px 8px; font-size: 13px; cursor: pointer; border-radius: 2px; width: fit-content; font-family: Arial, sans-serif;">submit</button>
+                                                <a href="#" id="btn-sim-captcha-cancel" style="color: #004a99; font-size: 13px; text-decoration: underline; cursor: pointer;">Volver a certificados</a>
+                                            </div>
+                                        </div>
+
+                                        <div style="font-size: 11px; color: #555; margin-top: 15px;" id="sim-captcha-support-code">
+                                            Código de soporte: 16906399457734005773.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Right Column: Cart Summary and Applicant Form -->
+                                <div class="sim-rc-cart-col" style="display: flex; flex-direction: column; gap: 20px;">
+                                    <!-- Cart Box Replica -->
+                                    <div class="sim-cart-box">
+                                        <div class="sim-cart-header">
+                                            <div class="sim-cart-icon-circle">
+                                                🛒
+                                            </div>
+                                            <span>Carro de Certificados</span>
+                                        </div>
+                                        <div class="sim-cart-total-box-white">
+                                            Total $ <span id="sim-cart-total-val-display">0</span>
+                                        </div>
+                                        <div style="margin-top: 5px;">
+                                            <span class="sim-cart-detail-link">Detalle</span>
+                                        </div>
+                                        
+                                        <!-- Table hidden/shown dynamically -->
+                                        <div id="sim-cart-empty-msg" class="sim-cart-empty-text">Su carro está vacío.</div>
+                                        <table id="sim-cart-table" style="display: none; width: 100%; font-size: 13px; text-align: left; margin-top: 15px; border-collapse: collapse;">
+                                            <thead>
+                                                <tr style="border-bottom: 1px solid #ccc;">
+                                                    <th style="padding: 6px 0;">Certificado</th>
+                                                    <th style="padding: 6px 0;">RUT</th>
+                                                    <th style="padding: 6px 0; text-align: right;">Precio</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="sim-cart-items-body">
+                                                <!-- Dynamic items -->
+                                            </tbody>
+                                        </table>
+                                        
+                                        <!-- Hidden total in white container above, but tracked in JS -->
+                                        <div class="sim-cart-total" id="sim-cart-total-box" style="display: none;">
+                                            <span>Total a pagar:</span>
+                                            <strong id="sim-cart-total-val">$0</strong>
+                                        </div>
+                                        
+                                        <!-- Hidden count badge to track items -->
+                                        <span class="sim-cart-count" id="sim-cart-count" style="display: none;">0 art.</span>
+                                    </div>
+
+                                    <!-- Solicitante Form Replica -->
+                                    <div class="sim-solicitante-box disabled" id="sim-solicitante-box">
+                                        <div class="sim-box-title">📄 Datos del Solicitante</div>
+                                        <p class="sim-box-subtitle">Complete esta información para continuar el proceso y recibir su certificado:</p>
+                                        
+                                        <div class="sim-form-group">
+                                            <label for="sim-sol-rut">RUT del Solicitante</label>
+                                            <input type="text" id="sim-sol-rut" placeholder="Ej: 11.111.111-1" disabled>
+                                        </div>
+                                        
+                                        <div class="sim-form-group">
+                                            <div class="sim-label-with-help" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                                <label for="sim-sol-doc">N° Documento (Serie de tu Carnet)</label>
+                                                <span class="sim-help-trigger" id="sim-btn-help-doc" style="cursor: pointer; background: #e3f2fd; padding: 2px 8px; border-radius: 50%; color: var(--primary); font-weight: bold; font-size: 14px;">❓</span>
+                                            </div>
+                                            <input type="text" id="sim-sol-doc" placeholder="Ej: 123456789" disabled>
+                                        </div>
+
+                                        <div class="sim-form-group">
+                                            <label for="sim-sol-email">Correo Electrónico</label>
+                                            <input type="text" id="sim-sol-email" placeholder="Ej: juan.perez@gmail.com" disabled>
+                                        </div>
+
+                                        <div class="sim-form-group">
+                                            <label for="sim-sol-email-confirm">Confirmar Correo Electrónico</label>
+                                            <input type="text" id="sim-sol-email-confirm" placeholder="Ej: juan.perez@gmail.com" disabled>
+                                        </div>
+
+                                        <button id="sim-btn-continue" class="btn primary full" disabled style="margin-top: 15px; background-color: #003b7e;">Continuar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                        <!-- Final Checkout Screen (Step 5) -->
+                        <div class="sim-rc-checkout-container" id="sim-checkout-screen" style="display: none; padding: 25px 30px; max-width: 900px; margin: 0 auto; background: white; border-radius: 16px; border: 1px solid #dee2e6; box-shadow: 0 4px 12px rgba(0,0,0,0.02); text-align: left; color: #333;">
+                            <h2 style="color: #003b7e; border-bottom: 2px solid #003b7e; padding-bottom: 10px; margin-bottom: 20px; font-weight: 700; font-size: 22px;">Carro de Compras - Confirmación Final</h2>
+                            <p style="font-size: 16px; color: #6c757d; margin-bottom: 25px;">Por favor, confirme que el certificado solicitado es correcto. Al ser un trámite gratuito, no requiere pago.</p>
+                            
+                            <div class="checkout-summary-box" style="background: white; border: 1px solid #dee2e6; border-radius: 12px; padding: 20px; margin-bottom: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.02);">
+                                <table style="width: 100%; border-collapse: collapse; font-size: 16px; text-align: left;">
+                                    <thead>
+                                        <tr style="border-bottom: 2px solid #eee; color: #495057;">
+                                            <th style="padding: 10px 0; font-weight: bold;">Descripción del Certificado</th>
+                                            <th style="padding: 10px 0; font-weight: bold;">RUT</th>
+                                            <th style="padding: 10px 0; font-weight: bold; text-align: right;">Precio</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="sim-checkout-items">
+                                        <!-- Populated dynamically -->
+                                    </tbody>
+                                </table>
+                                <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 18px; border-top: 2px solid #eee; margin-top: 20px; padding-top: 15px; color: #212529;">
+                                    <span>Total a Pagar:</span>
+                                    <span style="color: #28a745;">$0 (Gratis)</span>
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 15px; justify-content: flex-end;">
+                                 <button class="btn outline" id="btn-sim-checkout-back" style="padding: 10px 20px; font-size: 16px;">Atrás, corregir</button>
+                                 <button class="btn primary" id="btn-sim-checkout-submit" style="background-color: #003b7e; padding: 10px 20px; font-size: 16px;">Obtener Certificado</button>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="sim-rc-footer">
+                            <p>© 2026 Servicio de Registro Civil e Identificación - Chile</p>
+                        </div>
+                    </div>
+
+                    <!-- Old Captcha Modal Removed (Now Inline) -->
+
+                </div>
+            </div>
+        </section>
     </main>
 
 
     <!-- Nuevo Asistente Inteligente -->
     <div class="assistant-container">
         <div id="assistant-bubble" class="assistant-chat-bubble">
+            <button id="btn-close-assistant" class="assistant-close-btn" title="Cerrar chat" aria-label="Cerrar chat">✕</button>
             <div id="assistant-text">Hola, soy tu asistente virtual. ¿En qué puedo ayudarte hoy?</div>
             <div class="assistant-chat-input-container" style="display: flex; margin-top: 10px; gap: 5px;">
                 <input type="text" id="assistant-chat-input" placeholder="Escribe aquí..." 
-                       style="flex: 1; border-radius: 20px; padding: 8px 15px; border: 1px solid #ccc; font-size: 16px; width: 100%;">
+                       style="flex: 1; border-radius: 20px; padding: 8px 15px; border: 1px solid #ccc; font-size: 0.8rem; width: 100%;">
                 <button id="btn-assistant-send" style="background: var(--primary); color: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; display: flex; align-items: center; justify-content: center;">➔</button>
             </div>
         </div>
         <div class="assistant-avatar-wrapper" id="btn-assistant-main">
             <div class="mic-status-ring"></div>
             <div class="assistant-avatar" id="assistant-icon">
-                🎤
+                💬
             </div>
+        </div>
+        <!-- Selector de Modo de Asistente (Teclado / Voz) -->
+        <div class="assistant-mode-switcher input-mode-toggle" id="input-mode-toggle">
+            <button class="btn-mode-toggle mode-btn active" id="btn-mode-text" title="Solo escribir" aria-label="Modo texto">
+                <span class="mode-icon">⌨️</span>
+            </button>
+            <button class="btn-mode-toggle mode-btn" id="btn-mode-voice" title="Usar micrófono" aria-label="Modo voz">
+                <span class="mode-icon">🎤</span>
+            </button>
         </div>
     </div>
     <div style="display:none">
@@ -542,12 +1142,150 @@
                 </div>
             </div>
 
-            <button class="btn primary" id="btn-close-guide" style="margin-top: 20px;">¡Entendido, abrir
-                micrófono!</button>
+            <p style="margin-top: 20px; font-weight: 600;">¿Cómo prefiere comunicarse?</p>
+            <div class="mic-guide-choice">
+                <button class="btn btn-mode-choice" id="btn-choose-text">⌨️ Prefiero escribir</button>
+                <button class="btn primary btn-mode-choice" id="btn-choose-voice">🎤 Usar micrófono</button>
+            </div>
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <!-- Modal: Zoom de imagen del tutorial -->
+    <div id="modal-zoom" class="modal modal-zoom-wrapper">
+        <div class="modal-zoom-content">
+            <button class="modal-zoom-close" id="btn-zoom-close" aria-label="Cerrar">✕</button>
+            <img id="zoom-img" src="" alt="Imagen ampliada del paso">
+        </div>
+    </div>
+
+    <!-- Modal: Confirmación para salir del tutorial -->
+    <div id="modal-exit-tutorial" class="modal">
+        <div class="modal-content modal-exit-content">
+            <div class="modal-exit-icon">⚠️</div>
+            <h2>¿Salir de la guía?</h2>
+            <p>Si sale ahora, perderá el avance en esta guía.</p>
+            <div class="modal-exit-actions">
+                <button class="btn primary" id="btn-exit-confirm">Sí, salir</button>
+                <button class="btn outline" id="btn-exit-cancel">No, continuar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Resumen al finalizar tutorial -->
+    <div id="modal-tutorial-summary" class="modal">
+        <div class="modal-content modal-summary-content">
+            <div class="summary-success-icon">🎉</div>
+            <h2>¡Felicitaciones!</h2>
+            <p id="summary-text">Usted aprendió cómo realizar este trámite.</p>
+            <div class="summary-steps-recap" id="summary-steps-recap"></div>
+            <div class="modal-exit-actions" style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+                <button class="btn primary" id="btn-summary-ok" style="width: 100%;">Entendido, volver</button>
+                <button class="btn secondary" id="btn-summary-simulate" style="width: 100%; background-color: var(--secondary); color: white; display: flex; align-items: center; justify-content: center; gap: 8px;">🎮 Practicar en Simulación</button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Overlay: Primer uso — bienvenida al asistente -->
+    <div id="overlay-first-use" class="first-use-overlay" role="dialog" aria-modal="true" aria-label="Guía de bienvenida">
+        <div class="first-use-card">
+            <!-- Slide 1 -->
+            <div class="first-use-slide active" id="fuse-slide-1">
+                <div class="fuse-icon">🤖</div>
+                <h2>¡Bienvenido!</h2>
+                <p>Esta guía le explicará cómo hacer sus trámites paso a paso.</p>
+                <p class="fuse-sub">Tiene un asistente de ayuda disponible en todo momento.</p>
+            </div>
+            <!-- Slide 2 -->
+            <div class="first-use-slide" id="fuse-slide-2">
+                <div class="fuse-icon">🎤</div>
+                <h2>Su asistente de voz</h2>
+                <p>Presione el botón azul de abajo para hablarle.</p>
+                <p class="fuse-sub">Puede decirle <strong>"ayuda"</strong>, <strong>"siguiente"</strong> o <strong>"volver"</strong>.</p>
+                <div class="fuse-demo-btn">🎤</div>
+            </div>
+            <!-- Slide 3 -->
+            <div class="first-use-slide" id="fuse-slide-3">
+                <div class="fuse-icon">▶️</div>
+                <h2>Escuchar instrucciones</h2>
+                <p>En cada pantalla hay un botón <strong>▶️ Reproducir</strong>.</p>
+                <p class="fuse-sub">Presiónelo para que el sistema le lea en voz alta lo que debe hacer.</p>
+            </div>
+            <!-- Navegación del overlay -->
+            <div class="fuse-nav">
+                <div class="fuse-dots">
+                    <span class="fuse-dot active" data-slide="1"></span>
+                    <span class="fuse-dot" data-slide="2"></span>
+                    <span class="fuse-dot" data-slide="3"></span>
+                </div>
+                <button class="btn primary" id="btn-fuse-next">Siguiente →</button>
+            </div>
+            <button class="fuse-skip" id="btn-fuse-skip">Saltar introducción</button>
+        </div>
+    </div>
+
+    <!-- Panel modo daltonismo (flotante, oculto por defecto) -->
+    <div id="colorblind-panel" class="colorblind-panel" role="group" aria-label="Ajuste de colores">
+        <span class="cb-panel-label">Si le cuesta ver algunos colores, pruebe estas opciones:</span>
+        <button class="cb-btn active" id="cb-none">
+            <span class="cb-name">Colores normales</span>
+            <span class="cb-desc">Sin ajuste</span>
+        </button>
+        <button class="cb-btn" id="cb-protanopia">
+            <span class="cb-name">Opción 1</span>
+            <span class="cb-desc">Ajuste para el rojo</span>
+        </button>
+        <button class="cb-btn" id="cb-deuteranopia">
+            <span class="cb-name">Opción 2</span>
+            <span class="cb-desc">Ajuste para el verde</span>
+        </button>
+        <button class="cb-btn" id="cb-tritanopia">
+            <span class="cb-name">Opción 3</span>
+            <span class="cb-desc">Ajuste para el azul</span>
+        </button>
+    </div>
+
+
+
+    <!-- Botón flotante de ayuda rápida -->
+    <button id="btn-quick-help" class="btn-quick-help" title="Necesito ayuda" aria-label="Pedir ayuda">
+        <span class="qh-icon" aria-hidden="true">❓</span>
+        <span class="qh-label">Ayuda</span>
+    </button>
+
+    <script type="module" src="/src/main.js"></script>
+    <!-- Filtros SVG para simulación de daltonismo (científicamente precisos) -->
+    <svg id="colorblind-filters" aria-hidden="true" focusable="false"
+         style="position:absolute;width:0;height:0;overflow:hidden">
+        <defs>
+            <!-- Protanopia: ausencia de conos L (rojo) -->
+            <filter id="filter-protanopia" color-interpolation-filters="sRGB">
+                <feColorMatrix type="matrix" values="
+                    0.567 0.433 0.000 0 0
+                    0.558 0.442 0.000 0 0
+                    0.000 0.242 0.758 0 0
+                    0     0     0     1 0"/>
+            </filter>
+            <!-- Deuteranopia: ausencia de conos M (verde) -->
+            <filter id="filter-deuteranopia" color-interpolation-filters="sRGB">
+                <feColorMatrix type="matrix" values="
+                    0.625 0.375 0.000 0 0
+                    0.700 0.300 0.000 0 0
+                    0.000 0.300 0.700 0 0
+                    0     0     0     1 0"/>
+            </filter>
+            <!-- Tritanopia: ausencia de conos S (azul) -->
+            <filter id="filter-tritanopia" color-interpolation-filters="sRGB">
+                <feColorMatrix type="matrix" values="
+                    0.950 0.050 0.000 0 0
+                    0.000 0.433 0.567 0 0
+                    0.000 0.475 0.525 0 0
+                    0     0     0     1 0"/>
+            </filter>
+        </defs>
+    </svg>
+
 </body>
 
 </html>

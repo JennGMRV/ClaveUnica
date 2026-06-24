@@ -48,13 +48,21 @@ document.addEventListener('DOMContentLoaded', () => {
         tutorial: document.getElementById('screen-tutorial'),
         rcCategories: document.getElementById('screen-rc-categories'),
         rcTutorial: document.getElementById('screen-rc-tutorial'),
-        caCategories: document.getElementById('screen-ca-categories')
+        caCategories: document.getElementById('screen-ca-categories'),
+        rcInteractiveSimulation: document.getElementById('screen-rc-interactive-simulation')
     };
 
     let history = ['landing'];
     let currentScreenKey = 'landing';
     let postLoginTarget = 'menu'; // Default target after login
     let autoReadMode = false; // Modo lector persistente: lee cada pantalla automáticamente
+
+    // variables for learning mode choice
+    let choiceCertId = '';
+    let choiceCertName = '';
+    let choiceCertCu = false;
+    let currentTutorialCertId = '';
+    let currentTutorialCertName = '';
 
     function showScreen(key, addToHistory = true) {
         // Hide all
@@ -164,6 +172,17 @@ document.addEventListener('DOMContentLoaded', () => {
         showScreen('caCategories');
     });
 
+    const btnRecoverGuide = document.getElementById('btn-recover-guide');
+    if (btnRecoverGuide) {
+        btnRecoverGuide.addEventListener('click', () => {
+            currentTutorialOrigin = 'landing';
+            currentTutorialSteps = cuData['recuperar-pass'].steps;
+            currentStepIndex = 0;
+            updateStepUI();
+            showScreen('rcTutorial');
+        });
+    }
+
     // Login -> Menu or Simulation Target
     document.getElementById('btn-login').addEventListener('click', () => {
         const rutElement = document.getElementById('rut');
@@ -198,8 +217,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Success: Go to the intended target
         if (postLoginTarget === 'rcTutorial') {
             updateStepUI();
+            showScreen(postLoginTarget);
+        } else if (postLoginTarget === 'rcInteractiveSimulation') {
+            startInteractiveSimulation(choiceCertId, choiceCertName);
+        } else {
+            showScreen(postLoginTarget);
         }
-        showScreen(postLoginTarget);
         // Reset postLoginTarget for next time
         postLoginTarget = 'menu';
     });
@@ -445,7 +468,7 @@ document.addEventListener('DOMContentLoaded', () => {
             name: 'Mi Registro Social de Hogares',
             steps: [
                 { title: "Paso 1: Entrar a la página de ChileAtiende", text: "Abra el navegador y vaya a la página www.chileatiende.gob.cl. Verá el logo de ChileAtiende arriba y un recuadro blanco a la derecha que dice 'Para acceder, ingresa con tu ClaveÚnica'. Apriete el botón azul que dice 'Iniciar sesión'.", visual: "🌐 Página principal de Mi ChileAtiende con el botón azul 'Iniciar sesión'." },
-                { title: "Paso 2: Ingresar su RUN y Clave Única", text: "Aparecerá un formulario con el título 'miChileAtiende'. Escriba su RUN en el primer recuadro y su Clave Única en el segundo. Luego apriete el botón azul grande que dice 'INGRESA'.", visual: "🔑 Formulario con campos de RUN y ClaveÚnica, y botón INGRESA." },
+                { title: "Paso 2: Ingresar su RUT y Clave Única", text: "Aparecerá un formulario con el título 'miChileAtiende'. Escriba su RUT en el primer recuadro y su Clave Única en el segundo. Luego apriete el botón azul grande que dice 'INGRESA'.", visual: "🔑 Formulario con campos de RUT y ClaveÚnica, y botón INGRESA." },
                 { title: "Paso 3: Elegir el servicio desde el menú lateral", text: "Una vez adentro verá su nombre arriba y un menú a la izquierda llamado 'Mis accesos'. Busque y apriete donde dice 'Mi Registro Social de Hogares'. También puede apretarlo desde las tarjetas del centro de la pantalla.", visual: "📋 Menú lateral 'Mis accesos' con la opción Mi Registro Social de Hogares." },
                 { title: "Paso 4: Ver su Calificación Socioeconómica", text: "Verá la sección 'Calificación socioeconómica' con una barra de colores. Ahí aparece en qué porcentaje está su hogar entre todos los hogares de Chile, y si está más cerca de mayor o menor vulnerabilidad.", visual: "📊 Barra de calificación socioeconómica con el porcentaje del hogar." },
                 { title: "Paso 5: Obtener la Cartola del Hogar e Integrantes", text: "Más abajo verá el recuadro 'Cartola Hogar'. Apriete el botón azul 'Obtener cartola' para descargar el documento. Al final de la página está la sección 'Integrantes de mi hogar' con las personas registradas en su hogar.", visual: "📄 Recuadro Cartola Hogar y tarjetas de integrantes del hogar." }
@@ -455,7 +478,7 @@ document.addEventListener('DOMContentLoaded', () => {
             name: 'Mis Pagos de Beneficios Sociales',
             steps: [
                 { title: "Paso 1: Entrar a la página de ChileAtiende", text: "Abra el navegador y vaya a la página www.chileatiende.gob.cl. Verá un recuadro blanco a la derecha que dice 'Para acceder, ingresa con tu ClaveÚnica'. Apriete el botón azul 'Iniciar sesión'.", visual: "🌐 Página principal de Mi ChileAtiende con el botón azul 'Iniciar sesión'." },
-                { title: "Paso 2: Ingresar su RUN y Clave Única", text: "Aparecerá un formulario con el título 'miChileAtiende'. Escriba su RUN en el primer recuadro y su Clave Única en el segundo. Luego apriete el botón azul grande que dice 'INGRESA'.", visual: "🔑 Formulario con campos de RUN y ClaveÚnica, y botón INGRESA." },
+                { title: "Paso 2: Ingresar su RUT y Clave Única", text: "Aparecerá un formulario con el título 'miChileAtiende'. Escriba su RUT en el primer recuadro y su Clave Única en el segundo. Luego apriete el botón azul grande que dice 'INGRESA'.", visual: "🔑 Formulario con campos de RUT y ClaveÚnica, y botón INGRESA." },
                 { title: "Paso 3: Elegir el servicio desde el menú lateral", text: "Una vez adentro verá el menú 'Mis accesos' a la izquierda. Apriete donde dice 'Mis pagos de beneficios sociales'. También puede apretarlo desde las tarjetas del centro de la pantalla. Este servicio lo entrega el Instituto de Previsión Social.", visual: "📋 Menú lateral con la opción Mis pagos de beneficios sociales." },
                 { title: "Paso 4: Revisar sus pagos", text: "La página le mostrará sus pagos de pensión o beneficios a cargo del IPS. Si el Estado le ha pagado algún bono o subsidio, aparecerá aquí con la fecha y el monto recibido.", visual: "💰 Lista de pagos de pensión y beneficios del IPS con fechas y montos." },
                 { title: "Paso 5: Si no aparece ningún pago", text: "Si sale el mensaje 'No encontramos pagos de beneficios sociales a tu nombre', no se preocupe, no es un error. Significa que por ahora el IPS no registra pagos a su nombre. El sistema le avisará cuando haya novedades.", visual: "ℹ️ Mensaje informativo cuando no hay pagos registrados por el IPS." }
@@ -465,7 +488,7 @@ document.addEventListener('DOMContentLoaded', () => {
             name: 'Mis Capacitaciones',
             steps: [
                 { title: "Paso 1: Entrar a la página de ChileAtiende", text: "Abra el navegador y vaya a la página www.chileatiende.gob.cl. Verá un recuadro blanco a la derecha que dice 'Para acceder, ingresa con tu ClaveÚnica'. Apriete el botón azul 'Iniciar sesión'.", visual: "🌐 Página principal de Mi ChileAtiende con el botón azul 'Iniciar sesión'." },
-                { title: "Paso 2: Ingresar su RUN y Clave Única", text: "Aparecerá un formulario con el título 'miChileAtiende'. Escriba su RUN en el primer recuadro y su Clave Única en el segundo. Luego apriete el botón azul grande que dice 'INGRESA'.", visual: "🔑 Formulario con campos de RUN y ClaveÚnica, y botón INGRESA." },
+                { title: "Paso 2: Ingresar su RUT y Clave Única", text: "Aparecerá un formulario con el título 'miChileAtiende'. Escriba su RUT en el primer recuadro y su Clave Única en el segundo. Luego apriete el botón azul grande que dice 'INGRESA'.", visual: "🔑 Formulario con campos de RUT y ClaveÚnica, y botón INGRESA." },
                 { title: "Paso 3: Elegir el servicio desde el menú lateral", text: "Una vez adentro verá el menú 'Mis accesos' a la izquierda. Apriete donde dice 'Mis capacitaciones'. También puede apretarlo desde las tarjetas del centro. Este servicio lo entrega el SENCE, el Servicio Nacional de Capacitación y Empleo.", visual: "📋 Menú lateral con la opción Mis capacitaciones." },
                 { title: "Paso 4: Ver sus cursos registrados", text: "La página mostrará todos los cursos, talleres o diplomados que ha realizado a través del SENCE. Aparecerá el nombre del curso, la institución donde lo hizo y la fecha en que lo realizó.", visual: "📚 Lista de cursos, talleres y diplomados realizados a través de SENCE." },
                 { title: "Paso 5: Si no aparece ningún curso", text: "Si sale el mensaje 'Aún no tienes cursos registrados en SENCE', no tiene cursos en el sistema. Puede apretar el botón 'Ir al sitio web de SENCE' para ver cursos y capacitaciones gratuitas disponibles para usted.", visual: "ℹ️ Mensaje cuando no hay cursos, con botón para ir al sitio de SENCE." }
@@ -475,7 +498,7 @@ document.addEventListener('DOMContentLoaded', () => {
             name: 'Mi Información Previsional',
             steps: [
                 { title: "Paso 1: Entrar a la página de ChileAtiende", text: "Abra el navegador y vaya a la página www.chileatiende.gob.cl. Verá un recuadro blanco a la derecha que dice 'Para acceder, ingresa con tu ClaveÚnica'. Apriete el botón azul 'Iniciar sesión'.", visual: "🌐 Página principal de Mi ChileAtiende con el botón azul 'Iniciar sesión'." },
-                { title: "Paso 2: Ingresar su RUN y Clave Única", text: "Aparecerá un formulario con el título 'miChileAtiende'. Escriba su RUN en el primer recuadro y su Clave Única en el segundo. Luego apriete el botón azul grande que dice 'INGRESA'.", visual: "🔑 Formulario con campos de RUN y ClaveÚnica, y botón INGRESA." },
+                { title: "Paso 2: Ingresar su RUT y Clave Única", text: "Aparecerá un formulario con el título 'miChileAtiende'. Escriba su RUT en el primer recuadro y su Clave Única en el segundo. Luego apriete el botón azul grande que dice 'INGRESA'.", visual: "🔑 Formulario con campos de RUT y ClaveÚnica, y botón INGRESA." },
                 { title: "Paso 3: Elegir el servicio desde el menú lateral", text: "Una vez adentro verá el menú 'Mis accesos' a la izquierda. Apriete donde dice 'Mi información previsional'. También puede apretarlo desde las tarjetas del centro. Este servicio lo entrega el Ministerio del Trabajo y Previsión Social.", visual: "📋 Menú lateral con la opción Mi información previsional." },
                 { title: "Paso 4: Ver la sección AFP", text: "Verá la sección 'AFP' que muestra su fecha de afiliación, cuál es su AFP actual y los datos de su Cuenta de Capitalización Individual. Ojo: estos datos pueden tener hasta 30 días de desfase. Más abajo verá la sección 'Seguridad laboral'.", visual: "📊 Sección AFP con fecha de afiliación y datos de la cuenta individual." },
                 { title: "Paso 5: Si no aparece información de AFP", text: "Si sale un aviso que dice 'No existen registros de afiliación a una AFP', no es un error. Puede ser porque usted pertenece a otro sistema como Capredena, Dipreca o las ex Cajas de Previsión Social. Si alguna sección no carga, inténtelo más tarde.", visual: "ℹ️ Aviso cuando el sistema previsional es distinto a una AFP privada." }
@@ -485,7 +508,7 @@ document.addEventListener('DOMContentLoaded', () => {
             name: 'Mi Seguro Social',
             steps: [
                 { title: "Paso 1: Entrar a la página de ChileAtiende", text: "Abra el navegador y vaya a la página www.chileatiende.gob.cl. Verá un recuadro blanco a la derecha que dice 'Para acceder, ingresa con tu ClaveÚnica'. Apriete el botón azul 'Iniciar sesión'.", visual: "🌐 Página principal de Mi ChileAtiende con el botón azul 'Iniciar sesión'." },
-                { title: "Paso 2: Ingresar su RUN y Clave Única", text: "Aparecerá un formulario con el título 'miChileAtiende'. Escriba su RUN en el primer recuadro y su Clave Única en el segundo. Luego apriete el botón azul grande que dice 'INGRESA'.", visual: "🔑 Formulario con campos de RUN y ClaveÚnica, y botón INGRESA." },
+                { title: "Paso 2: Ingresar su RUT y Clave Única", text: "Aparecerá un formulario con el título 'miChileAtiende'. Escriba su RUT en el primer recuadro y su Clave Única en el segundo. Luego apriete el botón azul grande que dice 'INGRESA'.", visual: "🔑 Formulario con campos de RUT y ClaveÚnica, y botón INGRESA." },
                 { title: "Paso 3: Elegir el servicio desde el menú lateral", text: "Una vez adentro verá el menú 'Mis accesos' a la izquierda. Apriete donde dice 'Mi Seguro Social'. También puede apretarlo desde las tarjetas del centro. Este servicio lo entrega el Instituto de Previsión Social.", visual: "📋 Menú lateral con la opción Mi Seguro Social." },
                 { title: "Paso 4: Ver sus cotizaciones al Seguro Social", text: "Verá la sección 'Cotizaciones al Seguro Social'. Este seguro no es lo mismo que su AFP: este dinero lo paga su empleador y sirve para mejorar las pensiones actuales y futuras. Si trabaja independiente, puede pagarlo voluntariamente.", visual: "🛡️ Sección de cotizaciones al Seguro Social con explicación del beneficio." },
                 { title: "Paso 5: Si no aparecen cotizaciones", text: "Si sale el mensaje 'Todavía no registras cotizaciones en este Seguro', puede ser que aún no se haya actualizado el pago más reciente. Puede apretar el botón 'Revisar información' para aprender más sobre qué es el Seguro Social y cómo funciona.", visual: "ℹ️ Mensaje cuando no hay cotizaciones, con botón 'Revisar información'." }
@@ -493,9 +516,45 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    const cuData = {
+        'recuperar-pass': {
+            name: 'Recuperar Contraseña de ClaveÚnica',
+            steps: [
+                { title: "Paso 1: Entrar a la página", text: "Abra el navegador y vaya a la página claveunica.gob.cl/recuperar. Verá un recuadro blanco que dice 'Recuperar ClaveÚnica'.", visual: "🌐 Presione aquí para ir a: <br><a href='https://claveunica.gob.cl/recuperar' target='_blank' style='display: inline-block; margin-top: 10px; color: white; background: var(--primary); padding: 10px 20px; border-radius: 8px; text-decoration: none; font-size: 20px;'>claveunica.gob.cl/recuperar</a>" },
+                { title: "Paso 2: Ingresar su RUT", text: "Escriba su RUT en el recuadro blanco. Luego apriete el botón azul que dice 'Continuar'.", visual: "<div style='text-align: left; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); color: #333; font-family: sans-serif; font-weight: normal; line-height: 1.4;'><h2 style='margin: 0; color: #222; font-size: 26px; font-weight: 800;'>RECUPERA</h2><div style='font-size: 18px; margin-bottom: 5px; color: #444;'>Tu ClaveÚnica</div><hr style='border: 0; border-top: 2px solid #555; width: 140px; margin: 0 0 15px 0;'><p style='font-size: 14px; color: #333; margin-bottom: 30px;'>Necesitas tu cédula de identidad y acceso a tu correo registrado en ClaveÚnica. (Si ya tienes un código del Registro Civil, <span style=\"color: #0066cc; text-decoration: underline;\">ve a la sección Activa</span>).</p><label style='display: block; font-size: 14px; margin-bottom: 8px; color: #444;'>RUT</label><div style='position: relative; margin-bottom: 5px; max-width: 400px; box-shadow: 0 0 0 4px #FF9800, 0 0 15px rgba(255,152,0,0.5); border-radius: 6px; padding: 2px;'><div style='position: absolute; left: -40px; top: 8px; font-size: 25px;'>👉</div><input type='text' value='11.111.111-1' readonly style='width: 100%; padding: 12px; border: 1px solid #1abc9c; border-radius: 4px; font-size: 16px; color: #555; outline: none; box-sizing: border-box; background: white;'><span style='position: absolute; right: 15px; top: 14px; color: #1abc9c; font-size: 18px; font-weight: bold;'>✓</span></div><div style='color: #1abc9c; font-size: 13px; margin-bottom: 30px;'>RUT con formato correcto</div><button style='background: #0056b3; color: white; border: none; padding: 12px 30px; font-size: 16px; font-weight: bold; border-radius: 4px; text-decoration: underline;'>Continuar</button></div>" },
+                { title: "Paso 3: Elegir cómo recuperar", text: "El sistema le preguntará cómo quiere recuperar su contraseña. Asegúrese de elegir la opción 'Por correo electrónico' y luego presione el botón azul 'Continuar'.", visual: "<div style='text-align: left; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); color: #333; font-family: sans-serif; font-weight: normal; line-height: 1.4;'><h2 style='margin: 0; color: #222; font-size: 26px; font-weight: 800;'>RECUPERA</h2><div style='font-size: 18px; margin-bottom: 5px; color: #444;'>Tu ClaveÚnica</div><hr style='border: 0; border-top: 2px solid #555; width: 140px; margin: 0 0 25px 0;'><p style='font-size: 15px; color: #333; margin-bottom: 20px;'>Selecciona cómo quieres restablecer tu contraseña</p><div style='position: relative; display: flex; align-items: center; margin-bottom: 30px; padding: 15px; border: 4px solid #FF9800; border-radius: 8px; background-color: rgba(255,152,0,0.1); box-shadow: 0 0 15px rgba(255,152,0,0.4); max-width: 400px;'><div style='position: absolute; left: -40px; font-size: 25px;'>👉</div><input type='radio' checked style='margin-right: 15px; transform: scale(1.8); accent-color: #0056b3;'><label style='font-size: 16px; color: #333; font-weight: 600;'>Por correo electrónico</label></div><button style='background: #0056b3; color: white; border: none; padding: 12px 30px; font-size: 16px; font-weight: bold; border-radius: 4px; text-decoration: underline;'>Continuar</button></div>" },
+                { title: "Paso 4: Revisar su correo electrónico", text: "La página le confirmará que ha enviado un mensaje y le mostrará su correo con asteriscos (***) por seguridad, solo para recordarle a cuál se envió. Ahora debe abrir ese correo electrónico y buscar un mensaje del Registro Civil con el enlace para crear su nueva contraseña.", visual: "<div style='text-align: left; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); color: #333; font-family: sans-serif; font-weight: normal; line-height: 1.4;'><h2 style='margin: 0; color: #222; font-size: 26px; font-weight: 800;'>RECUPERA</h2><div style='font-size: 18px; margin-bottom: 5px; color: #444;'>Tu ClaveÚnica</div><hr style='border: 0; border-top: 2px solid #555; width: 140px; margin: 0 0 25px 0;'><div style='position: relative; padding: 15px; border: 4px solid #FF9800; border-radius: 8px; background-color: rgba(255,152,0,0.1); box-shadow: 0 0 15px rgba(255,152,0,0.4); margin-bottom: 25px;'><div style='position: absolute; left: -40px; top: 10px; font-size: 25px;'>👉</div><p style='font-size: 15px; color: #333; margin: 0;'>Hemos enviado un mensaje a <strong>mail*********@gmai*****</strong> con instrucciones para restablecer tu contraseña.</p></div><p style='font-size: 14px; color: #555; margin-bottom: 5px;'>¿No llega el correo?</p><p style='font-size: 14px; color: #555; margin-top: 0; margin-bottom: 30px;'>Revisa la carpeta de spam o verifica si tu servicio de correo lo está bloqueando. Si el problema persiste llámanos al 600 360 3303 para ayudarte.</p><span style='color: #4b0082; text-decoration: underline; font-size: 14px;'>Vuelve al inicio</span></div>" },
+                { title: "Paso 5: Buscar el correo en su bandeja", text: "Vaya a su bandeja de entrada (por ejemplo, Gmail o Outlook) y busque un correo nuevo que diga 'no-reply' con el asunto 'ClaveÚnica - Recuperación'. Presione sobre ese mensaje para abrirlo.", visual: "<div style='position: relative; display: inline-block;'><img src='rc-cu-inbox.png' style='width: 100%; max-width: 600px; border-radius: 8px; border: 2px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1);'><div style='position: absolute; left: 30%; top: 55%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👆</div></div>" },
+                { title: "Paso 6: Leer el código en el correo", text: "Al abrir el correo, verá un saludo y un número llamado 'Código de Recuperación'. Anote ese código en un papel (letras mayúsculas y números) y luego presione el enlace azul que dice 'claveunica.gob.cl/restaurar'.", visual: "<div style='position: relative; display: inline-block;'><img src='rc-cu-email.png' style='width: 100%; max-width: 500px; border-radius: 8px; border: 2px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1);'><div style='position: absolute; left: 18%; top: 45%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div><div style='position: absolute; left: 15%; top: 68%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div></div>" },
+                { title: "Paso 7: Ingresar el código en la página", text: "En la nueva página, escriba su RUT arriba y en el recuadro de abajo escriba el código que le mandaron a su correo (por ejemplo, DNE8KI). Luego, presione el cuadrito en blanco que está al lado de 'Acepto los Términos y condiciones'.", visual: "<div style='position: relative; display: inline-block;'><img src='rc-cu-restaurar.png' style='width: 100%; max-width: 600px; border-radius: 8px; border: 2px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1);'><div style='position: absolute; left: 8%; top: 65%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div><div style='position: absolute; left: 15%; top: 80%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div></div>" },
+                { title: "Paso 8: Aceptar los Términos", text: "Se abrirá una ventana con un texto largo. Estos 'Términos y condiciones' son simplemente las reglas de seguridad del Estado para proteger sus datos personales. Mueva la ruedita del ratón (o deslice el dedo hacia arriba en su celular) hasta llegar al final del texto. Allí presione el botón azul 'Aceptar términos y condiciones', y luego ya podrá apretar 'Continuar'.", visual: "<div style='position: relative; display: inline-block;'><img src='rc-cu-terms-bottom.png' style='width: 100%; max-width: 600px; border-radius: 8px; border: 2px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1);'><div style='position: absolute; right: 10%; top: 80%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👆</div></div>" },
+                { title: "Paso 9: Crear nueva contraseña", text: "¡Último paso! Ahora podrá crear su nueva Clave Única. Escríbala en el primer recuadro y vuelva a escribirla exactamente igual en el recuadro de abajo. Recuerde que para que sea segura debe tener al menos 8 letras, números y algún símbolo (como un punto o un guión).", visual: "<div style='position: relative; display: inline-block;'><img src='rc-cu-password.png' style='width: 100%; max-width: 600px; border-radius: 8px; border: 2px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1);'><div style='position: absolute; left: 2%; top: 32%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div><div style='position: absolute; left: 2%; top: 85%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div></div>" },
+                { title: "Paso 10: Guardar y finalizar", text: "Una vez que haya escrito su contraseña en ambos recuadros y cumpla los requisitos (se marcarán con un visto verde ✔️), presione el botón azul 'Continuar' que está abajo a la derecha. ¡Felicidades, ha recuperado su Clave Única con éxito!", visual: "<div style='position: relative; display: inline-block;'><img src='rc-cu-password-done.png' style='width: 100%; max-width: 600px; border-radius: 8px; border: 2px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1);'><div style='position: absolute; left: 70%; top: 80%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div></div>" },
+                { title: "Paso 11: ¡Proceso Terminado!", text: "La página le mostrará un mensaje de éxito indicando que ha recuperado su Clave Única. Ahora ya puede presionar 'Volver al inicio' y realizar todos sus trámites con su nueva contraseña. ¡Excelente trabajo!", visual: "<div style='position: relative; display: inline-block;'><img src='rc-cu-success.png' style='width: 100%; max-width: 600px; border-radius: 8px; border: 2px solid #ddd; box-shadow: 0 4px 10px rgba(0,0,0,0.1);'><div style='position: absolute; left: 30%; top: 40%; font-size: 35px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);'>👉</div></div>" }
+            ]
+        }
+    };
+
     let currentTutorialSteps = [];
     let currentStepIndex = 0;
     let currentTutorialOrigin = 'rcCategories';
+    let rcLearnMode = 'guide'; // 'guide' o 'simulation'
+
+    const btnModeGuide = document.getElementById('btn-mode-guide');
+    const btnModeSimulation = document.getElementById('btn-mode-simulation');
+    
+    if (btnModeGuide && btnModeSimulation) {
+        btnModeGuide.onclick = () => {
+            rcLearnMode = 'guide';
+            btnModeGuide.classList.add('active');
+            btnModeSimulation.classList.remove('active');
+        };
+        btnModeSimulation.onclick = () => {
+            rcLearnMode = 'simulation';
+            btnModeSimulation.classList.add('active');
+            btnModeGuide.classList.remove('active');
+        };
+    }
 
     // Menu -> RC Categories
     document.getElementById('btn-rc-guide').addEventListener('click', () => {
@@ -503,7 +562,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('btn-back-rc').addEventListener('click', goBack);
-    document.getElementById('btn-back-rc-tutorial').addEventListener('click', goBack);
+    document.getElementById('btn-back-rc-tutorial').addEventListener('click', () => {
+        if (currentStepIndex > 0) {
+            document.getElementById('modal-exit-tutorial').style.display = 'block';
+        } else {
+            goBack();
+        }
+    });
 
     // Menu -> CA Categories
     document.getElementById('btn-ca-guide').addEventListener('click', () => {
@@ -547,6 +612,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cat.certs.forEach(cert => {
                 const item = document.createElement('div');
                 item.className = 'rc-cert-item';
+                item.setAttribute('data-cert-id', cert.id);
                 item.innerHTML = `
                     <div class="rc-cert-info">
                         <span class="rc-cert-name">${cert.name}</span>
@@ -555,14 +621,29 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${cert.cu ? '<div class="cu-badge"><span class="icon">🔑</span> Requiere Clave Única</div>' : ''}
                 `;
                 item.onclick = () => {
-                    if (cert.cu) {
-                        postLoginTarget = 'rcTutorial';
-                        currentTutorialOrigin = 'rcCategories';
-                        currentTutorialSteps = rcData.steps[cert.id] || [];
-                        currentStepIndex = 0;
-                        showScreen('login');
-                    } else {
-                        startTutorial(cert.id, cert.name);
+                    choiceCertId = cert.id;
+                    choiceCertName = cert.name;
+                    choiceCertCu = cert.cu;
+                    
+                    if (rcLearnMode === 'guide') {
+                        if (cert.cu) {
+                            postLoginTarget = 'rcTutorial';
+                            currentTutorialOrigin = 'rcCategories';
+                            currentTutorialSteps = rcData.steps[cert.id] || [];
+                            currentStepIndex = 0;
+                            showScreen('login');
+                        } else {
+                            startTutorial(cert.id, cert.name);
+                        }
+                    } else { // 'simulation'
+                        if (cert.cu) {
+                            postLoginTarget = 'rcInteractiveSimulation';
+                            currentTutorialOrigin = 'rcCategories';
+                            currentStepIndex = 0;
+                            showScreen('login');
+                        } else {
+                            startInteractiveSimulation(cert.id, cert.name);
+                        }
                     }
                 };
                 container.appendChild(item);
@@ -589,6 +670,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function startTutorial(certId, certName) {
         currentTutorialOrigin = 'rcCategories';
+        currentTutorialCertId = certId;
+        currentTutorialCertName = certName;
         currentTutorialSteps = rcData.steps[certId] || [
             { title: "Paso 1: Ingresar", text: `Para obtener el ${certName}, primero debe ir al sitio oficial del Registro Civil.`, visual: "🌐 www.registrocivil.cl" },
             { title: "Paso 2: Selección", text: "Busque el nombre del certificado en la lista de servicios en línea.", visual: "🖱️ Clic en la lista." },
@@ -614,9 +697,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (step.visual.endsWith('.png') || step.visual.endsWith('.jpg')) {
             visualHtml = `
                 <div class="rc-visual-wrapper">
-                    <img src="${step.visual}" class="rc-step-img" alt="Guía visual">
+                    <img src="${step.visual}" class="rc-step-img" alt="Guía visual" title="Toque para ampliar">
                     ${step.highlight ? `<div class="rc-highlight-overlay ${step.highlight}"></div><div class="rc-finger-pointer">☝️</div>` : ''}
                 </div>
+                <p class="zoom-hint">🔍 Toque la imagen para verla más grande</p>
             `;
         } else {
             visualHtml = `
@@ -626,9 +710,16 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         }
 
+        const progressPct = Math.round(((currentStepIndex + 1) / currentTutorialSteps.length) * 100);
         content.innerHTML = `
+            <div class="tutorial-progress-header">
+                <span class="tutorial-step-counter">Paso ${currentStepIndex + 1} de ${currentTutorialSteps.length}</span>
+                <div class="tutorial-progress-track">
+                    <div class="tutorial-progress-fill" style="width:${progressPct}%"></div>
+                </div>
+            </div>
             <h2>${step.title}</h2>
-            <div id="reader-target-text" class="step-text" style="font-size: 24px; margin-bottom: 25px; line-height: 1.8;">
+            <div id="reader-target-text" class="step-text">
                 ${wrappedText}
             </div>
             <div class="rc-official-mockup">
@@ -665,7 +756,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentStepIndex++;
             updateStepUI();
         } else {
-            showScreen(currentTutorialOrigin);
+            showTutorialSummary();
         }
     });
 
@@ -689,25 +780,52 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getFemaleLatamVoice() {
         const voices = synth.getVoices();
-        // Priority tags: es-CL, es-MX, es-AR, es-CO, es-US, es-ES
-        const preferredLangs = ['es-CL', 'es-MX', 'es-AR', 'es-CO', 'es-US', 'es-ES'];
         
+        // 1. Intentar buscar voz femenina en dialectos latinoamericanos / neutros preferidos (incluido es-419)
+        const preferredLangs = ['es-CL', 'es-MX', 'es-419', 'es-AR', 'es-CO', 'es-US'];
         for (const lang of preferredLangs) {
-            const voice = voices.find(v => 
-                v.lang.replace('_', '-').startsWith(lang) && 
-                (v.name.toLowerCase().includes('female') || 
-                 v.name.toLowerCase().includes('mujer') || 
-                 v.name.toLowerCase().includes('sabina') || 
-                 v.name.toLowerCase().includes('helena') || 
-                 v.name.toLowerCase().includes('zira') ||
-                 v.name.toLowerCase().includes('paul'))
-            );
+            const voice = voices.find(v => {
+                const normalizedLang = v.lang.replace('_', '-').toLowerCase();
+                const normalizedName = v.name.toLowerCase();
+                return normalizedLang.startsWith(lang.toLowerCase()) && (
+                    normalizedName.includes('female') ||
+                    normalizedName.includes('mujer') ||
+                    normalizedName.includes('sabina') ||
+                    normalizedName.includes('helena') ||
+                    normalizedName.includes('dalia') ||
+                    normalizedName.includes('zira') ||
+                    normalizedName.includes('paul') ||
+                    normalizedName.includes('google')
+                );
+            });
             if (voice) return voice;
         }
-        
-        // Fallback to any Spanish voice
-        return voices.find(v => v.lang.startsWith('es'));
+
+        // 2. Intentar buscar cualquier voz en dialectos latinoamericanos / neutros (no es-ES)
+        const latamVoice = voices.find(v => {
+            const normalizedLang = v.lang.replace('_', '-').toLowerCase();
+            return normalizedLang.startsWith('es') && !normalizedLang.startsWith('es-es');
+        });
+        if (latamVoice) return latamVoice;
+
+        // 3. Fallback: buscar voz femenina en español de España (es-ES)
+        const esFemaleVoice = voices.find(v => {
+            const normalizedLang = v.lang.replace('_', '-').toLowerCase();
+            const normalizedName = v.name.toLowerCase();
+            return normalizedLang.startsWith('es-es') && (
+                normalizedName.includes('female') ||
+                normalizedName.includes('mujer') ||
+                normalizedName.includes('sabina') ||
+                normalizedName.includes('helena') ||
+                normalizedName.includes('zira')
+            );
+        });
+        if (esFemaleVoice) return esFemaleVoice;
+
+        // 4. Último recurso: cualquier voz que empiece por 'es'
+        return voices.find(v => v.lang.toLowerCase().startsWith('es')) || null;
     }
+
 
     function speakText(text, button) {
         // If clicking the same button while playing, just stop
@@ -728,7 +846,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         utterance.lang = 'es-CL'; // Fallback lang
-        utterance.rate = 0.75;    // Much slower for seniors as requested
+        utterance.rate = 0.9;     // Slower for seniors as requested
         utterance.pitch = 1.05;   // Slightly higher for a clearer female tone
 
         utterance.onstart = () => {
@@ -796,54 +914,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Unified Reader Logic ---
     let readerUtterance = null;
-    let isReaderPaused = false;
     let targetElement = null;
 
     document.querySelectorAll('.reader-toolbar').forEach(tb => {
         const play = tb.querySelector('.btn-play');
-        const pause = tb.querySelector('.btn-pause');
         const stop = tb.querySelector('.btn-stop');
         const status = tb.querySelector('.reader-status');
 
         play.onclick = () => {
-            if (isReaderPaused) {
-                synth.resume();
-                isReaderPaused = false;
-                status.innerText = "Leyendo...";
-                play.innerHTML = "⏸️";
-                return;
-            }
-
-            if (synth.speaking) {
-                synth.pause();
-                isReaderPaused = true;
-                status.innerText = "Pausado";
-                play.innerHTML = "▶️";
-                return;
-            }
-
-            // Activar modo lector persistente
             autoReadMode = true;
-            status.innerText = "Modo auto activo";
+            status.innerText = "Leyendo...";
 
-            // Start new reading
             const targetId = tb.getAttribute('data-reader-target');
-            let target;
-            
-            if (targetId === 'reader-target-text') {
-                target = document.getElementById('reader-target-text');
-            } else {
-                target = document.getElementById(targetId);
-                if (target) prepareTextForHighlighting(target);
-            }
+            let target = targetId ? document.getElementById(targetId) : null;
 
             if (target) {
+                prepareTextForHighlighting(target);
                 startAdvancedReader(target, tb);
+            } else {
+                // Fallback: leer la pantalla activa actual
+                assistant.narrateCurrentScreen();
+                status.innerText = "Leyendo pantalla...";
             }
         };
 
         stop.onclick = () => {
-            autoReadMode = false; // Desactivar modo lector persistente
+            autoReadMode = false;
             stopAdvancedReader();
         };
     });
@@ -861,7 +957,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const utt = new SpeechSynthesisUtterance(fullText);
             const v = getFemaleLatamVoice();
             if (v) utt.voice = v;
-            utt.rate = 0.7;
+            utt.lang = 'es-CL';
+            utt.rate = 0.85;
+            utt.pitch = 1.05;
             synth.speak(utt);
             return;
         }
@@ -870,7 +968,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const voice = getFemaleLatamVoice();
         if (voice) readerUtterance.voice = voice;
         readerUtterance.lang = 'es-CL';
-        readerUtterance.rate = 0.7;
+        readerUtterance.rate = 0.85;
+        readerUtterance.pitch = 1.05;
         
         const status = toolbar.querySelector('.reader-status');
         const playBtn = toolbar.querySelector('.btn-play');
@@ -908,9 +1007,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         readerUtterance.onstart = () => {
             status.innerText = "Leyendo...";
-            playBtn.innerHTML = "⏸️";
             playBtn.classList.add('active');
-            toolbar.querySelector('.btn-pause').disabled = false;
         };
 
         readerUtterance.onend = () => {
@@ -922,13 +1019,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function stopAdvancedReader() {
         synth.cancel();
-        isReaderPaused = false;
         document.querySelectorAll('.highlight-word').forEach(el => el.classList.remove('highlight-word'));
         document.querySelectorAll('.reader-toolbar').forEach(tb => {
             tb.querySelector('.reader-status').innerText = "Escuchar";
             tb.querySelector('.btn-play').innerHTML = "▶️";
             tb.querySelector('.btn-play').classList.remove('active');
-            tb.querySelector('.btn-pause').disabled = true;
         });
     }
 
@@ -962,8 +1057,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Accessibility Toolbar Logic
-    let currentFontSize = 20;
+    let currentFontSize = parseInt(localStorage.getItem('fontSize') || '20', 10);
     const body = document.body;
+    const htmlEl = document.documentElement;
+
+    // Aplicar tamaño guardado al cargar
+    htmlEl.style.setProperty('--base-font-size', currentFontSize + 'px');
+
+    function applyFontSize(size) {
+        currentFontSize = size;
+        htmlEl.style.setProperty('--base-font-size', size + 'px');
+        localStorage.setItem('fontSize', size);
+    }
 
     document.getElementById('btn-toggle-contrast').addEventListener('click', () => {
         body.classList.toggle('high-contrast');
@@ -972,17 +1077,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('btn-font-plus').addEventListener('click', () => {
-        if (currentFontSize < 32) {
-            currentFontSize += 2;
-            body.style.setProperty('--base-font-size', currentFontSize + 'px');
-        }
+        if (currentFontSize < 32) applyFontSize(currentFontSize + 2);
     });
 
     document.getElementById('btn-font-minus').addEventListener('click', () => {
-        if (currentFontSize > 16) {
-            currentFontSize -= 2;
-            body.style.setProperty('--base-font-size', currentFontSize + 'px');
-        }
+        if (currentFontSize > 16) applyFontSize(currentFontSize - 2);
     });
 
     // --- Smart Assistant Logic ---
@@ -1038,7 +1137,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 name: 'Certificado de Antecedentes',
                 desc: 'muestra si usted tiene registros penales. Requiere Clave Única.',
                 keywords: ['antecedentes', 'penales', 'papel de antecedentes', 'policía', 'carcel', 'limpio']
-            }
+            },
+            { id: 'nac-matricula', type: 'rc', name: 'Certificado Nacimiento Para Matrícula', desc: 'para procesos de matrícula escolar', keywords: ['nacimiento','nacer','matrícula','matricula','colegio','escuela','escolar'] },
+            { id: 'nac-asignacion', type: 'rc', name: 'Certificado Nacimiento Asignación Familiar', desc: 'para asignación familiar y beneficios laborales', keywords: ['nacimiento','nacer','asignación','asignacion','familiar','laboral','trabajo'] },
+            { id: 'nac-todo', type: 'rc', name: 'Certificado Nacimiento Todo Trámite', desc: 'para cualquier tipo de trámite general', keywords: ['nacimiento','nacer','todo trámite','todo tramite','general','cualquier trámite'] },
+            { id: 'mat-todo', type: 'rc', name: 'Certificado Matrimonio Todo Trámite', desc: 'para certificar su estado civil para cualquier trámite', keywords: ['matrimonio','todo trámite','todo tramite','general','cualquier trámite','casado','casada'] },
+            { id: 'mat-asignacion', type: 'rc', name: 'Certificado Matrimonio Asignación Familiar', desc: 'para cargas y asignaciones familiares de cónyuges', keywords: ['matrimonio','asignación','asignacion','cónyuge','esposo','esposa'] },
+            { id: 'def-todo', type: 'rc', name: 'Certificado Defunción Todo Trámite', desc: 'para certificar un fallecimiento en cualquier trámite', keywords: ['defunción','defuncion','todo trámite','todo tramite','general','fallecimiento','muerte'] },
+            { id: 'def-asignacion', type: 'rc', name: 'Certificado Defunción Asignación Familiar', desc: 'para trámites de herencia y previsión social de fallecidos', keywords: ['defunción','defuncion','asignación','asignacion','herencia','fallecido','muerte'] },
+            { id: 'ant-fines-particulares', type: 'rc', name: 'Antecedentes Fines Particulares', desc: 'para trabajo u otros fines particulares', keywords: ['antecedentes','particulares','fines particulares','trabajo'] },
+            { id: 'ant-fines-especiales', type: 'rc', name: 'Antecedentes Fines Especiales', desc: 'para trámites legales y fines especiales', keywords: ['antecedentes','especiales','fines especiales','legal'] }
         ],
 
         formatNumbersForSeniors(str) {
@@ -1047,9 +1155,43 @@ document.addEventListener('DOMContentLoaded', () => {
             return str.split('').join(', ').replace(/-/g, ' guion ');
         },
 
+        inputMode: 'keyboard',
+
+        setMode(mode) {
+            this.inputMode = mode;
+            if (mode === 'keyboard') {
+                if (this.keyboardModeBtn) this.keyboardModeBtn.classList.add('active');
+                if (this.voiceModeBtn) this.voiceModeBtn.classList.remove('active');
+                if (this.chatInputContainer) this.chatInputContainer.style.display = 'flex';
+                if (this.isListening && this.recognition) {
+                    this.recognition.stop();
+                }
+                this.showBubble("Modo teclado activo. ¿En qué puedo ayudarte?");
+            } else {
+                if (this.voiceModeBtn) this.voiceModeBtn.classList.add('active');
+                if (this.keyboardModeBtn) this.keyboardModeBtn.classList.remove('active');
+                if (this.chatInputContainer) this.chatInputContainer.style.display = 'none';
+                
+                if (!this.isListening) {
+                    if (localStorage.getItem('micPermissionGranted') !== 'true') {
+                        showMicGuide();
+                    } else {
+                        try {
+                            this.recognition?.start();
+                        } catch(e) {
+                            console.error(e);
+                        }
+                    }
+                }
+            }
+        },
+
         init() {
             this.chatInput = document.getElementById('assistant-chat-input');
             this.chatSendBtn = document.getElementById('btn-assistant-send');
+            this.keyboardModeBtn = document.getElementById('btn-mode-keyboard');
+            this.voiceModeBtn = document.getElementById('btn-mode-voice');
+            this.chatInputContainer = document.querySelector('.assistant-chat-input-container');
 
             if (this.chatSendBtn) {
                 this.chatSendBtn.addEventListener('click', () => {
@@ -1088,8 +1230,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
 
                 this.recognition.onerror = (e) => {
-                    console.error("Mic error:", e);
-                    this.showBubble("No pude escucharte bien. ¿Podrías repetir?");
+                    if (e.error === 'not-allowed' || e.error === 'permission-denied') {
+                        setInputMode('text');
+                        localStorage.removeItem('micPermissionGranted');
+                        this.showBubble("No se pudo acceder al micrófono. Puede seguir escribiendo normalmente.");
+                    } else if (e.error !== 'aborted') {
+                        this.showBubble("No pude escucharte bien. ¿Podrías repetir?");
+                    }
                 };
 
                 this.recognition.onresult = (event) => {
@@ -1112,23 +1259,61 @@ document.addEventListener('DOMContentLoaded', () => {
                         const cmd = finalTranscript.trim();
                         this.showBubble('"' + cmd + '"', true);
                         this.handleCommand(cmd, true);
-                        // Optional: stop after each final command to prevent ghosting
                         this.recognition.stop();
                     }
                 };
+            }
 
-                this.mainBtn.addEventListener('click', () => {
+            if (this.keyboardModeBtn) {
+                this.keyboardModeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.setMode('keyboard');
+                });
+            }
+
+            if (this.voiceModeBtn) {
+                this.voiceModeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.setMode('voice');
+                });
+            }
+
+            this.mainBtn.addEventListener('click', () => {
+                const mode = this.inputMode || localStorage.getItem('inputMode') || 'text';
+                if (mode === 'voice') {
                     if (this.isListening) {
-                        this.recognition.stop();
+                        this.recognition?.stop();
                     } else {
                         if (localStorage.getItem('micPermissionGranted') !== 'true') {
                             showMicGuide();
                         } else {
-                            this.recognition.start();
+                            try {
+                                this.recognition?.start();
+                            } catch(e) {
+                                console.error(e);
+                            }
                         }
                     }
-                });
-            }
+                } else {
+                    // Modo teclado/texto: mostrar burbuja con el chat
+                    if (this.bubble) {
+                        const visible = this.bubble.style.display === 'block';
+                        this.bubble.style.display = visible ? 'none' : 'block';
+                        if (!visible) {
+                            const inputEl = this.chatInput || document.getElementById('assistant-chat-input');
+                            if (inputEl) inputEl.focus();
+                        }
+                    }
+                }
+            });
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Initialize mode
+            this.setMode('keyboard');
         },
 
         showBubble(text, isUser = false) {
@@ -1244,6 +1429,79 @@ document.addEventListener('DOMContentLoaded', () => {
                     this.state = null;
                     this.pendingData = null;
                     return;
+                }
+            }
+
+            // Modos de aprendizaje (Simulación y Guía)
+            if (cmd.includes('simulación') || cmd.includes('simulacion') || cmd.includes('simular')) {
+                const btn = document.getElementById('btn-mode-simulation');
+                if (btn) {
+                    btn.click();
+                    this.say('Excelente, he activado el modo de simulación interactiva. Ahora, cuando elija un certificado, practicaremos los pasos en pantalla.');
+                    return;
+                }
+            }
+            if (cmd.includes('guía') || cmd.includes('guia') || cmd.includes('paso a paso')) {
+                const btn = document.getElementById('btn-mode-guide');
+                if (btn) {
+                    btn.click();
+                    this.say('Entendido, he activado el modo de guía paso a paso. Ahora, al seleccionar un certificado, le iré mostrando los pasos a seguir.');
+                    return;
+                }
+            }
+
+            // Categorías del Registro Civil por voz
+            if (currentScreenKey === 'rcCategories') {
+                let catToClick = null;
+                if (cmd.includes('nacimiento') || cmd.includes('nacer') || cmd.includes('bebé') || cmd.includes('hijo') || cmd.includes('hija')) {
+                    catToClick = 'nacimiento';
+                } else if (cmd.includes('matrimonio') || cmd.includes('casado') || cmd.includes('casada') || cmd.includes('boda') || cmd.includes('casamiento')) {
+                    catToClick = 'matrimonio';
+                } else if (cmd.includes('defunción') || cmd.includes('defuncion') || cmd.includes('muerte') || cmd.includes('fallecido') || cmd.includes('fallecimiento')) {
+                    catToClick = 'defuncion';
+                } else if (cmd.includes('antecedentes') || cmd.includes('penales') || cmd.includes('policía')) {
+                    catToClick = 'antecedentes';
+                } else if (cmd.includes('vehículo') || cmd.includes('vehiculo') || cmd.includes('auto') || cmd.includes('carro') || cmd.includes('patente')) {
+                    catToClick = 'vehiculos';
+                } else if (cmd.includes('identidad') || cmd.includes('carnet') || cmd.includes('cédula') || cmd.includes('cedula')) {
+                    catToClick = 'identidad';
+                }
+
+                if (catToClick) {
+                    const card = document.querySelector(`.rc-category-card[data-cat="${catToClick}"]`);
+                    if (card) {
+                        this.say(`Abriendo categoría de ${catToClick === 'defuncion' ? 'defunciones' : catToClick === 'vehiculos' ? 'vehículos' : catToClick}.`);
+                        card.click();
+                        return;
+                    }
+                }
+
+                // Selección de certificados específicos visibles en el sublistado
+                const sublist = document.getElementById('rc-certs-sublist');
+                if (sublist && sublist.style.display !== 'none') {
+                    const certItems = sublist.querySelectorAll('.rc-cert-item');
+                    let bestItem = null;
+                    let maxScore = 0;
+                    certItems.forEach(item => {
+                        const name = item.querySelector('.rc-cert-name')?.innerText.toLowerCase() || '';
+                        let score = 0;
+                        const words = name.split(/\s+/);
+                        words.forEach(word => {
+                            if (word.length > 3 && cmd.includes(word)) {
+                                score += 5;
+                            }
+                        });
+                        if (score > maxScore) {
+                            maxScore = score;
+                            bestItem = item;
+                        }
+                    });
+                    if (bestItem && maxScore >= 5) {
+                        const name = bestItem.querySelector('.rc-cert-name').innerText;
+                        this.say(`Entendido. Seleccionando ${name}.`);
+                        bestItem.click();
+                        return;
+                    }
                 }
             }
 
@@ -1443,7 +1701,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     setTimeout(() => {
                         if (bestMatch.type === 'rc') {
-                            selectRCCategory(bestMatch.id);
+                            const certCategoryMap = {
+                                'nac-matricula': 'nacimiento',
+                                'nac-asignacion': 'nacimiento',
+                                'nac-todo': 'nacimiento',
+                                'mat-todo': 'matrimonio',
+                                'mat-asignacion': 'matrimonio',
+                                'def-todo': 'defuncion',
+                                'def-asignacion': 'defuncion',
+                                'ant-fines-particulares': 'antecedentes',
+                                'ant-fines-especiales': 'antecedentes'
+                            };
+                            const catId = certCategoryMap[bestMatch.id] || bestMatch.id;
+                            selectRCCategory(catId);
+                            
+                            if (certCategoryMap[bestMatch.id]) {
+                                setTimeout(() => {
+                                    const certItem = document.querySelector(`.rc-cert-item[data-cert-id="${bestMatch.id}"]`);
+                                    if (certItem) certItem.click();
+                                }, 250);
+                            }
                         } else {
                             // Fonasa flow
                             const rad = document.querySelector(`input[value="${bestMatch.id}"]`);
@@ -1489,7 +1766,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     text = 'Bienvenido al portal de trámites. Puede elegir obtener un certificado del Registro Civil, o explorar los servicios de ChileAtiende.';
                     break;
                 case 'login':
-                    text = 'Pantalla de inicio de sesión. Por favor ingrese su RUN en el primer campo, y su Clave Única en el segundo. Luego presione el botón Autenticar.';
+                    text = 'Pantalla de inicio de sesión. Por favor ingrese su RUT en el primer campo, y su Clave Única en el segundo. Luego presione el botón Autenticar.';
                     break;
                 case 'menu':
                     text = 'Menú principal. Tiene tres opciones: Obtener Certificado, Guía del Registro Civil, o Guía de ChileAtiende.';
@@ -1517,6 +1794,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     text = step ? step.title + '. ' + step.text : '';
                     break;
                 }
+                case 'rcInteractiveSimulation': {
+                    const textEl = document.getElementById('sim-assistant-text');
+                    text = textEl ? textEl.innerText : 'Modo de simulación interactiva.';
+                    break;
+                }
                 default:
                     text = '';
             }
@@ -1527,7 +1809,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Helper for Microphone Guide
     const modal = document.getElementById('modal-mic-guide');
     const closeBtn = document.querySelector('.close-modal');
-    const understoodBtn = document.getElementById('btn-close-guide');
 
     function showMicGuide() {
         if (modal) modal.style.display = 'block';
@@ -1536,20 +1817,66 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function hideMicGuide() {
         if (modal) modal.style.display = 'none';
-        assistant.recognition?.start();
     }
 
     if (closeBtn) closeBtn.onclick = hideMicGuide;
-    if (understoodBtn) {
-        understoodBtn.onclick = () => {
-            localStorage.setItem('micPermissionGranted', 'true');
-            hideMicGuide();
-        };
-    }
+
+    // Opción: solo escribir
+    document.getElementById('btn-choose-text')?.addEventListener('click', () => {
+        localStorage.setItem('micPermissionGranted', 'true');
+        setInputMode('text');
+        hideMicGuide();
+    });
+
+    // Opción: usar micrófono
+    document.getElementById('btn-choose-voice')?.addEventListener('click', () => {
+        localStorage.setItem('micPermissionGranted', 'true');
+        setInputMode('voice');
+        hideMicGuide();
+        if (assistant.recognition && !assistant.isListening) {
+            try { assistant.recognition.start(); } catch (_) {}
+        }
+    });
 
     window.onclick = (event) => {
-        if (event.target == modal) hideMicGuide();
+        if (event.target === modal) hideMicGuide();
     };
+
+    // --- Toggle de modo de entrada (texto / voz) ---
+    function setInputMode(mode) {
+        localStorage.setItem('inputMode', mode);
+        const btnText = document.getElementById('btn-mode-text');
+        const btnVoice = document.getElementById('btn-mode-voice');
+        const icon = document.getElementById('assistant-icon');
+        if (btnText) btnText.classList.toggle('active', mode === 'text');
+        if (btnVoice) btnVoice.classList.toggle('active', mode === 'voice');
+        if (icon) icon.textContent = mode === 'voice' ? '🎤' : '💬';
+        if (mode === 'text' && assistant.isListening) {
+            assistant.recognition?.stop();
+        }
+    }
+
+    // Restaurar modo guardado al cargar
+    setInputMode(localStorage.getItem('inputMode') || 'text');
+
+    document.getElementById('btn-mode-text')?.addEventListener('click', () => {
+        setInputMode('text');
+    });
+
+    document.getElementById('btn-mode-voice')?.addEventListener('click', () => {
+        if (!assistant.recognition) {
+            showNotification('Tu navegador no soporta comandos de voz. Usa el chat de texto.', 'warning');
+            return;
+        }
+        if (localStorage.getItem('micPermissionGranted') !== 'true') {
+            showMicGuide();
+        } else {
+            setInputMode('voice');
+            if (!assistant.isListening) {
+                try { assistant.recognition.start(); } catch (_) {}
+            }
+        }
+    });
 
     assistant.init();
 
@@ -1557,6 +1884,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const oldShowScreen = showScreen;
     showScreen = (key, add) => {
         oldShowScreen(key, add);
+        updateBreadcrumb(key);
+        resetInactivityTimer();
         // Solo narrar si el modo lector persistente está activo (activado con ▶️, desactivado con ⏹️)
         if (autoReadMode) {
             clearTimeout(assistant._narrateTimer);
@@ -1565,5 +1894,1114 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 800);
         }
     };
+
+    // --- Dark Mode ---
+    const btnDarkMode = document.getElementById('btn-dark-mode');
+    if (btnDarkMode) {
+        const savedDark = localStorage.getItem('darkMode') === 'true';
+        if (savedDark) document.body.classList.add('dark-mode');
+        btnDarkMode.classList.toggle('active', savedDark);
+
+        btnDarkMode.addEventListener('click', () => {
+            const isDark = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', isDark);
+            btnDarkMode.classList.toggle('active', isDark);
+        });
+    }
+
+    // --- Font Size Cycle ---
+    const fontSizes = [20, 26, 32];
+    let fontSizeIndex = 0;
+    const btnFontCycle = document.getElementById('btn-font-size-cycle');
+    if (btnFontCycle) {
+        btnFontCycle.addEventListener('click', () => {
+            fontSizeIndex = (fontSizeIndex + 1) % fontSizes.length;
+            applyFontSize(fontSizes[fontSizeIndex]);
+        });
+    }
+
+    // --- Breadcrumb ---
+    const breadcrumbLabels = {
+        landing: null,
+        login: ['Inicio'],
+        menu: ['Inicio', 'Menú principal'],
+        form: ['Inicio', 'Menú principal', 'Solicitar certificado'],
+        confirm: ['Inicio', 'Menú principal', 'Solicitar certificado', 'Confirmación'],
+        success: ['Inicio', 'Menú principal', 'Completado'],
+        tutorial: ['Inicio', 'Menú principal', 'Tutorial ChileAtiende'],
+        rcCategories: ['Inicio', 'Menú principal', 'Registro Civil'],
+        rcTutorial: ['Inicio', 'Menú principal', 'Registro Civil', 'Tutorial'],
+        caCategories: ['Inicio', 'Menú principal', 'ChileAtiende'],
+        rcInteractiveSimulation: ['Inicio', 'Menú principal', 'Registro Civil', 'Simulación Interactiva']
+    };
+
+    function updateBreadcrumb(key) {
+        const breadcrumb = document.getElementById('breadcrumb');
+        if (!breadcrumb) return;
+        const crumbs = breadcrumbLabels[key];
+        if (!crumbs || crumbs.length === 0) {
+            breadcrumb.style.display = 'none';
+            return;
+        }
+        breadcrumb.style.display = 'flex';
+        breadcrumb.innerHTML = crumbs.map((label, i) =>
+            i < crumbs.length - 1
+                ? `<span class="bc-item bc-link">${label}</span><span class="bc-sep">›</span>`
+                : `<span class="bc-item bc-current">${label}</span>`
+        ).join('');
+    }
+
+    // --- Inactivity Timer ---
+    let inactivityTimer = null;
+    function resetInactivityTimer() {
+        clearTimeout(inactivityTimer);
+        inactivityTimer = setTimeout(() => {
+            if (!assistant.isListening) {
+                assistant.say('¿Necesita ayuda? Puede preguntarme lo que necesite o presionar el botón de ayuda.');
+            }
+        }, 90000);
+    }
+    // ['mousemove', 'keydown', 'touchstart', 'click'].forEach(evt => {
+    //     document.addEventListener(evt, resetInactivityTimer, { passive: true });
+    // });
+    // resetInactivityTimer();
+
+    // --- Touch-friendly help tooltip for password ---
+    const helpBtnTooltip = document.getElementById('btn-help-password');
+    if (helpBtnTooltip) {
+        const tooltip = helpBtnTooltip.closest('.input-wrapper')?.querySelector('.cu-help-tooltip');
+        if (tooltip) {
+            helpBtnTooltip.addEventListener('click', (e) => {
+                e.stopPropagation();
+                tooltip.classList.toggle('visible');
+            });
+            document.addEventListener('click', () => tooltip.classList.remove('visible'));
+        }
+    }
+
+    // --- Speed Control Panel ---
+    let speechRate = 1.05;
+    const btnSpeedToggle = document.getElementById('btn-speed-toggle');
+    const speedPanel = document.getElementById('speed-control-panel');
+    if (btnSpeedToggle && speedPanel) {
+        btnSpeedToggle.addEventListener('click', () => {
+            speedPanel.classList.toggle('visible');
+        });
+    }
+    document.getElementById('speed-fast')?.addEventListener('click', () => {
+        speechRate = 1.3;
+        document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('speed-fast')?.classList.add('active');
+        if (speedPanel) speedPanel.classList.remove('visible');
+        showNotification('Velocidad rápida activada', 'info');
+    });
+    document.getElementById('speed-normal')?.addEventListener('click', () => {
+        speechRate = 1.05;
+        document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('speed-normal')?.classList.add('active');
+        if (speedPanel) speedPanel.classList.remove('visible');
+        showNotification('Velocidad normal activada', 'info');
+    });
+    document.getElementById('speed-slow')?.addEventListener('click', () => {
+        speechRate = 0.8;
+        document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('speed-slow')?.classList.add('active');
+        if (speedPanel) speedPanel.classList.remove('visible');
+        showNotification('Velocidad lenta activada', 'info');
+    });
+    document.getElementById('speed-very-slow')?.addEventListener('click', () => {
+        speechRate = 0.55;
+        document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('speed-very-slow')?.classList.add('active');
+        if (speedPanel) speedPanel.classList.remove('visible');
+        showNotification('Velocidad muy lenta activada', 'info');
+    });
+
+    // Patch assistant.say: muestra el texto en la burbuja Y lo habla
+    assistant.say = function(text, onEnd) {
+        // Siempre mostrar en burbuja (modo texto o voz)
+        assistant.showBubble(text, false);
+
+        window.speechSynthesis.cancel();
+        const cleanedText = text
+            .replace(/\$\s*([\d\.]+)/g, '$1 pesos chilenos')
+            .replace(/\$/g, ' pesos chilenos')
+            .replace(/\bRUN\b/g, 'RUT')
+            .replace(/\bPGU\b/g, 'P G U')
+            .replace(/\bIPS\b/g, 'I P S')
+            .replace(/\bAFP\b/g, 'A F P')
+            .replace(/\bFONASA\b/gi, 'Fonasa');
+        const utter = new SpeechSynthesisUtterance(cleanedText);
+        utter.lang = 'es-CL';
+        utter.rate = speechRate;
+        utter.pitch = 1.05;
+        if (typeof getFemaleLatamVoice === 'function') {
+            utter.voice = getFemaleLatamVoice();
+        }
+        if (onEnd) utter.onend = onEnd;
+        window.speechSynthesis.speak(utter);
+    };
+
+    // --- Image Zoom ---
+    const modalZoom = document.getElementById('modal-zoom');
+    const zoomImg = document.getElementById('zoom-img');
+    const btnZoomClose = document.getElementById('btn-zoom-close');
+
+    document.addEventListener('click', (e) => {
+        const img = e.target.closest('.rc-step-img');
+        if (img && modalZoom && zoomImg) {
+            zoomImg.src = img.src;
+            zoomImg.alt = img.alt;
+            modalZoom.style.display = 'flex';
+        }
+    });
+    if (btnZoomClose) {
+        btnZoomClose.addEventListener('click', () => {
+            if (modalZoom) modalZoom.style.display = 'none';
+        });
+    }
+    if (modalZoom) {
+        modalZoom.addEventListener('click', (e) => {
+            if (e.target === modalZoom) modalZoom.style.display = 'none';
+        });
+    }
+
+    // --- Exit Tutorial Confirmation ---
+    document.getElementById('btn-exit-confirm')?.addEventListener('click', () => {
+        const m = document.getElementById('modal-exit-tutorial');
+        if (m) m.style.display = 'none';
+        goBack();
+    });
+    document.getElementById('btn-exit-cancel')?.addEventListener('click', () => {
+        const m = document.getElementById('modal-exit-tutorial');
+        if (m) m.style.display = 'none';
+    });
+
+    // --- Tutorial Summary Modal ---
+    function showTutorialSummary() {
+        const modal = document.getElementById('modal-tutorial-summary');
+        if (!modal) return;
+        const steps = currentTutorialSteps;
+        const listEl = document.getElementById('summary-steps-recap');
+        if (listEl && steps) {
+            listEl.innerHTML = '<ul>' + steps.map(s =>
+                `<li><span class="summary-check">✅</span> ${s.title}</li>`
+            ).join('') + '</ul>';
+        }
+        modal.style.display = 'flex';
+        assistant.say('¡Felicitaciones! Ha completado el tutorial exitosamente. ¡Muy bien hecho!');
+    }
+
+    document.getElementById('btn-summary-ok')?.addEventListener('click', () => {
+        const modal = document.getElementById('modal-tutorial-summary');
+        if (modal) modal.style.display = 'none';
+        showScreen(currentTutorialOrigin || 'menu');
+    });
+
+    // --- Quick Help Button ---
+    const btnQuickHelp = document.getElementById('btn-quick-help');
+    if (btnQuickHelp) {
+        const isTouchDevice = window.matchMedia('(hover: none)').matches;
+
+        btnQuickHelp.addEventListener('click', () => {
+            if (isTouchDevice) {
+                if (!btnQuickHelp.classList.contains('is-expanded')) {
+                    btnQuickHelp.classList.add('is-expanded');
+                    clearTimeout(btnQuickHelp._collapseTimer);
+                    btnQuickHelp._collapseTimer = setTimeout(() => {
+                        btnQuickHelp.classList.remove('is-expanded');
+                    }, 3000);
+                } else {
+                    clearTimeout(btnQuickHelp._collapseTimer);
+                    btnQuickHelp.classList.remove('is-expanded');
+                    openFirstUseOverlay();
+                }
+            } else {
+                openFirstUseOverlay();
+            }
+        });
+    }
+
+    function openFirstUseOverlay() {
+        const overlay = document.getElementById('overlay-first-use');
+        if (overlay) {
+            overlay.classList.add('visible');
+        }
+    }
+
+    // --- Transparencia del asistente ---
+    const assistantContainer = document.querySelector('.assistant-container');
+    if (assistantContainer) {
+        const isTouchOnly = window.matchMedia('(hover: none)').matches;
+
+        // Activar al tocar: opaco mientras el dedo esté encima, luego 2s antes de volver
+        if (isTouchOnly) {
+            assistantContainer.addEventListener('touchstart', () => {
+                assistantContainer.classList.add('is-active');
+                assistantContainer.classList.remove('is-overlapping');
+                clearTimeout(assistantContainer._fadeTimer);
+            }, { passive: true });
+
+            const startFadeTimer = () => {
+                clearTimeout(assistantContainer._fadeTimer);
+                assistantContainer._fadeTimer = setTimeout(() => {
+                    assistantContainer.classList.remove('is-active');
+                    checkAssistantOverlap();
+                }, 2000);
+            };
+
+            assistantContainer.addEventListener('touchend', startFadeTimer, { passive: true });
+            assistantContainer.addEventListener('touchcancel', startFadeTimer, { passive: true });
+        }
+
+        // Detectar solapamiento con texto (mobile)
+        function checkAssistantOverlap() {
+            if (assistantContainer.classList.contains('is-active')) return;
+            const acRect = assistantContainer.getBoundingClientRect();
+            const textEls = document.querySelectorAll(
+                '#app p, #app h1, #app h2, #app h3, #app li, #app label, #app .btn-text, #app .menu-item, #app .card'
+            );
+            let overlaps = false;
+            for (const el of textEls) {
+                const r = el.getBoundingClientRect();
+                if (r.bottom > acRect.top && r.top < acRect.bottom &&
+                    r.right > acRect.left && r.left < acRect.right) {
+                    overlaps = true;
+                    break;
+                }
+            }
+            assistantContainer.classList.toggle('is-overlapping', overlaps);
+        }
+
+        if (isTouchOnly) {
+            window.addEventListener('scroll', checkAssistantOverlap, { passive: true });
+            // Re-chequear al cambiar de pantalla
+            const appEl = document.getElementById('app');
+            if (appEl) {
+                new MutationObserver(checkAssistantOverlap).observe(appEl, {
+                    attributes: true, subtree: false, attributeFilter: ['class']
+                });
+            }
+            checkAssistantOverlap();
+        }
+
+        // Hacerlo activo mientras habla o escucha
+        const avatarEl = document.getElementById('assistant-icon');
+        if (avatarEl) {
+            new MutationObserver(() => {
+                const busy = avatarEl.classList.contains('speaking') || avatarEl.classList.contains('listening');
+                assistantContainer.classList.toggle('is-active', busy);
+            }).observe(avatarEl, { attributes: true, attributeFilter: ['class'] });
+        }
+    }
+
+    // --- First-Use Onboarding Overlay ---
+    const overlay = document.getElementById('overlay-first-use');
+    if (overlay) {
+        const slides = overlay.querySelectorAll('.first-use-slide');
+        const dots = overlay.querySelectorAll('.fuse-dot');
+        const btnNext = document.getElementById('btn-fuse-next');
+        let fuseStep = 0;
+
+        const dismissOverlay = () => {
+            overlay.classList.remove('visible');
+            localStorage.setItem('firstUseShown', 'true');
+        };
+
+        const goToSlide = (n) => {
+            slides.forEach((s, i) => s.classList.toggle('active', i === n));
+            dots.forEach((d, i) => d.classList.toggle('active', i === n));
+            if (btnNext) {
+                btnNext.textContent = n === slides.length - 1 ? '¡Comenzar!' : 'Siguiente →';
+            }
+        };
+
+        dots.forEach((dot, i) => {
+            dot.addEventListener('click', () => { fuseStep = i; goToSlide(fuseStep); });
+        });
+
+        btnNext?.addEventListener('click', () => {
+            if (fuseStep < slides.length - 1) {
+                fuseStep++;
+                goToSlide(fuseStep);
+            } else {
+                dismissOverlay();
+            }
+        });
+
+        document.getElementById('btn-fuse-skip')?.addEventListener('click', dismissOverlay);
+
+        if (!localStorage.getItem('firstUseShown')) {
+            goToSlide(0);
+            overlay.classList.add('visible');
+        }
+    }
+
+    // --- Modo Daltonismo (ciclo) ---
+    const cbCycle = [
+        { cls: null,              label: 'Normal'   },
+        { cls: 'cb-protanopia',   label: 'Opción 1' },
+        { cls: 'cb-deuteranopia', label: 'Opción 2' },
+        { cls: 'cb-tritanopia',   label: 'Opción 3' },
+    ];
+    const cbModes = cbCycle.slice(1).map(m => m.cls);
+    const btnColorblind = document.getElementById('btn-colorblind');
+    const cbBadge = document.getElementById('cb-current-badge');
+    const cbPanel = document.getElementById('colorblind-panel');
+    if (cbPanel) cbPanel.style.display = 'none';
+
+    let cbIndex = 0;
+    const savedCb = localStorage.getItem('colorblindMode');
+    if (savedCb) {
+        const found = cbCycle.findIndex(m => m.cls === savedCb);
+        if (found >= 0) {
+            cbIndex = found;
+            document.body.classList.add(savedCb);
+            if (btnColorblind) btnColorblind.classList.add('active');
+        }
+    }
+    if (cbBadge) cbBadge.textContent = cbCycle[cbIndex].label;
+
+    let cbFlashTimer = null;
+    function applyCbMode(index) {
+        cbModes.forEach(m => document.body.classList.remove(m));
+        const mode = cbCycle[index];
+        if (mode.cls) {
+            document.body.classList.add(mode.cls);
+            localStorage.setItem('colorblindMode', mode.cls);
+            btnColorblind.classList.add('active');
+        } else {
+            localStorage.removeItem('colorblindMode');
+            btnColorblind.classList.remove('active');
+        }
+        if (cbBadge) {
+            cbBadge.textContent = mode.label;
+            cbBadge.classList.add('flash');
+            clearTimeout(cbFlashTimer);
+            cbFlashTimer = setTimeout(() => cbBadge.classList.remove('flash'), 2200);
+        }
+
+    }
+
+    if (btnColorblind) {
+        btnColorblind.addEventListener('click', () => {
+            cbIndex = (cbIndex + 1) % cbCycle.length;
+            applyCbMode(cbIndex);
+        });
+    }
+
+    // --- Legend items interactivos ---
+    const toggleTargets = new Set(['btn-dark-mode', 'btn-toggle-contrast', 'btn-colorblind']);
+
+    function syncLegendItems() {
+        document.querySelectorAll('.toolbar-legend-item[data-target]').forEach(item => {
+            const btn = document.getElementById(item.dataset.target);
+            if (btn && toggleTargets.has(item.dataset.target)) {
+                item.classList.toggle('active', btn.classList.contains('active'));
+            }
+        });
+    }
+
+    // --- Lógica del Modal de Elección de Modo de Aprendizaje ---
+    const choiceModal = document.getElementById('modal-rc-learn-choice');
+    const btnCloseChoice = document.getElementById('btn-close-choice');
+    const btnChoiceTutorial = document.getElementById('btn-choice-tutorial');
+    const btnChoiceSimulate = document.getElementById('btn-choice-simulate');
+
+    if (btnCloseChoice && choiceModal) {
+        btnCloseChoice.onclick = () => {
+            choiceModal.style.display = 'none';
+        };
+        // close when clicking outside
+        window.addEventListener('click', (event) => {
+            if (event.target == choiceModal) {
+                choiceModal.style.display = 'none';
+            }
+        });
+    }
+
+    if (btnChoiceTutorial && choiceModal) {
+        btnChoiceTutorial.onclick = () => {
+            choiceModal.style.display = 'none';
+            if (choiceCertCu) {
+                postLoginTarget = 'rcTutorial';
+                currentTutorialOrigin = 'rcCategories';
+                currentTutorialSteps = rcData.steps[choiceCertId] || [];
+                currentStepIndex = 0;
+                showScreen('login');
+            } else {
+                startTutorial(choiceCertId, choiceCertName);
+            }
+        };
+    }
+
+    if (btnChoiceSimulate && choiceModal) {
+        btnChoiceSimulate.onclick = () => {
+            choiceModal.style.display = 'none';
+            if (choiceCertCu) {
+                postLoginTarget = 'rcInteractiveSimulation';
+                currentTutorialOrigin = 'rcCategories';
+                currentStepIndex = 0;
+                showScreen('login');
+            } else {
+                startInteractiveSimulation(choiceCertId, choiceCertName);
+            }
+        };
+    }
+
+    // --- Lógica del Botón "Practicar en Simulación" en el Modal de Felicitaciones ---
+    const btnSummarySimulate = document.getElementById('btn-summary-simulate');
+    if (btnSummarySimulate) {
+        btnSummarySimulate.onclick = () => {
+            const modalSummary = document.getElementById('modal-tutorial-summary');
+            if (modalSummary) modalSummary.style.display = 'none';
+            startInteractiveSimulation(currentTutorialCertId || 'nac-matricula', currentTutorialCertName || 'Certificado de Nacimiento');
+        };
+    }
+
+    // --- Motor de Simulación Interactiva del Registro Civil ---
+    let simActiveCertId = '';
+    let simActiveCertName = '';
+    let simActiveCatId = '';
+    let simCurrentStep = 0;
+    let simCaptchaText = '';
+    let simCartRUT = '';
+
+    // Mapear certificados a sus categorías
+    const certCategoryMap = {
+        'nac-matricula': 'nacimiento',
+        'nac-asignacion': 'nacimiento',
+        'nac-todo': 'nacimiento',
+        'mat-todo': 'matrimonio',
+        'mat-asignacion': 'matrimonio',
+        'def-todo': 'defuncion',
+        'def-asignacion': 'defuncion'
+    };
+
+    const categoryNames = {
+        'nacimiento': 'Nacimiento',
+        'matrimonio': 'Matrimonio',
+        'defuncion': 'Defunción'
+    };
+
+    function startInteractiveSimulation(certId, certName) {
+        simActiveCertId = certId;
+        simActiveCertName = certName;
+        simActiveCatId = certCategoryMap[certId] || 'nacimiento';
+        simCurrentStep = 0;
+        
+        // Limpiar inputs de RUT y formularios
+        document.querySelectorAll('.sim-input-rut').forEach(inp => inp.value = '');
+        document.getElementById('sim-sol-rut').value = '';
+        document.getElementById('sim-sol-doc').value = '';
+        document.getElementById('sim-sol-email').value = '';
+        document.getElementById('sim-sol-email-confirm').value = '';
+        document.getElementById('sim-captcha-input').value = '';
+        
+        // Resetear clases de error
+        document.querySelectorAll('.error-field').forEach(el => el.classList.remove('error-field'));
+        
+        // Deshabilitar formulario del solicitante
+        const solBox = document.getElementById('sim-solicitante-box');
+        if (solBox) {
+            solBox.classList.add('disabled');
+            solBox.querySelectorAll('input, button').forEach(el => el.disabled = true);
+        }
+
+        // Colapsar todas las categorías simulated
+        document.querySelectorAll('.sim-cat-card').forEach(card => {
+            card.classList.remove('active');
+        });
+
+        // Limpiar checkboxes de certificados y ocultar action-boxes
+        document.querySelectorAll('.sim-cert-checkbox').forEach(cb => {
+            cb.checked = false;
+        });
+        document.querySelectorAll('.sim-cert-action-box').forEach(box => {
+            box.style.display = 'none';
+        });
+        const totalDisplay = document.getElementById('sim-cart-total-val-display');
+        if (totalDisplay) totalDisplay.innerText = '0';
+
+        // Limpiar carro simulated
+        const cartEmptyMsg = document.getElementById('sim-cart-empty-msg');
+        const cartTable = document.getElementById('sim-cart-table');
+        const cartTotalBox = document.getElementById('sim-cart-total-box');
+        const cartItemsBody = document.getElementById('sim-cart-items-body');
+        
+        if (cartEmptyMsg) cartEmptyMsg.style.display = 'block';
+        if (cartTable) cartTable.style.display = 'none';
+        if (cartTotalBox) cartTotalBox.style.display = 'none';
+        if (cartItemsBody) cartItemsBody.innerHTML = '';
+        document.getElementById('sim-cart-count').innerText = '0 art.';
+
+        // Ocultar pantalla de checkout y mostrar rejilla principal
+        document.getElementById('sim-main-grid').style.display = 'grid';
+        document.getElementById('sim-checkout-screen').style.display = 'none';
+
+        // Asegurar que las categorías y aviso estén visibles y el captcha oculto al iniciar
+        const infoBlock = document.getElementById('sim-info-text-block');
+        const categoriesBlock = document.getElementById('sim-categories-list-block');
+        const captchaContainer = document.getElementById('sim-captcha-container');
+        if (infoBlock) infoBlock.style.display = 'block';
+        if (categoriesBlock) categoriesBlock.style.display = 'block';
+        if (captchaContainer) captchaContainer.style.display = 'none';
+
+        // Mostrar pantalla de simulación
+        showScreen('rcInteractiveSimulation');
+
+        // Inicializar UI de pasos
+        updateSimulationStepUI();
+    }
+
+    function updateSimulationStepUI() {
+        const textEl = document.getElementById('sim-assistant-text');
+        if (!textEl) return;
+
+        let instructionText = '';
+        let targetSelector = '';
+
+        const catName = categoryNames[simActiveCatId];
+
+        switch(simCurrentStep) {
+            case 0: // Buscar y hacer clic en categoría
+                instructionText = `Paso 1: Busque y haga clic sobre la categoría "${catName}" (marcada con el borde naranja parpadeante) para abrir las opciones.`;
+                targetSelector = `#sim-cat-${simActiveCatId}`;
+                break;
+            case 1: // Rellenar RUT y agregar
+                instructionText = `Paso 2: Marque la casilla al lado de "${simActiveCertName}", escriba el RUT de la persona en el cuadro blanco y presione "Agregar al carro".`;
+                targetSelector = `#sim-cert-${simActiveCertId}`;
+                break;
+            case 2: // Resolver Captcha (inline)
+                instructionText = `Paso 3: Por seguridad, escriba el código de 6 letras y números de la imagen en el recuadro blanco y presione "submit".`;
+                targetSelector = `#sim-captcha-container`;
+                break;
+            case 3: // Rellenar datos del solicitante
+                instructionText = `Paso 4: ¡El certificado se agregó al carro! Ahora, complete los "Datos del Solicitante" a la derecha: ingrese su RUT, N° documento de carnet y su correo.`;
+                targetSelector = `#sim-solicitante-box`;
+                break;
+            case 4: // Presionar continuar del solicitante
+                instructionText = `Paso 5: Revise que sus datos estén correctos y presione el botón "Continuar" para avanzar al paso final.`;
+                targetSelector = `#sim-btn-continue`;
+                break;
+            case 5: // Confirmar y obtener
+                instructionText = `Paso 6: ¡Último paso! Revise que el valor sea $0 (estos certificados son gratis para usted) y presione el botón "Obtener Certificado" para terminar.`;
+                targetSelector = `#btn-sim-checkout-submit`;
+                break;
+        }
+
+        // Actualizar texto en panel flotante
+        textEl.innerHTML = instructionText;
+
+        // Resaltar visualmente el componente actual
+        simHighlightOnly(targetSelector);
+
+        // Narrar instrucción si corresponde
+        if (autoReadMode) {
+            assistant.say(instructionText);
+        }
+    }
+
+    function simHighlightOnly(selector) {
+        // Remover clases previas
+        document.querySelectorAll('.sim-highlight-guide, .sim-highlight-text-guide').forEach(el => {
+            el.classList.remove('sim-highlight-guide');
+            el.classList.remove('sim-highlight-text-guide');
+        });
+
+        if (selector) {
+            const el = document.querySelector(selector);
+            if (el) {
+                if (selector.includes('input') || selector.includes('group') || selector.includes('box')) {
+                    el.classList.add('sim-highlight-text-guide');
+                } else {
+                    el.classList.add('sim-highlight-guide');
+                }
+                // Scroll suave
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    }
+
+    // Configurar click en botones de reproducción de voz en la simulación
+    const btnSimVoicePlay = document.getElementById('btn-sim-voice-play');
+    if (btnSimVoicePlay) {
+        btnSimVoicePlay.onclick = () => {
+            const textEl = document.getElementById('sim-assistant-text');
+            if (textEl) {
+                assistant.say(textEl.innerText);
+            }
+        };
+    }
+
+    // Cancelar simulación
+    const btnBackRcSimulation = document.getElementById('btn-back-rc-simulation');
+    if (btnBackRcSimulation) {
+        btnBackRcSimulation.onclick = () => {
+            goBack();
+        };
+    }
+
+    // --- Manejo de Eventos en la Página Simulación ---
+
+    // 1. Clic en categorías de la simulación
+    document.querySelectorAll('.sim-cat-card .sim-cat-header').forEach(hdr => {
+        hdr.onclick = () => {
+            const card = hdr.closest('.sim-cat-card');
+            const catId = card.getAttribute('data-sim-cat');
+            
+            if (simCurrentStep === 0) {
+                if (catId === simActiveCatId) {
+                    card.classList.add('active');
+                    simCurrentStep = 1;
+                    updateSimulationStepUI();
+                } else {
+                    showNotification(`Para este trámite, busque y presione la categoría "${categoryNames[simActiveCatId]}" marcada en naranja.`, "error");
+                }
+            } else if (simCurrentStep >= 1) {
+                // Permitir abrir/cerrar libremente si ya pasamos el paso 0
+                card.classList.toggle('active');
+            }
+        };
+    });
+
+    // Manejo de checkboxes de certificados
+    document.querySelectorAll('.sim-cert-checkbox').forEach(cb => {
+        cb.onchange = () => {
+            const certId = cb.getAttribute('data-cert-id');
+            const actionBox = document.getElementById(`sim-action-${certId}`);
+            
+            if (cb.checked) {
+                // Si intenta marcar un certificado diferente al activo de la simulación
+                if (simCurrentStep === 1 && certId !== simActiveCertId) {
+                    showNotification(`Por favor, simule el certificado indicado: "${simActiveCertName}".`, "error");
+                    cb.checked = false;
+                    return;
+                }
+                
+                // Mostrar panel de entrada de RUT y botón
+                if (actionBox) actionBox.style.display = 'flex';
+                
+                // Desmarcar otros checkboxes en la misma categoría
+                document.querySelectorAll('.sim-cert-checkbox').forEach(other => {
+                    if (other !== cb && other.closest('.sim-cat-card') === cb.closest('.sim-cat-card')) {
+                        other.checked = false;
+                        const otherId = other.getAttribute('data-cert-id');
+                        const otherBox = document.getElementById(`sim-action-${otherId}`);
+                        if (otherBox) otherBox.style.display = 'none';
+                    }
+                });
+            } else {
+                if (actionBox) actionBox.style.display = 'none';
+            }
+        };
+    });
+
+    // Validar y formatear inputs de RUT en la simulación
+    document.querySelectorAll('.sim-input-rut, #sim-sol-rut').forEach(input => {
+        input.addEventListener('input', function() {
+            this.value = formatRut(this.value);
+            this.classList.remove('error-field');
+        });
+    });
+
+    // 2. Clic en "Agregar al Carro" en la simulación
+    document.querySelectorAll('.sim-btn-add-cart').forEach(btn => {
+        btn.onclick = () => {
+            const certId = btn.getAttribute('data-cert-id');
+            const inputRut = document.getElementById(`input-rut-${certId}`);
+            const rutVal = inputRut ? inputRut.value : '';
+
+            if (simCurrentStep === 1) {
+                if (certId !== simActiveCertId) {
+                    showNotification(`Por favor, simule el certificado indicado: "${simActiveCertName}".`, "error");
+                    return;
+                }
+
+                if (rutVal.trim() === '') {
+                    showNotification("Por favor, ingrese el RUT del inscrito.", "error");
+                    inputRut.classList.add('error-field');
+                    return;
+                }
+
+                if (!validateRut(rutVal)) {
+                    showNotification("Por favor, ingrese un RUT válido.", "error");
+                    inputRut.classList.add('error-field');
+                    return;
+                }
+
+                // Guardar RUT de la persona y mostrar Captcha
+                simCartRUT = rutVal;
+                showSimCaptchaModal();
+            } else {
+                showNotification("Siga las instrucciones del asistente flotante de ayuda.", "info");
+            }
+        };
+    });
+
+    // 3. Captcha simulado (Inline, reemplaza categorías)
+    const captchaContainer = document.getElementById('sim-captcha-container');
+    const infoBlock = document.getElementById('sim-info-text-block');
+    const categoriesBlock = document.getElementById('sim-categories-list-block');
+    const btnCaptchaRefresh = document.getElementById('btn-sim-captcha-refresh');
+    const inputCaptcha = document.getElementById('sim-captcha-input');
+    const btnCaptchaCancel = document.getElementById('btn-sim-captcha-cancel');
+    const btnCaptchaSubmit = document.getElementById('btn-sim-captcha-submit');
+    const btnCaptchaAudio = document.getElementById('btn-sim-captcha-audio');
+
+    function showSimCaptchaModal() {
+        simCaptchaText = generateRandomCaptcha();
+        renderCaptcha(simCaptchaText);
+        
+        if (inputCaptcha) {
+            inputCaptcha.value = '';
+            inputCaptcha.classList.remove('error-field');
+        }
+        
+        // Ocultar categorías y mostrar captcha inline
+        if (infoBlock) infoBlock.style.display = 'none';
+        if (categoriesBlock) categoriesBlock.style.display = 'none';
+        if (captchaContainer) captchaContainer.style.display = 'block';
+        
+        // Randomizar código de soporte
+        const supportCodeEl = document.getElementById('sim-captcha-support-code');
+        if (supportCodeEl) {
+            let code = '1690';
+            for (let i = 0; i < 16; i++) {
+                code += Math.floor(Math.random() * 10);
+            }
+            supportCodeEl.innerText = `Código de soporte: ${code}.`;
+        }
+        
+        simCurrentStep = 2;
+        updateSimulationStepUI();
+        if (inputCaptcha) inputCaptcha.focus();
+    }
+
+    function renderCaptcha(text) {
+        const container = document.getElementById('sim-captcha-letters-container');
+        if (!container) return;
+        container.innerHTML = '';
+        
+        for (let i = 0; i < text.length; i++) {
+            const char = text.charAt(i);
+            const span = document.createElement('span');
+            span.innerText = char;
+            
+            // Distorsión del captcha
+            const rot = Math.floor(Math.random() * 30) - 15; // -15 a 15 deg
+            const size = Math.floor(Math.random() * 8) + 26; // 26px a 34px
+            const yOffset = Math.floor(Math.random() * 10) - 5; // -5px a 5px
+            const xOffset = Math.floor(Math.random() * 6) - 3; // -3px a 3px
+            const weight = [400, 600, 800][Math.floor(Math.random() * 3)];
+            
+            // Colores oscuros legibles
+            const colors = ['#2b2b2b', '#3a3a3a', '#4a4a4a', '#1e1e1e', '#555555'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            span.style.transform = `rotate(${rot}deg) translateY(${yOffset}px) translateX(${xOffset}px)`;
+            span.style.fontSize = `${size}px`;
+            span.style.fontWeight = weight;
+            span.style.color = color;
+            span.style.display = 'inline-block';
+            span.style.fontFamily = "monospace";
+            
+            container.appendChild(span);
+        }
+    }
+
+    if (btnCaptchaRefresh) {
+        btnCaptchaRefresh.onclick = (e) => {
+            if (e) e.preventDefault();
+            simCaptchaText = generateRandomCaptcha();
+            renderCaptcha(simCaptchaText);
+            if (inputCaptcha) inputCaptcha.value = '';
+        };
+    }
+
+    if (btnCaptchaCancel) {
+        btnCaptchaCancel.onclick = (e) => {
+            if (e) e.preventDefault();
+            // Mostrar categorías y ocultar captcha inline
+            if (infoBlock) infoBlock.style.display = 'block';
+            if (categoriesBlock) categoriesBlock.style.display = 'block';
+            if (captchaContainer) captchaContainer.style.display = 'none';
+            
+            simCurrentStep = 1;
+            updateSimulationStepUI();
+        };
+    }
+
+    if (btnCaptchaSubmit) {
+        btnCaptchaSubmit.onclick = (e) => {
+            if (e) e.preventDefault();
+            const entered = inputCaptcha ? inputCaptcha.value.trim().toUpperCase() : '';
+            if (entered === simCaptchaText.toUpperCase()) {
+                // Captcha correcto: ocultar y agregar al carro
+                if (infoBlock) infoBlock.style.display = 'block';
+                if (categoriesBlock) categoriesBlock.style.display = 'block';
+                if (captchaContainer) captchaContainer.style.display = 'none';
+                addItemToSimCart();
+            } else {
+                showNotification("Código incorrecto, por favor intente de nuevo.", "error");
+                if (inputCaptcha) {
+                    inputCaptcha.classList.add('error-field');
+                    inputCaptcha.value = '';
+                }
+                simCaptchaText = generateRandomCaptcha();
+                renderCaptcha(simCaptchaText);
+            }
+        };
+    }
+
+    if (btnCaptchaAudio) {
+        btnCaptchaAudio.onclick = (e) => {
+            if (e) e.preventDefault();
+            if (!simCaptchaText) return;
+            
+            let spellOut = 'El código es: ';
+            for (let i = 0; i < simCaptchaText.length; i++) {
+                const char = simCaptchaText.charAt(i);
+                if (char >= '0' && char <= '9') {
+                    spellOut += `${char}. `;
+                } else if (char === char.toUpperCase()) {
+                    spellOut += `${char.toUpperCase()} mayúscula. `;
+                } else {
+                    spellOut += `${char.toLowerCase()} minúscula. `;
+                }
+            }
+            assistant.say(spellOut);
+        };
+    }
+
+    if (inputCaptcha) {
+        inputCaptcha.onkeypress = (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                btnCaptchaSubmit.click();
+            }
+        };
+    }
+
+    function generateRandomCaptcha() {
+        // Genera código de 6 caracteres con números y letras mayúsculas y minúsculas (filtrando ambiguas)
+        const chars = 'abcdefhkmnpqruvwxyABCDEFGHKLMNPQRSTUVWXY346789';
+        let result = '';
+        for (let i = 0; i < 6; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
+    }
+
+    function addItemToSimCart() {
+        // Mostrar en la tabla del carro
+        const cartEmptyMsg = document.getElementById('sim-cart-empty-msg');
+        const cartTable = document.getElementById('sim-cart-table');
+        const cartTotalBox = document.getElementById('sim-cart-total-box');
+        const cartItemsBody = document.getElementById('sim-cart-items-body');
+
+        // Asegurar que las categorías y aviso estén visibles y el captcha oculto
+        if (infoBlock) infoBlock.style.display = 'block';
+        if (categoriesBlock) categoriesBlock.style.display = 'block';
+        if (captchaContainer) captchaContainer.style.display = 'none';
+
+        if (cartEmptyMsg) cartEmptyMsg.style.display = 'none';
+        if (cartTable) cartTable.style.display = 'table';
+        if (cartTotalBox) cartTotalBox.style.display = 'flex';
+        
+        if (cartItemsBody) {
+            cartItemsBody.innerHTML = `
+                <tr>
+                    <td style="padding: 10px 0;"><strong>${simActiveCertName}</strong></td>
+                    <td style="padding: 10px 0;">${simCartRUT}</td>
+                    <td style="padding: 10px 0; color: #28a745; font-weight: bold;">$0</td>
+                </tr>
+            `;
+        }
+
+        document.getElementById('sim-cart-count').innerText = '1 art.';
+
+        // Habilitar Formulario de Solicitante
+        const solBox = document.getElementById('sim-solicitante-box');
+        if (solBox) {
+            solBox.classList.remove('disabled');
+            solBox.querySelectorAll('input, button').forEach(el => el.disabled = false);
+        }
+
+        // Si ya hay RUT logueado en la app principal, auto-llenarlo
+        const loggedInRut = document.getElementById('rut') ? document.getElementById('rut').value : '';
+        if (loggedInRut) {
+            document.getElementById('sim-sol-rut').value = loggedInRut;
+        }
+
+        simCurrentStep = 3;
+        updateSimulationStepUI();
+    }
+
+    // 4. Datos del solicitante inputs validation
+    const simSolRut = document.getElementById('sim-sol-rut');
+    const simSolDoc = document.getElementById('sim-sol-doc');
+    const simSolEmail = document.getElementById('sim-sol-email');
+    const simSolEmailConfirm = document.getElementById('sim-sol-email-confirm');
+    const simBtnContinue = document.getElementById('sim-btn-continue');
+
+    function checkSimFormCompletion() {
+        if (simCurrentStep === 3) {
+            const r = simSolRut ? simSolRut.value : '';
+            const d = simSolDoc ? simSolDoc.value : '';
+            const e = simSolEmail ? simSolEmail.value : '';
+            const ec = simSolEmailConfirm ? simSolEmailConfirm.value : '';
+
+            if (r.trim() !== '' && d.trim() !== '' && e.trim() !== '' && ec.trim() !== '') {
+                simCurrentStep = 4;
+                updateSimulationStepUI();
+            }
+        }
+    }
+
+    [simSolRut, simSolDoc, simSolEmail, simSolEmailConfirm].forEach(el => {
+        if (el) {
+            el.addEventListener('input', () => {
+                el.classList.remove('error-field');
+                checkSimFormCompletion();
+            });
+        }
+    });
+
+    const simHelpDoc = document.getElementById('sim-btn-help-doc');
+    if (simHelpDoc) {
+        simHelpDoc.onclick = () => {
+            showNotification("El número de documento o de serie está en el frente o reverso de su carnet de identidad. Es un número de 9 dígitos.", "info");
+        };
+    }
+
+    // Clic en Continuar (solicitante)
+    if (simBtnContinue) {
+        simBtnContinue.onclick = () => {
+            const rVal = simSolRut ? simSolRut.value : '';
+            const dVal = simSolDoc ? simSolDoc.value : '';
+            const eVal = simSolEmail ? simSolEmail.value : '';
+            const ecVal = simSolEmailConfirm ? simSolEmailConfirm.value : '';
+
+            // Validaciones
+            if (!validateRut(rVal)) {
+                showNotification("Por favor, ingrese un RUT de solicitante válido.", "error");
+                simSolRut.classList.add('error-field');
+                return;
+            }
+
+            if (dVal.trim().length < 6) {
+                showNotification("Por favor, ingrese un N° Documento válido (está en su carnet).", "error");
+                simSolDoc.classList.add('error-field');
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(eVal)) {
+                showNotification("Por favor, ingrese un correo electrónico válido.", "error");
+                simSolEmail.classList.add('error-field');
+                return;
+            }
+
+            if (eVal !== ecVal) {
+                showNotification("Los correos electrónicos ingresados no coinciden.", "error");
+                simSolEmailConfirm.classList.add('error-field');
+                return;
+            }
+
+            // Exitoso: Avanzar a la pantalla de checkout final
+            showSimCheckoutScreen();
+        };
+    }
+
+    function showSimCheckoutScreen() {
+        document.getElementById('sim-main-grid').style.display = 'none';
+        
+        // Cargar ítems en checkout
+        const checkoutItems = document.getElementById('sim-checkout-items');
+        if (checkoutItems) {
+            checkoutItems.innerHTML = `
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 12px 0;"><strong>${simActiveCertName}</strong></td>
+                    <td style="padding: 12px 0;">${simCartRUT}</td>
+                    <td style="padding: 12px 0; text-align: right; color: #28a745; font-weight: bold;">$0</td>
+                </tr>
+            `;
+        }
+
+        document.getElementById('sim-checkout-screen').style.display = 'block';
+
+        simCurrentStep = 5;
+        updateSimulationStepUI();
+    }
+
+    // Checkout Back button
+    const btnSimCheckoutBack = document.getElementById('btn-sim-checkout-back');
+    if (btnSimCheckoutBack) {
+        btnSimCheckoutBack.onclick = () => {
+            document.getElementById('sim-main-grid').style.display = 'grid';
+            document.getElementById('sim-checkout-screen').style.display = 'none';
+            simCurrentStep = 4;
+            updateSimulationStepUI();
+        };
+    }
+
+    // Checkout Submit button: Obtener Certificado (Final)
+    const btnSimCheckoutSubmit = document.getElementById('btn-sim-checkout-submit');
+    if (btnSimCheckoutSubmit) {
+        btnSimCheckoutSubmit.onclick = () => {
+            // Ir al final con Éxito personalizado!
+            const successTitle = document.querySelector('#screen-success h1');
+            const successSubtitle = document.querySelector('#screen-success .subtitle');
+            const successDesc = document.querySelector('#screen-success .success-actions p');
+            const btnFinish = document.getElementById('btn-finish');
+
+            if (successTitle) successTitle.innerHTML = '¡Simulación Completada con Éxito! 🎉';
+            if (successSubtitle) successSubtitle.innerText = `¡Felicitaciones! Ha aprendido a obtener su ${simActiveCertName}.`;
+            if (successDesc) successDesc.innerHTML = `Usted simuló correctamente todos los pasos de la página del Registro Civil. Su certificado (simulado) ha sido enviado al correo <strong>${simSolEmail.value}</strong>.`;
+            
+            if (btnFinish) {
+                btnFinish.innerText = 'Volver al Registro Civil';
+                // Cambiar el handler temporalmente
+                const oldFinishClick = btnFinish.onclick;
+                btnFinish.onclick = (e) => {
+                    e.preventDefault();
+                    // Restaurar los textos originales de screen-success
+                    if (successTitle) successTitle.innerHTML = '¡Trámite Exitoso!';
+                    if (successSubtitle) successSubtitle.innerText = 'Su certificado ha sido procesado correctamente.';
+                    if (successDesc) successDesc.innerHTML = 'Se ha enviado una copia a su correo electrónico.';
+                    btnFinish.innerText = 'Volver al Inicio';
+                    // Restaurar handler viejo
+                    btnFinish.onclick = oldFinishClick;
+                    
+                    // Ir a las categorías
+                    showScreen('rcCategories');
+                };
+            }
+
+            showScreen('success');
+        };
+    }
+    document.querySelectorAll('.toolbar-legend-item[data-target]').forEach(item => {
+        item.addEventListener('click', () => {
+            const btn = document.getElementById(item.dataset.target);
+            if (!btn) return;
+            item.classList.add('clicking');
+            setTimeout(() => item.classList.remove('clicking'), 180);
+            btn.click();
+            setTimeout(syncLegendItems, 40);
+        });
+        item.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                item.click();
+            }
+        });
+    });
+
+    syncLegendItems();
+
+    // Initial breadcrumb
+    updateBreadcrumb('landing');
 });
 
